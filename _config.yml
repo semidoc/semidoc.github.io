@@ -10,7 +10,7 @@ permalink:        pretty
 
 # Setup
 title:            Semidoc
-tagline:          'Blog du séminaire des doctorants de l'IRIF'
+tagline:          "Blog du séminaire des doctorants de l'IRIF"
 url:              http://semidoc.github.io
 shorturl:         semidoc.github.io
 

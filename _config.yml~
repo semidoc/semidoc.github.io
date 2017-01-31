@@ -23,7 +23,7 @@ paginate:         1
 version:          1.0.0
 
 github:
-  repo:           github.com/FiV0/FiV0.github.io
+  repo:           github.com/semidoc/semidoc.github.io
 
 # This is the list of pages to include in the header of the website.
 pages_list:
