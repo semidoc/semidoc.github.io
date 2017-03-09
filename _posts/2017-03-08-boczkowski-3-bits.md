@@ -44,7 +44,7 @@ Our main result is the following.
 
 Note these $3$ bits in principle allow to encode information such as *I am the source* but it is not enough to say *I saw the source $k$ rounds ago* for more than $\Omega(1)$ distinct values of $k$.
 
-#Sketch of proof of the Theorem
+# Sketch of proof of the Theorem
 
 The proof consists of three steps.
 
