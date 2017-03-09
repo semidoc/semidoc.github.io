@@ -12,7 +12,7 @@ fr : Bonjour, et bienvenue pour le premier vrai post de ce blog. Aujourd'hui [Lu
 
 en: Hi everyone, and welcome to the first real post of this blog. The following text is a summary (in English) by [Lucas Boczkowski](ttps://www.irif.fr/~lboczko/) of the talk he gave at the PhD seminar on the 22nd of February 2017. It is about the paper he and his coauthors presented at SODA this year: [*Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits*](https://arxiv.org/abs/1602.04419). For any comment, send an email to Lucas or to me (respectively lboczko and feuilloley at irif.fr).
 
-#Setup and result
+# Setup and result
 Consider the following scenario.
 A school of $n$ fish has to decide whether to keep moving forward or change direction. We model an answer to this question by a binary bit $b \in \{0,1\}$.
 An informed source, perhaps a fish who saw a predator, is convinced on what the correct choice of $b$ should be and she wishes to spread  it to her peers. On each round every fish looks at $O(1)$ randomly chosen other fish.
