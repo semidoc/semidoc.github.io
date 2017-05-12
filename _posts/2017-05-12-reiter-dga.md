@@ -32,5 +32,7 @@ The information available from the neighbours, the synchrony or not of the autom
 
 For more on the topic, I let you read Fabian's papers! 
 
+---
+
 [^1]:For those of you who have met the LOCAL model at some point, this must sound very familiar as it is basically the same state of mind as the locality-oriented distributed computing.
 [^2]:The paper _Distributed Graph Automata_ ([arxiv version](https://arxiv.org/abs/1408.3030)). The slides are also available [here](https://www.irif.fr/_media/users/reiterf/lics2015.pdf).
