@@ -73,7 +73,7 @@ In our context, any protocol  $\Pi$ using $\ell$ bits messages can be emulated b
 *Informal proof*
 We know from the previous step how to design a counter modulo $\ell$ using $\lceil \log \ell \rceil $ bits. This can be interpreted as an index saying which bit of the $\Pi$-message  to display. Looping over indices of $\Pi$ allows, within $\ell$ rounds to emulate \emph{one} round of $\Pi$.
 
-The lemma can be applied to any protocol, and in particular\ldots to the clock synchronization protocol we saw in Step $2$. This reduces the message size from $\log T$ to $\lceil \log \log T\rceil +1$. We can keep iterating this and
+The lemma can be applied to any protocol, and in particular... to the clock synchronization protocol we saw in Step $2$. This reduces the message size from $\log T$ to $\lceil \log \log T\rceil +1$. We can keep iterating this and
 we are able to reduce the message size until reaching the fixed point of $T \mapsto \lceil \log T \rceil + 1$ which happens to be $3$.
 
 # Open questions
