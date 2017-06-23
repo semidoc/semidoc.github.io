@@ -2,10 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://semidoc.github.io</loc>
-    <lastmod>2017-05-12T14:11:29+02:00</lastmod>
+    <lastmod>2017-06-23T16:23:43+02:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+  
+    <url>
+      <loc>http://semidoc.github.io/zijlstra-lwe</loc>
+      
+        <lastmod>2017-06-25T00:00:00+02:00</lastmod>
+      
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+    </url>
   
     <url>
       <loc>http://semidoc.github.io/reiter-dga</loc>
@@ -38,7 +47,7 @@
   <url>
     <loc>http://semidoc.github.io/404/</loc>
     
-      <lastmod>2017-05-12</lastmod>
+      <lastmod>2017-06-23</lastmod>
     
     
       <changefreq>monthly</changefreq>
@@ -51,7 +60,7 @@
   <url>
     <loc>http://semidoc.github.io/about/</loc>
     
-      <lastmod>2017-05-12</lastmod>
+      <lastmod>2017-06-23</lastmod>
     
     
       <changefreq>monthly</changefreq>
@@ -64,7 +73,7 @@
   <url>
     <loc>http://semidoc.github.io/archive/</loc>
     
-      <lastmod>2017-05-12</lastmod>
+      <lastmod>2017-06-23</lastmod>
     
     
       <changefreq>monthly</changefreq>
@@ -77,7 +86,7 @@
   <url>
     <loc>http://semidoc.github.io/</loc>
     
-      <lastmod>2017-05-12</lastmod>
+      <lastmod>2017-06-23</lastmod>
     
     
       <changefreq>monthly</changefreq>
@@ -90,7 +99,7 @@
   <url>
     <loc>http://semidoc.github.io/page2/</loc>
     
-      <lastmod>2017-05-12</lastmod>
+      <lastmod>2017-06-23</lastmod>
     
     
       <changefreq>monthly</changefreq>
@@ -103,7 +112,20 @@
   <url>
     <loc>http://semidoc.github.io/page3/</loc>
     
-      <lastmod>2017-05-12</lastmod>
+      <lastmod>2017-06-23</lastmod>
+    
+    
+      <changefreq>monthly</changefreq>
+    
+    
+      <priority>0.3</priority>
+    
+  </url>
+  
+  <url>
+    <loc>http://semidoc.github.io/page4/</loc>
+    
+      <lastmod>2017-06-23</lastmod>
     
     
       <changefreq>monthly</changefreq>
