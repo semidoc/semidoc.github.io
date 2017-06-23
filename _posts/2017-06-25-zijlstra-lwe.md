@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Learning with Errors- based Cryptography
-redirect_from: "/2017/06/19/zijlstra-lwe/"
+redirect_from: "/2017/06/23/zijlstra-lwe/"
 permalink: zijlstra-lwe
 ---
 
