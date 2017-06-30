@@ -63,7 +63,7 @@ the best strategy is to fix some ordering on the path, and to visit them in the 
 (1, 2, ..., m, 1, 2, etc.), and every time a new path is taken 
 to multiply the distance by $m/(m-1)$.   
 
-# and more cows were grazing
+# ...and more cows were grazing
 Then one can again improve the story by adding more cows (usually less than the 
 number of paths, otherwise it is less funny[^4]).
 Then the finishing time can be defined in several ways: 
