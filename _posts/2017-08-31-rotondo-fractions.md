@@ -5,7 +5,7 @@ redirect_from: "/2017/06/19/rotondo-fractions/"
 permalink: rotondo-fractions
 ---
 
-Hello, the first post of this new academix year is by [Pablo Rotondo](https://www.irif.fr/users/rotondo/index) 
+Hello, the first post of this new academic year is by [Pablo Rotondo](https://www.irif.fr/users/rotondo/index) 
 who gave a talk at the seminar a few months ago. As there is more to say about 
 the subject, this post will probably have a follow-up later.
 
@@ -13,8 +13,7 @@ the subject, this post will probably have a follow-up later.
 
 In this post we discuss 
 **[continued fraction expansions](https://en.wikipedia.org/wiki/Continued_fraction)**, 
-their statistics and conclude with one of our results regarding the application 
-of these to [Sturmian Words](https://en.wikipedia.org/wiki/Sturmian_word).
+and their statistics.
 
 # Introduction
 Continued fractions are rather ubiquitous, they pop up in various contexts such as: 
@@ -22,8 +21,7 @@ the [Euclidean Algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm),
 [Pell's equation](https://en.wikipedia.org/wiki/Pell%27s_equation) (see 
 [here](http://www-bcf.usc.edu/~lototsky/PiMuEp/Pell-IMO.pdf) and 
 [here](http://math.stanford.edu/~jbooher/expos/continued_fractions.pdf)) and 
-[Diophantine approximation](https://en.wikipedia.org/wiki/Diophantine_approximation) 
-- the approximation of reals by rationals.
+[Diophantine approximation](https://en.wikipedia.org/wiki/Diophantine_approximation), the approximation of reals by rationals.
 
 ### Relation to the Euclidean algorithm and definitions.
 
