@@ -83,7 +83,7 @@ $$
 
 the last one being made up from the concatenation of the trios $1,2n,1$ for $n=1,2,\ldots$.
 
-###Notations 
+### Notations 
 Given an irrational number $\alpha \in (0,1)$ with continued fraction expansion
 
 $$
@@ -161,7 +161,7 @@ For more on this read the notes
 [here](http://www.maths.manchester.ac.uk/~cwalkden/ergodic-theory/ergodic_theory.pdf) 
 or in Khinchin's book.
 
-#Best approximations
+# Best approximations
 Convergents are particularly important due to the fact that they provide the ``best'' approximations to numbers in the following sense
 
 _Definition_ [Best approximations of the second kind]
