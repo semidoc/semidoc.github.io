@@ -69,7 +69,7 @@ $$
 $$ 
 by the same argument. 
 
-###Sturmian words as circle rotations 
+### Sturmian words as circle rotations 
 The above definition can be seen more intuitively as the binary coding of the 
 trajectory of a point on a circle of circumference $1$. This circle is realized 
 as the interval $[0,1]$ identifying $0$ and $1$, that is, taking fractional 
