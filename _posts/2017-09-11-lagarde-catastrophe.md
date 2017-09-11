@@ -121,7 +121,7 @@ is a word $$w$$ such that $$|D(w)| = \Theta\left(|w|^{1/2}\right)$$ and $$|D(0w)
 = \Theta\left(|0w|^{3/4}\right)$$. For that, we consider a word $$w$$ which is
 the concatenation of the prefixes of a word $$x$$, where $$x$$ has a
 maximal number of different substrings: $$x$$ is a 
-[de Bruijn word](De Bruijn sequence);
+[de Bruijn word](https://en.wikipedia.org/wiki/De_Bruijn_sequence);
 this alone should be sufficient to get a weak catastrophe (simulations
 say!), but we were not able to prove it directly. Instead, we need to
 add in an adaptative way small words between the prefixes, called
