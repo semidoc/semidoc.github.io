@@ -71,14 +71,14 @@ notation in hand, the size of the compression can be rephrased as
 $$\Theta(|D(w)| \log |D(w)|) $$. A word is said to be *incompressible*
 if the size of the compression is of the order of the size of the
 word. Equivalently, a word is incompressible if $$|D(w)|=
-\Theta(\frac{|w|}{\log |w|})$$.
+\Theta\left(\frac{|w|}{\log |w|}\right)$$.
 
 
 The most compressible words are obtained by taking the concatenation
 of the prefixes of any word $$x_0.x_1\dots x_{n-1}$$. That is, the
 most compressible words are of the form $$w
 =x_0.(x_0.x_1)(x_0.x_1.x_2)...(x_0.x_1\dots x_{n-2}.x_{n-1})$$. The
-size of the dictionnary of such word is $$\Theta(|w|^{1/2})$$.
+size of the dictionnary of such word is $$\Theta\left(|w|^{1/2}\right)$$.
 
 ## One-bit catastrophe and results
 
