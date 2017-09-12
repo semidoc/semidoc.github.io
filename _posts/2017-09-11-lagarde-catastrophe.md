@@ -11,6 +11,8 @@ his advisor [Sylvain Perifel](https://www.irif.fr/~sperifel/):
 [Lempel-Ziv: a “one-bit catastrophe” but not a tragedy](https://arxiv.org/abs/1707.04312).
 He presented parts of it at the PhD seminar last spring.  
 
+-----
+
 ## A strange scenario
 
 Imagine you compressed a file using your favorite compression
@@ -43,9 +45,9 @@ letter $$a$$ and $$m_i$$ is not equal to $$m_l$$, for $$l < i$$.
 For example, consider the word $$w = 00010110100001 $$. The first
 block is always the first letter (it is the extension of the empty
 word $$\epsilon$$), so that $$m_1 = 0$$. Then, $$m_2 = 00$$, since
-this is the biggest prefix of $$0010110100001$$ which is not equal to
+this is the smallest prefix of $$0010110100001$$ which is not equal to
 a word in the set $$\{\epsilon,0\}$$. Then, $$m_3 = 1$$ since this is
-the biggest prefix of $$10110100001$$ which is not equal to a word in
+the smallest prefix of $$10110100001$$ which is not equal to a word in
 $$\{\epsilon,0,00\}$$, and so on. In the end, $$w$$ is cut as
 
 $$0|00|1|01|10|100|001$$
@@ -54,7 +56,8 @@ $$0|00|1|01|10|100|001$$
 It is not hard to see that there is a unique cut that satisfies this
 property. Then, the compression algorithm LZ'78 encodes each block
 $$m_i$$ as a couple $$(p_i,a_i)$$ where $$p_i$$ is a *pointer* to its
-*predecessor* $$m_j$$ together with the letter such that $$m_i = m_j.a_i$$.
+*predecessor* $$m_j$$ together with the letter $$a_i$$ such that $$m_i
+= m_j.a_i$$.
 
 The previous word $$w$$ is thus encoded as
 	
@@ -110,7 +113,7 @@ which the size of the dictionnary is $$o\left(\frac{|w|}{\log^2 |w|}\right)$$
 remains compressible when we add any letter in front of it, i.e
 $$|D(aw)| = o\left(\frac{|aw|}{\log |aw|}\right)$$.
 
-Theorem 2 also tell us that for the most compressible words, the
+Theorem 2 also tells us that for the most compressible words, the
 variation can change from $$\Theta \left(|w|^{1/2}\right)$$ to
 $$\Theta \left(|w|^{3/4}\right)$$.
 
@@ -137,3 +140,14 @@ weak catastrophes at the same time. Then by tuning some parameters
 like the size or the number of weak catastrophes, together coupled
 with new and independent gadgets between the words, we get a
 catastrophe.
+
+## Open questions
+
+Is it possible to push the limits as far as to get a catastrophe where the
+compression ratio changes from $$0$$ to $$1$$? This would yield as the
+worst possible configuration.
+
+The main challenge, to our mind, is to remove the gadgets in our
+constructions. This would mean that the *weak catastrophe* is the
+typical case for optimally compressible words.
+
