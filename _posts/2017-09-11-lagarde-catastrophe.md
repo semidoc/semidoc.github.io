@@ -7,7 +7,7 @@ permalink: lagarde-catastrophe
 
 Hi! Today [Guillaume Lagarde](https://www.irif.fr/~glagarde/) 
 gives an overview of the recent preprint he has with
-his advisor Sylvain Perifel: 
+his advisor [Sylvain Perifel](https://www.irif.fr/~sperifel/): 
 [Lempel-Ziv: a “one-bit catastrophe” but not a tragedy](https://arxiv.org/abs/1707.04312).
 He presented parts of it at the PhD seminar last spring.  
 
