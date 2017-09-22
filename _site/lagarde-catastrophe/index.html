@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        jax: ["input/TeX","output/HTML-CSS"],
+        extensions: ["tex2jax.js"],
+        tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+        },
+     "HTML-CSS": {
+      styles: {
+        ".MathJax .mo, .MathJax .mi": {}
+      }
+    }
+    });
+    </script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    });
+
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    </script>
+
+<script type="text/javascript"
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <title>
+    
+      One-bit catastrophe &middot; Semidoc
+    
+  </title>
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/theorems.css">
+
+  <!-- Icons -->
+  <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">-->
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <div class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Semidoc</a>
+
+          
+              &nbsp;&nbsp;&nbsp;<small><a href="/about/">About</a></small>
+          
+              &nbsp;&nbsp;&nbsp;<small><a href="/archive/">Archive</a></small>
+          
+
+        </h3>
+      </div>
+
+      <div class="post">
+  <h1 class="post-title">One-bit catastrophe</h1>
+  <span class="post-date">11 Sep 2017</span>
+  <p>Hi! Today <a href="https://www.irif.fr/~glagarde/">Guillaume Lagarde</a> 
+gives an overview of the recent preprint he has with
+his advisor Sylvain Perifel: 
+<a href="https://arxiv.org/abs/1707.04312">Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</a>.
+He presented parts of it at the PhD seminar last spring.</p>
+
+<h2 id="a-strange-scenario">A strange scenario</h2>
+
+<p>Imagine you compressed a file using your favorite compression
+algorithm, but you realize that there was a typo in the file. 
+You then correct it, adding a single bit to the original file.</p>
+
+<p>Compress it again and you get a much
+larger compressed file… for just a one-bit difference! Much
+compression algorithms do not have this strange behavior, but for
+LZ’78, one of the most famous of them, this surprising scenario might
+well happen. This is what we will overview in this post.</p>
+
+<h2 id="introduction-to-lz78-and-notations">Introduction to LZ’78 and notations</h2>
+
+<p><a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv (LZ in short) algorithms</a> 
+refer to a bunch of lossless
+compression techniques introduced by 
+<a href="https://en.wikipedia.org/wiki/Abraham_Lempel">Abraham Lempel</a> and 
+<a href="https://en.wikipedia.org/wiki/Jacob_Ziv">Jacob Ziv</a> that
+are used as key ingredients in various places such as 
+<em><a href="https://en.wikipedia.org/wiki/DEFLATE">deflate</a></em>,
+<em><a href="https://en.wikipedia.org/wiki/GIF">gif</a></em>, 
+<em><a href="https://en.wikipedia.org/wiki/Gzip">gzip</a></em>, etc.<br />
+The version we consider is LZ’78, and works by
+cutting the word <script type="math/tex">w</script> we want to compress into substrings, called
+blocks, <script type="math/tex">w = m_1m_2\dots m_k</script>, such that each block <script type="math/tex">m_i</script>, except
+maybe the last one, is an extension of a previous block, that is:
+<script type="math/tex">m_i = m_j.a</script> for some letter <script type="math/tex">a</script>.</p>
+
+<p>// Peut-être mettre un coup d’exemple déjà ici. en expliquant les deux-trois 
+premiers blocs.</p>
+
+<p>It is not hard to see that
+there is a unique cut that satisfies this property. Then, the
+compression algorithm LZ’78 encodes each block <script type="math/tex">m_i</script> as a <em>pointer</em>
+to its <em>predecessor</em> <script type="math/tex">m_j</script> together with the letter <script type="math/tex">a</script>.</p>
+
+<p>For example, the word <script type="math/tex">w = 00010110100001</script> is cut as</p>
+
+<script type="math/tex; mode=display">0|00|1|01|10|100|001</script>
+
+<p>and is thus encoded as</p>
+
+<script type="math/tex; mode=display">(\epsilon,0);(0,0);(\epsilon,1);(0,1);(2,0);(4,0);(1,1)</script>
+
+<p>It can be shown that the order of the compression size</p>
+
+<p>// à définir ?</p>
+
+<p>is
+<script type="math/tex">\Theta(k\log k)</script> where <script type="math/tex">k</script> is the number of blocks.  The
+<em>dictionnary</em> of a word <script type="math/tex">w</script>, written <script type="math/tex">D(w)</script> will be the set of all
+the blocks <script type="math/tex">m_i</script>. With this notation in hand, the size of the
+compression can be rephrased as <script type="math/tex">\Theta(|D(w)| \log |D(w)|)</script>. A
+word is said to be <em>incompressible</em> if the size of the compression is
+of the order of the size of the word. Equivalently, a word is
+incompressible if <script type="math/tex">|D(w)|= \Theta(\frac{|w|}{\log |w|})</script>.</p>
+
+<p>The most compressible words are obtained by taking the concatenation
+of the prefixes of any word <script type="math/tex">x_0.x_1\dots x_{n-1}</script>. That is, the
+most compressible words are of the form <script type="math/tex">w
+=x_0.(x_0.x_1)(x_0.x_1.x_2)...(x_0.x_1\dots x_{n-2}.x_{n-1})</script>. The
+size of the dictionnary of such word is <script type="math/tex">\Theta(|w|^{1/2})</script>.</p>
+
+<h2 id="one-bit-catastrophe-and-results">One-bit catastrophe and results</h2>
+
+<p>The <em>one-bit catastrophe question</em> asks whether there exists a
+compressible (infinite) word <script type="math/tex">w</script> such that <script type="math/tex">0w</script> is
+incompressible. We answer positively this question by showing our main
+theorem:</p>
+
+<p><strong>Theorem 1:</strong> There exists an infinite word <script type="math/tex">w</script> such that the
+compression ratio changes from <script type="math/tex">0</script> to at least <script type="math/tex">\frac{1}{6075}</script> by
+adding one single bit in front of <script type="math/tex">w</script>.</p>
+
+<p>In fact, this result is not as tragic as it seems. Indeed, for the
+ratio to change, the word <script type="math/tex">w</script> needs to be compressible, but very
+slowly; in symbol <script type="math/tex">|D(w)| = \Omega\left(\frac{|w|}{\log^2 |w|}\right)</script> – this
+is quite close to an incompressible word!</p>
+
+<p>More generally, we can be more precise by considering the possible
+variations of the compression size on finite words:</p>
+
+<p><strong>Theorem 2</strong> For any finite word <script type="math/tex">w\in\{0,1\}</script> and any letter <script type="math/tex">a</script></p>
+
+<script type="math/tex; mode=display">|D(aw)| \leq 3\sqrt{|w|.|D(w)|}.</script>
+
+<p>Moreover, we can show that this result is tight up to a multiplicative constant.</p>
+
+<p>In particular, Theorem 2 tells us that any compressible word <script type="math/tex">w</script> for
+which the size of the dictionnary is <script type="math/tex">o\left(\frac{|w|}{\log^2 |w|}\right)</script>
+remains compressible when we add any letter in front of it, i.e
+<script type="math/tex">|D(aw)| = o\left(\frac{|aw|}{\log |aw|}\right)</script>.</p>
+
+<p>Theorem 2 also tell us that for the most compressible words, the
+variation can change from <script type="math/tex">\Theta \left(|w|^{1/2}\right)</script> to
+<script type="math/tex">\Theta \left(|w|^{3/4}\right)</script>.</p>
+
+<h2 id="high-level-ideas-of-the-proofs">High level ideas of the proofs</h2>
+
+<p>The first step is to understand how to get a <em>weak</em> catastrophe, that
+is a word <script type="math/tex">w</script> such that <script type="math/tex">|D(w)| = \Theta\left(|w|^{1/2}\right)</script> and <script type="math/tex">|D(0w)|
+= \Theta\left(|0w|^{3/4}\right)</script>. For that, we consider a word <script type="math/tex">w</script> which is
+the concatenation of the prefixes of a word <script type="math/tex">x</script>, where <script type="math/tex">x</script> has a
+maximal number of different substrings: <script type="math/tex">x</script> is a 
+<a href="De Bruijn sequence">de Bruijn word</a>;
+this alone should be sufficient to get a weak catastrophe (simulations
+say!), but we were not able to prove it directly. Instead, we need to
+add in an adaptative way small words between the prefixes, called
+gadgets, in order to have more control on the parsing of <script type="math/tex">w</script> and
+<script type="math/tex">0w</script> simultaneously.</p>
+
+<p>With this <em>weak</em> catastrophe in hand, the idea is now to create the
+<em>true catastrophe</em> (from compressible to incompressible word). We do
+that by creating probabilistically a lot of “independent de
+Bruijn-style words” which will be used to create a lot of independent
+weak catastrophes at the same time. Then by tuning some parameters
+like the size or the number of weak catastrophes, together coupled
+with new and independent gadgets between the words, we get a
+catastrophe.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/jacq-jeux">
+            Introduction ludique à la sémantique des jeux
+            <small>22 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rotondo-sturmian">
+            Sturmian words
+            <small>07 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rotondo-fractions">
+            Combinatorics of continued fractions
+            <small>31 Aug 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+      
+
+
+
+      <div class="footer">
+        <p>
+          &copy; 2017. All rights reserved.
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

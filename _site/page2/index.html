@@ -86,94 +86,139 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/zijlstra-lwe">
-        Learning with Errors- based Cryptography
+      <a href="/lagarde-catastrophe">
+        One-bit catastrophe
       </a>
     </h1>
 
-    <span class="post-date">23 Jun 2017</span>
+    <span class="post-date">11 Sep 2017</span>
 
-    <p>Hi! The current blog post has been written by <strong>Timo Zijlstra</strong>, who is doing an internship at the IRIF, and gave a talk at the seminar a few weeks ago.</p>
+    <p>Hi! Today <a href="https://www.irif.fr/~glagarde/">Guillaume Lagarde</a> 
+gives an overview of the recent preprint he has with
+his advisor Sylvain Perifel: 
+<a href="https://arxiv.org/abs/1707.04312">Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</a>.
+He presented parts of it at the PhD seminar last spring.</p>
 
-<hr />
+<h2 id="a-strange-scenario">A strange scenario</h2>
 
-<p>Cryptographic primitives such as encryption and signature schemes rely on computationally hard problems. A good scheme is constructed in such a way that any method that breaks the scheme automatically yields an algorithm that solves the underlying hard problem. The <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA encryption scheme</a>, for example, relies on the fact that there is no known algorithm that <a href="https://en.wikipedia.org/wiki/Integer_factorization">efficiently factorizes large integers</a>. If someone would be able to break RSA, then this would imply a method to factorize large integers. This would be a major breakthrough in mathematics, since the factorization problem has been intensively studied. Therefore, it is safe to assume that RSA cannot be broken. Most of implemented cryptography relies on the hardness of the factorization problem (RSA) or the <a href="https://en.wikipedia.org/wiki/Discrete_logarithm">discrete logarithm problem</a> (<a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic Curve Cryptography</a>). However, <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor’s quantum algorithm</a> can be applied to both of these problems, making the cryptosystems unsafe against quantum adversaries.</p>
+<p>Imagine you compressed a file using your favorite compression
+algorithm, but you realize that there was a typo in the file. 
+You then correct it, adding a single bit to the original file.</p>
 
-<p>This is the reason why we need to find mathematical problems that are computationally hard even for quantum computers. The best candidates for use in post-quantum cryptography are <a href="https://en.wikipedia.org/wiki/Lattice_problem">lattice problems</a> such as the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Shortest_vector_problem_.28SVP.29">Shortest Vector Problem</a> (SVP) and the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Closest_vector_problem_.28CVP.29">Closest Vector Problem</a> (CVP). There is currently no known (quantum) algorithm that solves these problems efficiently.</p>
+<p>Compress it again and you get a much
+larger compressed file… for just a one-bit difference! Much
+compression algorithms do not have this strange behavior, but for
+LZ’78, one of the most famous of them, this surprising scenario might
+well happen. This is what we will overview in this post.</p>
 
-<p>One lattice problem that is particularly adaptable for cryptographic applications is the <strong>Learning With Errors</strong> (LWE) problem. It consists of solving a system of approximate linear equations over the integers modulo some prime $q$. Let 
-<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
-be a secret vector and 
-<script type="math/tex">\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}</script> 
-vectors taken from the uniformly random distribution over 
-<script type="math/tex">\mathbb{Z}_q^n</script>
-. Given the system of approximate equations:</p>
+<h2 id="introduction-to-lz78-and-notations">Introduction to LZ’78 and notations</h2>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-\textbf{a}^{(1)} \cdot \textbf{s} &\approx b_1 \\
-&\vdots \\
-\textbf{a}^{(m)} \cdot \textbf{s} &\approx b_m,
-\end{align*} %]]></script>
+<p><a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv (LZ in short) algorithms</a> 
+refer to a bunch of lossless
+compression techniques introduced by 
+<a href="https://en.wikipedia.org/wiki/Abraham_Lempel">Abraham Lempel</a> and 
+<a href="https://en.wikipedia.org/wiki/Jacob_Ziv">Jacob Ziv</a> that
+are used as key ingredients in various places such as 
+<em><a href="https://en.wikipedia.org/wiki/DEFLATE">deflate</a></em>,
+<em><a href="https://en.wikipedia.org/wiki/GIF">gif</a></em>, 
+<em><a href="https://en.wikipedia.org/wiki/Gzip">gzip</a></em>, etc.<br />
+The version we consider is LZ’78, and works by
+cutting the word <script type="math/tex">w</script> we want to compress into substrings, called
+blocks, <script type="math/tex">w = m_1m_2\dots m_k</script>, such that each block <script type="math/tex">m_i</script>, except
+maybe the last one, is an extension of a previous block, that is:
+<script type="math/tex">m_i = m_j.a</script> for some letter <script type="math/tex">a</script>.</p>
 
-<p>where the approximation is ‘close’ in a sense that will be made clear later, the LWE-problem is to find 
-<script type="math/tex">\textbf{s}</script>. 
-Note that if the approximations were equalities, then it would be easy to solve the system using <a href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian elimination</a>. This method does not work for LWE though, because we cannot obtain a new approximation by adding an arbitrary number of multiples of approximate equations. The cumulative approximation error would grow so large that there is no information left in the ‘approximation’ obtained by summation and scalar multiplication. It is shown by Regev<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, that a (quantum) algorithm that solves LWE would imply a quantum algorithm that solves several believed to be hard lattice problems, among which SVP.</p>
+<p>// Peut-être mettre un coup d’exemple déjà ici. en expliquant les deux-trois 
+premiers blocs.</p>
 
-<p>More formally, the LWE-distribution is defined as follows.</p>
+<p>It is not hard to see that
+there is a unique cut that satisfies this property. Then, the
+compression algorithm LZ’78 encodes each block <script type="math/tex">m_i</script> as a <em>pointer</em>
+to its <em>predecessor</em> <script type="math/tex">m_j</script> together with the letter <script type="math/tex">a</script>.</p>
 
-<p><strong>Definition</strong>
-Let 
-<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
-be a secret vector and 
-<script type="math/tex">\chi</script> 
-an error distribution over 
-<script type="math/tex">\mathbb{Z}</script>. 
-The LWE distribution 
-<script type="math/tex">\mathcal{A}_{s, \chi}</script> 
-is sampled by taking a vector 
-<script type="math/tex">\textbf{a} \leftarrow \mathbb{Z}_q^n</script> 
-and an integer 
-<script type="math/tex">e \leftarrow \chi</script> 
-and outputting the pair 
-<script type="math/tex">(\textbf{a}, b:= \textbf{a} \cdot \textbf{s} + e)</script>.</p>
+<p>For example, the word <script type="math/tex">w = 00010110100001</script> is cut as</p>
 
-<p>This distribution is pseudorandom: given $m$ independent samples from either (1) the uniform distribution, or (2) the LWE- distribution, we cannot determine which is the case. To distinguish between the uniform and the LWE- distribution is equally hard as solving the LWE-problem, that is, finding the secret vector $\textbf{s}$. This makes the construction of LWE-based semantically secure cryptosystems possible, such as Regev’s encryption scheme:</p>
+<script type="math/tex; mode=display">0|00|1|01|10|100|001</script>
 
-<ul>
-  <li>Key generation. The private key is a random vector $\textbf{s} \in \mathbb{Z}_q^n$. To create a public key, we take $m$ vectors $\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}$ independently from the uniform distribution, and $e_1, \dots, e_m$ from $\chi$. The public key is given by the $m$ LWE samples $(\textbf{a}^{(i)}, b_i)$, where $b_i = \textbf{a}^{(i)} \cdot \textbf{s} + e_i$ for $i$ from 1 to $m$. In matrix notation: $\textbf{b} = A\textbf{s} + \textbf{e}$.</li>
-  <li>Encryption. To encrypt a bit $x$, we take a random vector $v \in {0, 1}^m$ and output the pair</li>
-</ul>
+<p>and is thus encoded as</p>
 
-<script type="math/tex; mode=display">(\textbf{c}_1, c_2) = \big( A\textbf{v}, \textbf{b} \cdot \textbf{v} + x \cdot \left\lfloor \frac{q}{2} \right\rfloor \big),</script>
+<script type="math/tex; mode=display">(\epsilon,0);(0,0);(\epsilon,1);(0,1);(2,0);(4,0);(1,1)</script>
 
-<p>that is, we take a subset of the row vectors and encrypt the bit in the subset sum of the samples.</p>
+<p>It can be shown that the order of the compression size</p>
 
-<ul>
-  <li>
-    <p>Decryption. Using the secret key $\textbf{s}$, compute:
-<script type="math/tex">% <![CDATA[
-\begin{align*}
-  c_2 - \textbf{c}_1 \cdot \textbf{s} &= \left(A\textbf{s} + \textbf{e}\right) \cdot \textbf{v} + x \left\lfloor \frac{q}{2} \right\rfloor - (A\textbf{v})\cdot \textbf{s} 
-  \\
-  &= (A\textbf{s})\cdot \textbf{v} - (A\textbf{v})\cdot \textbf{s} + \textbf{e}\cdot \textbf{v} + x \left\lfloor \frac{q}{2}\right\rfloor
-  \\
-  &\approx  x \left\lfloor \frac{q}{2}\right\rfloor, 
-  \end{align*} %]]></script></p>
+<p>// à définir ?</p>
 
-    <p>since both $\textbf{e}$ and $\textbf{v}$ are vectors of small norm. If this outcome is closer to zero than to $\left\lfloor \frac{q}{2}\right\rfloor$, then the decryption of $(\textbf{c}_1, c_2)$ is $0$, else it is $1$.</p>
-  </li>
-</ul>
+<p>is
+<script type="math/tex">\Theta(k\log k)</script> where <script type="math/tex">k</script> is the number of blocks.  The
+<em>dictionnary</em> of a word <script type="math/tex">w</script>, written <script type="math/tex">D(w)</script> will be the set of all
+the blocks <script type="math/tex">m_i</script>. With this notation in hand, the size of the
+compression can be rephrased as <script type="math/tex">\Theta(|D(w)| \log |D(w)|)</script>. A
+word is said to be <em>incompressible</em> if the size of the compression is
+of the order of the size of the word. Equivalently, a word is
+incompressible if <script type="math/tex">|D(w)|= \Theta(\frac{|w|}{\log |w|})</script>.</p>
 
-<hr />
+<p>The most compressible words are obtained by taking the concatenation
+of the prefixes of any word <script type="math/tex">x_0.x_1\dots x_{n-1}</script>. That is, the
+most compressible words are of the form <script type="math/tex">w
+=x_0.(x_0.x_1)(x_0.x_1.x_2)...(x_0.x_1\dots x_{n-2}.x_{n-1})</script>. The
+size of the dictionnary of such word is <script type="math/tex">\Theta(|w|^{1/2})</script>.</p>
 
-<div class="footnotes">
-  <ol>
-    <li id="fn:1">
-      <p>O. Regev. <a href="http://www.cims.nyu.edu/~regev/papers/qcrypto.pdf">On lattices, learning with errors, random linear codes, and cryptography</a>. J. ACM, 56(6):1–40, 2009. Preliminary version in STOC 2005.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
+<h2 id="one-bit-catastrophe-and-results">One-bit catastrophe and results</h2>
+
+<p>The <em>one-bit catastrophe question</em> asks whether there exists a
+compressible (infinite) word <script type="math/tex">w</script> such that <script type="math/tex">0w</script> is
+incompressible. We answer positively this question by showing our main
+theorem:</p>
+
+<p><strong>Theorem 1:</strong> There exists an infinite word <script type="math/tex">w</script> such that the
+compression ratio changes from <script type="math/tex">0</script> to at least <script type="math/tex">\frac{1}{6075}</script> by
+adding one single bit in front of <script type="math/tex">w</script>.</p>
+
+<p>In fact, this result is not as tragic as it seems. Indeed, for the
+ratio to change, the word <script type="math/tex">w</script> needs to be compressible, but very
+slowly; in symbol <script type="math/tex">|D(w)| = \Omega\left(\frac{|w|}{\log^2 |w|}\right)</script> – this
+is quite close to an incompressible word!</p>
+
+<p>More generally, we can be more precise by considering the possible
+variations of the compression size on finite words:</p>
+
+<p><strong>Theorem 2</strong> For any finite word <script type="math/tex">w\in\{0,1\}</script> and any letter <script type="math/tex">a</script></p>
+
+<script type="math/tex; mode=display">|D(aw)| \leq 3\sqrt{|w|.|D(w)|}.</script>
+
+<p>Moreover, we can show that this result is tight up to a multiplicative constant.</p>
+
+<p>In particular, Theorem 2 tells us that any compressible word <script type="math/tex">w</script> for
+which the size of the dictionnary is <script type="math/tex">o\left(\frac{|w|}{\log^2 |w|}\right)</script>
+remains compressible when we add any letter in front of it, i.e
+<script type="math/tex">|D(aw)| = o\left(\frac{|aw|}{\log |aw|}\right)</script>.</p>
+
+<p>Theorem 2 also tell us that for the most compressible words, the
+variation can change from <script type="math/tex">\Theta \left(|w|^{1/2}\right)</script> to
+<script type="math/tex">\Theta \left(|w|^{3/4}\right)</script>.</p>
+
+<h2 id="high-level-ideas-of-the-proofs">High level ideas of the proofs</h2>
+
+<p>The first step is to understand how to get a <em>weak</em> catastrophe, that
+is a word <script type="math/tex">w</script> such that <script type="math/tex">|D(w)| = \Theta\left(|w|^{1/2}\right)</script> and <script type="math/tex">|D(0w)|
+= \Theta\left(|0w|^{3/4}\right)</script>. For that, we consider a word <script type="math/tex">w</script> which is
+the concatenation of the prefixes of a word <script type="math/tex">x</script>, where <script type="math/tex">x</script> has a
+maximal number of different substrings: <script type="math/tex">x</script> is a 
+<a href="De Bruijn sequence">de Bruijn word</a>;
+this alone should be sufficient to get a weak catastrophe (simulations
+say!), but we were not able to prove it directly. Instead, we need to
+add in an adaptative way small words between the prefixes, called
+gadgets, in order to have more control on the parsing of <script type="math/tex">w</script> and
+<script type="math/tex">0w</script> simultaneously.</p>
+
+<p>With this <em>weak</em> catastrophe in hand, the idea is now to create the
+<em>true catastrophe</em> (from compressible to incompressible word). We do
+that by creating probabilistically a lot of “independent de
+Bruijn-style words” which will be used to create a lot of independent
+weak catastrophes at the same time. Then by tuning some parameters
+like the size or the number of weak catastrophes, together coupled
+with new and independent gadgets between the words, we get a
+catastrophe.</p>
 
   </div>
   

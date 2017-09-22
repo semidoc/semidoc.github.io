@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        jax: ["input/TeX","output/HTML-CSS"],
+        extensions: ["tex2jax.js"],
+        tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+        },
+     "HTML-CSS": {
+      styles: {
+        ".MathJax .mo, .MathJax .mi": {}
+      }
+    }
+    });
+    </script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    });
+
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    </script>
+
+<script type="text/javascript"
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <title>
+    
+      Introduction ludique à la sémantique des jeux &middot; Semidoc
+    
+  </title>
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/theorems.css">
+
+  <!-- Icons -->
+  <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">-->
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <div class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Semidoc</a>
+
+          
+              &nbsp;&nbsp;&nbsp;<small><a href="/about/">About</a></small>
+          
+              &nbsp;&nbsp;&nbsp;<small><a href="/archive/">Archive</a></small>
+          
+
+        </h3>
+      </div>
+
+      <div class="post">
+  <h1 class="post-title">Introduction ludique à la sémantique des jeux</h1>
+  <span class="post-date">22 Sep 2017</span>
+  <p>Hi! This post by Clément Jacq is about <em>game semantics</em>. It is in 
+French but you can check out the slides in English 
+<a href="https://www.irif.fr/~feuilloley/autre/slides_Jacq_seminaire_thesards.pdf">here</a>, 
+and a more in-depth survey 
+<a href="https://www.dpmms.cam.ac.uk/~martin/Research/Pub91-00/gamesemantics97scan.pdf">here</a>.</p>
+
+<p>Bonjour à tous pour ce premier vrai post en français sur semidoc. Et c’est 
+Clément Jacq (ancien responsable du séminaire) qui nous parle 
+de <em>sémantique des jeux</em>, inspiré de son exposé du printemps. Vous pouvez retrouver le 
+support de l’exposé 
+<a href="https://www.irif.fr/~feuilloley/autre/slides_Jacq_seminaire_thesards.pdf">ici</a> 
+et un texte plus approffondi 
+<a href="https://www.dpmms.cam.ac.uk/~martin/Research/Pub91-00/gamesemantics97scan.pdf">là</a>.</p>
+
+<hr />
+
+<h1 id="smantique-des-jeux-antique">Sémantique des jeux antique</h1>
+<p>La sémantique des jeux a d’abord été introduite dans les années 50 par 
+Lorenzen and Lorenz. L’objectif était de lier les notions de vérité et 
+de validité de la <a href="https://fr.wikipedia.org/wiki/Logique_classique">logique classique</a> 
+à des concepts de <a href="https://fr.wikipedia.org/wiki/Th%C3%A9orie_des_jeux">théorie des jeux</a> 
+telles que l’existence de stratégie. L’intuition est la suivante . 
+Pour chaque formule, on construit un jeu d’arêne à deux joueurs :</p>
+
+<ul>
+  <li>Les deux joueurs sont le Vérificateur et le Falsificateur.</li>
+  <li>chaque connecteur et chaque constante de la formule sont des positions 
+du jeu “contrôlées” par l’un des deux joueurs.</li>
+  <li>Lorsque le jeu est dans une position qu’un joueur contrôle, celui-ci 
+peut choisir la position suivante parmi les positions disponibles.</li>
+  <li>La partie se termine quand il n’y a pas de choix pour le joueur en 
+cours, celui-ci est alors désigné vainqueur.</li>
+  <li>La formule est vraie si et seulement si il existe une stratégie 
+gagnante pour le Vérificateur. C’est à dire que quelque soient les choix 
+du Falsificateur, le Vérificateur peut toujours orienter la partie vers 
+une position finale sous son contrôle.</li>
+</ul>
+
+<p>Voici un exemple du jeu associé à la formule de logique propositionnelle 
+$(V \cup F) \wedge \neg (F \cup V)$</p>
+
+<p><img src="assets/AntiqueGame3.png" alt="" class="center-image" height="300px" /></p>
+
+<p>Les atomes Vrai et $\cup$ sont associés au Vérificateur (en bleu) et les 
+atomes Faux et $\wedge$ au Falsificateur (en rouge). A noter le role 
+particulier de la négation qui inverse les possesseurs des positions de 
+son sous-arbre.  La formule est ici fausse car le falsificateur peut 
+jouer dans la branche de droite sans laisser au Vérificateur une 
+possibilité d’influer sur les positions.</p>
+
+<h1 id="des-stratgies-et-des-jeux">Des stratégies et des jeux</h1>
+<p>On va s’intêressé ici à une sémantique des jeux plus moderne créée à la 
+suite des travaux de <a href="https://fr.wikipedia.org/wiki/Jean-Yves_Girard">Girard</a> 
+sur la <a href="https://fr.wikipedia.org/wiki/Logique_lin%C3%A9aire">logique linéaire</a> 
+en 1987. De nombreux 
+travaux dans ce domaine sont apparus dans manière simultanée dans les 
+années 90. Citons notamment ceux d’Abramsky, de Blass, de Hyland ou de 
+Ong.  Une des particularités de la logique linéaire est qu’elle permet 
+de bien retranscrire le fonctionnement d’un programme. Pour simplifier
+ cette présentation, nous modéliserons directement par nos jeux un 
+ langage de programmation simple.</p>
+
+<p><strong>Définition</strong>
+Un jeu simple est un jeu d’arbre enraciné à deux joueurs, que l’on 
+appelera Opposant et Joueur, qui joue chacun leur tour et dont les 
+parties sont de taille finie. De plus nous ajoutons la règle que 
+l’Opposant est toujours le premier à jouer.</p>
+
+<p><img src="assets/ExampleGame2.png" alt="" class="center-image" width="400px" /></p>
+
+<p>Voici un exemple de jeu simple, les noeuds sont appelés des positions et 
+les arêtes des coups. Les positions bleues sont celles où l’Opposant 
+s’apprête à choisir un coup.</p>
+
+<p>Avec cette notion de jeu, nous avons besoin d’une notion de stratégie. 
+Par usage, on se place du point de vue de Joueur, c’est à dire qu’une 
+stratégie est un ensemble indiquant à Joueur comment jouer. Plus 
+formellement:</p>
+
+<p><strong>Définition</strong>
+Une stratégie pour Joueur d’un jeu G est un ensemble de parties de $G$ 
+clos par préfixe ( c’est à dire que la stratégie ne contient des 
+informations que sur les parties qu’on peut atteindre par celle-ci), et 
+déterministe ( à chaque position, Joueur n’a au plus qu’un seul choix 
+qui est dans la stratégie)</p>
+
+<p><img src="assets/ExampleStrat.png" alt="" class="center-image" height="400px" /></p>
+
+<p>Voici un exemple de stratégie pour le jeu montré précédemment. On peut 
+noter qu’il s’agit d’un sous-arbre du jeu en question.</p>
+
+<p>Ceci nous donne les bases pour construire nos premiers programmes .</p>
+
+<h1 id="modliser-de-simples-programmes">Modéliser de simples programmes</h1>
+<p>Le langage de programmation que nous allons modéliser par nos jeux est 
+un language fonctionnel typé (par exemple <a href="https://fr.wikipedia.org/wiki/Caml">Caml</a>).
+L’idée générale est la suivante :</p>
+
+<ul>
+  <li>Chaque type du langage correspond à un jeu. (On peut donc imaginer 
+un jeu Bool, un jeu Int,…)</li>
+  <li>Chaque programme valide de type A correspond à une stratégie du 
+jeu $A$.</li>
+</ul>
+
+<p>Une bonne intuition à noter pour la suite est que les rôles des deux 
+joueurs du jeu peuvent représenter l’Environnement et le Programme dans 
+l’interaction. C’est pour cela qu’on peut voir un programme valide comme 
+une stratégie pour Joueur, car une stratégie indique alors les 
+comportements raisonnables du Programme face à l’Environnement.</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="assets/BoolGame.png" alt="" class="center-image" height="300px" /></td>
+      <td><img src="assets/IntGame.png" alt="" class="center-image" height="300px" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Voici deux exemples deux jeux, réprésentant les types simples que sont 
+les booléens et les entiers. Une stratégie dans un de ces types 
+représente tout simplement une constante, l’unique moment ou Joueur doit 
+faire un choix étant le choix de la valeur. Par exemple, voici la 
+stratégie associée à la constante Vrai :</p>
+
+<p><img src="assets/BoolStratTrue.png" alt="" class="center-image" height="300px" /></p>
+
+<p>Maintenant que nous avons mis en place les types simples de constante, 
+mettons en place des types un peu plus complexe. Commençons par les 
+paires (et plus généralement les n-uplets). L’intuition est extrèmement 
+simple. Pour construire le type des paires de deux booléens, on prend 
+le jeu Bool en double et on peut jouer dans les deux instances au choix, 
+obtenant au final une paire de booléens.</p>
+
+<p><img src="assets/TensBoolGame1.png" alt="" class="center-image" height="300px" /></p>
+
+<p>Il est bon de noter que cela ne forme pas un jeu au sens où nous l’avons 
+défini. En effet, il n’y a pas une unique racine et l’ordre des coups 
+entre les deux jeux n’est pas clair. La définition formelle du jeu$Bool 
+\otimes Bool$ est un peu plus complexe :</p>
+
+<p><img src="assets/TensBoolGame2.png" alt="" class="center-image" height="500px" /></p>
+
+<h2 id="introduction-des-fonctions">Introduction des fonctions</h2>
+<p>Jusqu’à présent, tous les programmes que nous avons décrits sont 
+quasiment triviaux. il ne s’agissait que de constantes. En terme 
+d’interaction, ces programmes se comportent de la manière suivante : 
+Opposant/l’Environnement demande des valeurs spécifiques et Joueur/le 
+Programme les lui fournit.\</p>
+
+<p>Pour les fonctions, l’interaction inverse va aussi avoir lieur. Le 
+Programme va demander des arguments qui vont être fournis par 
+l’Environnement. Intuitivement, en se souvenant du rôle de la négation 
+en sémantique des jeux historique, le jeu de type $A\rightarrow B$ peut 
+etre vu comme $(\neg A) \otimes B$. Prenons l’exemple du jeu 
+$Bool \rightarrow Bool$ :</p>
+
+<p><img src="assets/ArrowBoolGame1.png" alt="" class="center-image" height="300px" /></p>
+
+<p>Comme indiqué par l’intuition, la partie gauche du jeu, qui correspond à 
+l’argument est inversée. Pour clarifier un peu le dessin, ajoutons en 
+pointillé les endroits ou l’on peut passer d’un jeu à l’autre tout en 
+respectant les règles d’alternance des jeux simples :</p>
+
+<p><img src="assets/ArrowBoolGame2.png" alt="" class="center-image" height="500px" /></p>
+
+<p>Ce jeu donne bien l’intuition des fonctions booléennes possibles. Une 
+fois que l’environnement a demandé le résultat, le joueur peut soit 
+répondre immédiatement ( fonction constante), soit demander un argument 
+avant de répondre.
+Voici par exemple la stratégie correspondant à la  Negation booléenne :</p>
+
+<p><img src="assets/ArrowBoolStrat5.png" alt="" class="center-image" height="500px" /></p>
+
+<p>Comme dans le cas des paires, le véritable jeu est une construction plus 
+complexe</p>
+
+<p><img src="assets/ArrowBoolGame3.png" alt="" class="center-image" height="500px" /></p>
+
+<p>En conclusion de cette partie, voici une partie de la stratégie associée 
+au OR booleen dans une représentation plus légère indiquant les coups 
+joués dans l’ordre et dans le sous-jeu dans lequel ils sont joués :</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{ccccc}
+ \mathbb{B} & \otimes & \mathbb{B} & \rightarrow & \mathbb{B} \\
+ 	&	     &	      &		       &    q     \\
+     q     &	     &	      &		       &        \\
+     F     &	     &	      &		       &         \\
+ 	&	     &	 q    &		       &         \\
+ 	&	     &	 V   &		       &         \\
+ 	&	     &	      &		       &    V     \\
+\end{array} %]]></script>
+
+<p>Il est important de noter que cette partie ne correspond qu’a une 
+version possible du programme OR. En effet, un choix a lieu lors de 
+l’implémentation d’un OR; le choix du premier argument à étudier. Il y a 
+donc plusieurs programmes pour le OR et donc plusieurs stratégies.</p>
+
+<h1 id="stratgie-de-composition-pour-la-composition-de-stratgies">Stratégie de composition pour la composition de stratégies</h1>
+<p>Puisqu’il est possible et même fort utile de composer des fonctions, 
+notre modèle doit pouvoir composer les stratégies de manière facile. 
+Cette composition se construit en parcourant toutes les paires de 
+parties des deux stratégies, (c’est à dire tous les cas possibles des 
+deux fonctions).</p>
+
+<p>Prenons une partie d’une stratégie $\sigma :A \rightarrow B$ et une 
+ partie d’une stratégie $\tau : B \rightarrow C$ telles que leurs 
+ composantes en $B$ sont égales. Intuivement, cela revient à s’intéresser 
+ au cas où l’argument de $\tau $ correspond au resultat de $\sigma$. 
+ L’idée est alors de réorganiser les deux parties en fonction de leur 
+ composante commune, avant d’effacer celle-ci. La représentation 
+ graphique montre ce processus.</p>
+
+<p><img src="assets/Composition1.png" alt="" class="center-image" height="300px" />
+<img src="assets/Composition2.png" alt="" class="center-image" height="300px" />
+<img src="assets/Composition3.png" alt="" class="center-image" height="300px" /></p>
+
+<p>Cette méthode de composition est aussi la manière dont est représentée 
+l’application d’une fonction à un argument, l’argument étant vu comme 
+une stratégie constante de son type.</p>
+
+<h1 id="pour-quelques-blocs-de-plus">Pour quelques blocs de plus</h1>
+<p>## Test
+Maintenant que nous avons les bases d’un bon langage fonctionnel, 
+ajoutons quelques structures de controle. Commençons par la plus simple, 
+le test. L’intuition pour cette fonction est très simple. Elle nécessite 
+trois arguments, dont un booleen qui représentera le test proprement 
+dit. La fonction commence par demander la valeur de ce booleen. S’il est 
+Vrai, alors elle demande puis renvoie la valeur du premier argument 
+restant. Sinon, elle demande puis renvoie le second. Voici les 
+représentations de deux parties de cette stratégie, dans le cas 
+d’arguments entiers :</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{ccccccc}
+ \mathbb{B} & \otimes & \mathbb{I}& \otimes & \mathbb{I} & \rightarrow & \mathbb{I} \\
+ 	&	     &	      &	&  &	       &    q    \\
+     q     &	     &	      &	&  &	       &         \\
+     F     &	     &	      &	&  &	       &         \\
+ 	&	     &	      &	& q  &	       &         \\
+ 	&	     &	    &	&  n' & 	       &         \\
+ 	&	     &	      &	&  &	       &    n'     \\
+\end{array} %]]></script>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{ccccccc}
+ \mathbb{B} & \otimes & \mathbb{I}& \otimes & \mathbb{I} & \rightarrow & \mathbb{I} \\
+ 	&	     &	      &	&  &	       &    q     \\
+     q     &	     &	      &	&  &	       &         \\
+     V     &	     &	      &	&  &	       &         \\
+ 	&	     &	  q    &	& &	       &         \\
+ 	&	     &	  n   &	&   & 	       &         \\
+ 	&	     &	      &	&  &	       &    n     \\
+\end{array} %]]></script>
+
+<p>A noter que puisque notre langage est typé, c’est aussi le cas du test.</p>
+
+<p>Il existe donc toute une gamme de fonctions de test, une par type.</p>
+
+<h2 id="boucle">Boucle</h2>
+<p>Pour terminer, nous nous interesserons à la modélisation des boucles. 
+Pour ce faire, nous devons introduire deux nouvelles structures, le 
+$!$ et le $?$. Pour un jeu $A$, $!A$ est le jeu basé sur $A$ dans lequel 
+l’Opposant est autorisé à revenir en arrière et à rejouer des coups 
+( forçant Joueur à y répondre). $?A$ fonctionne de la même manière, mais 
+pour Joueur.</p>
+
+<p>Dans une stratégie quelconque d’un tel jeu, Joueur, si il se retrouve 
+plusieurs fois devant le même choix (par répétition de mouvements 
+d’Opposant), peut répondre de manière différente à chaque fois. Cela ne 
+contredit pas le déterminisme, car on s’intéresse ici au déterminisme 
+dans l’arbre correspondant à $!A$ qui est beaucoup plus complexe que 
+celui de $A$. Si la $même$ position est jouée deux fois par Opposant, 
+il y aura deux noeuds distincts dans l’arbre de $!A$.</p>
+
+<p>Pour se rendre compte de ce qu’il est effectivement possible de faire, 
+voici un exemple de partie de $!(Bool \rightarrow Bool)$.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{ccccc}
+ \mathbb{B} &  \rightarrow & \mathbb{B} \\
+ 	&	    	       &    q     \\
+     q     &	    	       &         \\
+     F     &	    	       &         \\
+ 	&	    	       &    V     \\
+    V     &	    	       &        \\
+ 	&	    	       &    F    \\
+     F     &	    	       &    q    \\
+    q	&	    	       &        \\
+     F     &	    	       &        \\
+ 	&	    	       &    F     \\
+\end{array} %]]></script>
+
+<p>Dans le cas de la boucle whle, le jeu associé va utiliser à la fois $!$ 
+sur la partie gauche de la fonction et $?$ sur la partie droite. C’est 
+donc joueur qui sera au contrôle des retours en arrière.</p>
+
+<p>La fonction sera de type <script type="math/tex">! \mathbb{B}  \rightarrow ? A</script> et 
+fonctionne de la manière suivante. Joueur commence par demander la 
+valeur du test booleen, s’il est vrai, les calculs reprennent dans $A$ 
+jusqu’à ce que joueur considère qu’il doit demander de nouveau un test, 
+ce qui le fera recommencer les calculs si ce nouveau test est vrai. Et 
+ainsi de suite jusqu’à ce qu’un test retourne faux. En ce cas, Joueur 
+conclue la partie en renvoyant le résultat.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{array}{ccccc}
+ !\mathbb{B} &  \rightarrow & ? A \\
+ 	&	    	       &    q     \\
+     q     &	    	       &         \\
+     V     &	    	       &         \\
+ 	&	  	       &   ....       \\
+    q     &	    	       &         \\
+    V	&	    	       &        \\
+          &	    	       &    ...    \\
+    q	&	    	       &         \\
+     F     &	    	       &         \\
+ 	&	    	       &    res     \\
+\end{array} %]]></script>
+
+<h1 id="conclusion">Conclusion</h1>
+<p>Cette présentation n’a abordé que quelques aspects de base de la 
+modélisation des langages de programmation en sémantique des jeux et ne 
+s’est appuyé que sur un modèle particulier. Bien d’autres modèles de 
+jeux existent pouvant modéliser bien d’autres comportements, tels que 
+le non-déterminisme, la concurrence, les Effets, les Références ou les 
+Langages Objets. Pour ce dernier exemple, un langage de programmation 
+orienté Objet, Eriskay a été developpé par Jon Longley en se basant sur 
+les concepts de la sémantique des jeux.</p>
+
+</div>
+
+<div class="related">
+  <h2>Related Posts</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/lagarde-catastrophe">
+            One-bit catastrophe
+            <small>11 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rotondo-sturmian">
+            Sturmian words
+            <small>07 Sep 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/rotondo-fractions">
+            Combinatorics of continued fractions
+            <small>31 Aug 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+
+
+      
+
+
+
+      <div class="footer">
+        <p>
+          &copy; 2017. All rights reserved.
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

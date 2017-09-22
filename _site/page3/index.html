@@ -86,52 +86,144 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/reiter-dga">
-        Logic and distributed automata
+      <a href="/rotondo-sturmian">
+        Sturmian words
       </a>
     </h1>
 
-    <span class="post-date">12 May 2017</span>
+    <span class="post-date">07 Sep 2017</span>
 
-    <p>Hi everyone,</p>
-
-<p>today I’d like to give a glimpse of the PhD seminar <a href="https://www.irif.fr/users/reiterf/index">Fabian Reiter</a> gave fairly recently. It is about the paper <em>Asynchronous Distributed Automata: A Characterization of the Modal Mu-Fragment</em> (<a href="https://arxiv.org/abs/1611.08554">arxiv version</a>). 
-Between the seminar and today, the paper has been accepted at <a href="http://icalp17.mimuw.edu.pl/">ICALP 2017</a>, so if you are at Warsaw in mid-July, you can hear about this directly from him! For any comment on this post: feuilloley [at] irif.fr.</p>
-
-<p>Actually I will not talk about this paper in particular, as I am far from being an expert, but I would like to give a feeling of the topic, from the point of view of an outsider.</p>
-
-<p>Automata and logic are usually taught in different courses, and may be thought as unrelated subjects by those who are not working in these domains. It is far from being the case, and there are strong connexions between the two topics. One area of TCS for which these connexions are essential is <a href="https://en.wikipedia.org/wiki/Model_checking">model checking</a>. In this domain, one would like to check if some structure satisfies some property, expressed as a logical formula. In this case, a common technique is to translate the formula into an automaton. Then one can, for example, compute some product of the structure with the automaton, and the checking boils down to a reachability problem.</p>
-
-<p>To give an intuition of the logic we are talking about, let’s consider the case of words over the alphabet {$a,b$}. It is easier to consider a word as a directed path, for example the word $aabab$ is represented by the following path.</p>
-
-<p><img src="assets/mot2.svg" alt="" class="center-image" /></p>
-
-<p>A property one would like to express is, for example, ‘‘there are no two consecutive $b$’’ in the word. To do so the logic has three predicates, $\rightarrow$, $a()$ and $b()$. Given two variables $x$ and $y$ that indicate positions in the path, $x \rightarrow y$ means that $y$ is the position just after $x$ in the word. If the letter at position $x$ is $a$ (resp. $b$), then $a(x)$ (resp. $b(x)$) holds. Then the ‘‘not-2-b’’ property can be expressed as:</p>
-
-<script type="math/tex; mode=display">\not \exists x,y: b(x) \wedge b(y) \wedge x \rightarrow y</script>
-
-<p>This a basically first-order logic, with the predicates suited to talk about words. Note that quantifiers “talk about” single nodes. If in addition we add quantification over sets of nodes, we get <a href="https://en.wikipedia.org/wiki/Monadic_second-order_logic">monadic second-order (MSO) logic</a> on words. And here comes the magic: the properties of words that are expressible with MSO are precisely the ones that corresponds to regular languages, that is languages recognized by finite automata.</p>
-
-<p>This all goes back to the 60s, and then a lot of work has been done to create bridges between special kinds of logic and types of languages. An important example is the work on trees with <a href="https://en.wikipedia.org/wiki/Tree_automaton">tree automata</a>. What Fabian and a few others are interested in, is the case of graphs.</p>
-
-<p>There are several kinds of logic that can be considered on graphs, and I will not dive into it. Instead I will focus on the other side: the automaton. It is not clear what adaptation of a finite automaton is the most relevant for graphs, and several such tool have been proposed. The approach of Fabian and others is to consider <em>distributed graph automaton</em>. The word <em>distributed</em> comes from the fact that instead of having one machine considering the parts of the graph in some order, as one would do to generalize results on words and trees, here each node of the graph is equipped with an automaton. These automata take steps, and at each step they take into account their state, and the states of their neighbours, and update their own state.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
-
-<p>The information available from the neighbours, the synchrony or not of the automata, the termination criterion, and the non-determinism allowed have a great influence on the corresponding logic. A previous paper of Fabian<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> described a model of synchronized distributed graph automata that corresponds to the MSO logic on graphs. The current paper considers asynchronous automata, and links it with a fragment of the <a href="https://en.wikipedia.org/wiki/Modal_%CE%BC-calculus">modal $\mu$-calculus</a>.</p>
-
-<p>For more on the topic, I let you read Fabian’s papers!</p>
+    <p>Hi, this is the second post by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a>.
+This one is about sturmian words, and sometimes refers to the first post about 
+continued fractions, that you can found <a href="https://semidoc.github.io/rotondo-fractions">here</a>.</p>
 
 <hr />
 
-<div class="footnotes">
-  <ol>
-    <li id="fn:1">
-      <p>For those of you who have met the LOCAL model at some point, this must sound very familiar as it is basically the same state of mind as the locality-oriented distributed computing.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:2">
-      <p>The paper <em>Distributed Graph Automata</em> (<a href="https://arxiv.org/abs/1408.3030">arxiv version</a>). The slides are also available <a href="https://www.irif.fr/_media/users/reiterf/lics2015.pdf">here</a>.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
+<p>Sturmian words are infinite words ${\bf{u}}=u_0u_1\ldots\in \mathcal{A}^\infty$ 
+(sequences of symbols $u_i$ from an alphabet $\mathcal{A}$) that have numerous 
+characterizations, as the coding of digital lines, as rotation sequences, minimal 
+complexity sequences…</p>
+
+<h3 id="a-first-definition">A first definition</h3>
+<p><em>Definition</em> [Sturmian word]
+Consider $\alpha,\beta \in [0,1)$ with $\alpha$ irrational. We define infinite words
+<script type="math/tex">\left(\underline{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
+and 
+<script type="math/tex">\left(\bar{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
+by</p>
+
+<script type="math/tex; mode=display">\underline{s}_{\alpha,\beta}(n)= \left\lfloor (n+1)\,\alpha +\beta \right\rfloor - \left\lfloor n\,\alpha +\beta \right\rfloor\, ,</script>
+
+<p>and</p>
+
+<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)= \left\lceil (n+1)\,\alpha +\beta \right\rceil - \left\lceil n\,\alpha +\beta \right\rceil\,,</script>
+
+<p>for each $n\in \mathbb{N}$. A binary word ${\bf{u}} \in {0,1}^\infty$ is 
+Sturmian if and only if it is of the form 
+<script type="math/tex">u_n = \underline{s}_{\alpha,\beta}(n),\,\forall n</script>,
+or 
+<script type="math/tex">u_n = \bar{s}_{\alpha,\beta}(n),\,\forall n</script> 
+for some $\alpha,\beta$ as above. The irrational number $\alpha$ is called the 
+<em>slope</em> of the word $\bf{u}$.</p>
+
+<p><strong>Remark</strong> Observe that if ${\bf{u}}=\underline{s}_{\alpha,\beta}$</p>
+
+<script type="math/tex; mode=display">\lim_{n\to\infty} \frac{|u_0\ldots u_{n-1}|_1}{n} = \lim_{n\to\infty} \frac{1}{n}\,\sum_{i=0}^{n-1}u_i = \lim_{n\to\infty} \frac{\left\lfloor n\,\alpha +\beta \right\rfloor-\left\lfloor \beta \right\rfloor}{n} = \alpha\,,</script>
+
+<p>where 
+<script type="math/tex">|\cdot|_1</script>
+denotes the number of ones in the word. Thus $\alpha$ represents the <em>frequency</em> 
+of ones. Clearly the same result is true when 
+<script type="math/tex">{\bf{u}}=\bar{s}_{\alpha,\beta}</script> 
+by the same argument.</p>
+
+<h3 id="sturmian-words-as-circle-rotations">Sturmian words as circle rotations</h3>
+<p>The above definition can be seen more intuitively as the binary coding of the 
+trajectory of a point on a circle of circumference $1$. This circle is realized 
+as the interval $[0,1]$ identifying $0$ and $1$, that is, taking fractional 
+parts $x\mapsto {x}$ or, equivalently, modulo one $x\mapsto x \bmod 1$.</p>
+
+<p>Indeed, observe that</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\bar{s}_{\alpha,\beta}(n)=   1 \Longleftrightarrow n\alpha + \beta \leq m < (n+1)\alpha + \beta %]]></script>
+
+<p>for some integer $m$. By taking $\bmod 1$ it is immediately seen that this means 
+that</p>
+
+<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 1 \Longleftrightarrow \{n\alpha + \beta\} \in I_1  := [1-\alpha,1)\,,</script>
+
+<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 0 \Longleftrightarrow \{n\alpha + \beta\} \in I_0  := [0,1-\alpha)\,.</script>
+
+<p>A similar definition can be done for 
+<script type="math/tex">\underline{s}_{\alpha,\beta}(n)</script> 
+by reversing the close-open in the border of the intervals. In terms of the 
+circle, this reads: start from a point 
+<script type="math/tex">y_0=\beta</script> 
+on the circle and rotate an arc-length of $\alpha$ on each discrete time 
+<script type="math/tex">y_{k+1} = (\alpha + y_k)\bmod 1</script>, 
+then code the resulting points by $1$ when they belong to 
+<script type="math/tex">I_1</script> 
+and 
+$0$ when they belong to 
+<script type="math/tex">I_0</script>.</p>
+
+<p><img src="assets/rotondo_plot4.png" alt="" class="center-image" height="300px" /></p>
+
+<h3 id="factors-of-sturmian-words">Factors of Sturmian words.</h3>
+
+<p>The finite patterns appearing within our infinite words ${\bf{u}}$ are a 
+fundamental object of study in the field of Combinatorics of Words. We say that 
+$w\in {0,1}^m$ is a <em>factor</em> of ${\bf{u}}$ if, for some index $i\geq 0$, we have</p>
+
+<script type="math/tex; mode=display">w_1\ldots w_m = u_i \ldots u_{i+m-1}\,,</script>
+
+<p>and say that $m$ is its <em>length</em>.</p>
+
+<p>We have seen that digits in a Sturmian word ${\bf{u}}$ correspond to intervals 
+$I_0$ and $I_1$, this process can be iterated to explain what happens with 
+larger factors $w\in {0,1}^m$. The result being that factors are in 
+correspondance with the circle intervals delimited by</p>
+
+<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+
+<p>modulo $1$.</p>
+
+<p><img src="assets/rotondo_plot3.png" alt="" class="center-image" height="300px" /></p>
+
+<p><strong>Remark</strong> [Complexity of a Sturmian word]
+Since $\alpha$ is irrational, the points</p>
+
+<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+
+<p>modulo $1$ are all distinct.</p>
+
+<p>Thus the the above points delimit $m+1$ circle intervals: we have $m+1$ factors 
+$w\in {0,1}^m$ of length $m$ appearing in $\bf{u}$. This is the smallest 
+possible number of factors of length $m$ in the sense that, if we had at most 
+$m$ factors of length $m$ for some $m$, our words would be eventually periodic.</p>
+
+<p>The intervals-factor correspondence is independent from $\beta$. In particular, 
+the set of factors of length $m$ appearing within ${\bf{u}}$ depends only on the 
+choice of $\alpha$. Furthermore, the sequence ${n\alpha}$ is <em>equidistributed</em> 
+(also known as <a href="https://en.wikipedia.org/wiki/Equidistributed_sequence">uniform distribution $\bmod. 1$</a>) 
+meaning that the proportion of the time it spends on an interval $I$ tends to 
+its length 
+<script type="math/tex">\left| I \right|</script>. 
+Thus the initial point $y_0=\beta$ is not really important for our purposes.</p>
+
+<p>The smallest (least frequent) interval delimited by</p>
+
+<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+
+<p>in fact corresponds to the one given by $0$ and 
+<script type="math/tex">\{-q_k\alpha\}</script>, 
+where 
+<script type="math/tex">% <![CDATA[
+q_k(\alpha)\leq m < q_{k+1}(\alpha) %]]></script>, 
+and has length 
+<script type="math/tex">\Gamma(\alpha,m) := |q_k \alpha - p_k|</script>, 
+by the Theorem of the <em>Best approximation</em> section in the previous post.</p>
 
   </div>
   

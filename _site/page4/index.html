@@ -86,88 +86,168 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/boczkowski-3-bits">
-        Fast self-stabilizing bit dissemination
+      <a href="/rotondo-fractions">
+        Combinatorics of continued fractions
       </a>
     </h1>
 
-    <span class="post-date">09 Mar 2017</span>
+    <span class="post-date">31 Aug 2017</span>
 
-    <h3 id="introduction">Introduction</h3>
-<p>(The introduction is in French and English, the text itself is in English)</p>
+    <p>Hello, the first post of this new academic year is by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a> 
+who gave a talk at the seminar a few months ago. As there is more to say about 
+the subject, this post will probably have a follow-up later.</p>
 
-<p>fr : Bonjour, et bienvenue pour le premier vrai post de ce blog. Aujourd’hui <a href="https://www.irif.fr/~lboczko/">Lucas Boczkowski</a> résume (en anglais) l’exposé qu’il a donné au séminaire des doctorants le 22 février 2017 à propos de l’article <a href="https://arxiv.org/abs/1602.04419"><em>Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits</em></a>, présenté avec ses co-auteurs à SODA 2017. Si vous avez des commentaires n’hésitez pas à les envoyer, à Lucas ou bien à moi (respectivement lboczko et feuilloley at irif.fr).</p>
+<hr />
 
-<p>en: Hi everyone, and welcome to the first real post of this blog. The following text is a summary (in English) by <a href="https://www.irif.fr/~lboczko/">Lucas Boczkowski</a> of the talk he gave at the PhD seminar on the 22nd of February 2017. It is about the paper he and his coauthors presented at SODA this year: <a href="https://arxiv.org/abs/1602.04419"><em>Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits</em></a>. For any comment, send an email to Lucas or to me (respectively lboczko and feuilloley at irif.fr).</p>
+<p>In this post we discuss 
+<strong><a href="https://en.wikipedia.org/wiki/Continued_fraction">continued fraction expansions</a></strong>, 
+and their statistics.</p>
 
-<h1 id="setup-and-result">Setup and result</h1>
-<p>Consider the following scenario.
-A school of $n$ fish has to decide whether to keep moving forward or change direction. We model an answer to this question by a binary bit $b \in {0,1}$.
-An informed source, perhaps a fish who saw a predator, is convinced on what the correct choice of $b$ should be and she wishes to spread  it to her peers. On each round every fish looks at $O(1)$ randomly chosen other fish.
-If they see the source or someone who knows $b$ they learn it themselves.</p>
+<h1 id="introduction">Introduction</h1>
+<p>Continued fractions are rather ubiquitous, they pop up in various contexts such as: 
+the <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean Algorithm</a>, 
+<a href="https://en.wikipedia.org/wiki/Pell%27s_equation">Pell’s equation</a> (see 
+<a href="http://www-bcf.usc.edu/~lototsky/PiMuEp/Pell-IMO.pdf">here</a> and 
+<a href="http://math.stanford.edu/~jbooher/expos/continued_fractions.pdf">here</a>) and 
+<a href="https://en.wikipedia.org/wiki/Diophantine_approximation">Diophantine approximation</a>, the approximation of reals by rationals.</p>
 
-<p>We will be interested in information spreading of the kind we just described.
-Let us denote  by <em>SIMPLE</em> this simple example. It can be shown that <em>SIMPLE</em> only needs $O(\log n)$ rounds to finish with high probability (w.h.p). 
-In this work, we seek to understand what are the harshest conditions under which such efficient spreading of information can be implemented.
-Our result is a generalization to a more general context that still runs in $\tilde{O}(\log n)$ rounds.</p>
+<h3 id="relation-to-the-euclidean-algorithm-and-definitions">Relation to the Euclidean algorithm and definitions.</h3>
 
-<p>To begin with, it should be pointed out that <em>SIMPLE</em> already has some nice features. Agents interact <em>stochastically</em> and <em>anonymously</em>. When they interact they only need to exchange one bit which is $b$. In fact, we should be more precise and say they actually exchange two bits one saying if they are <em>knowledgeable</em> and the other possibly giving the value $b$.</p>
+<p>Let us briefly see their relation to the Euclidean algorithm as an introduction.</p>
 
-<p>On top of this, we add a requirement known as <em>self-stabilization</em>. This means that no matter what the agents inner state is at the beginning of the protocol, they should after some (hopefully short) time get to know the source bit $b$. Even if initially most fish wanted to go forward, if the informed source saw a predator, she will manage to influence the whole school.
-The self-stabilizing requirement  can be a daunting one. Indeed, the more complex a protocol is, the more states the agents are allowed to have, the more cases a proof of self-stabilization needs to handle.
-Another view on self-stabilization is that if the source for some reason, in the middle of the execution of the protocol changes her mind from $b$ to $1-b$ then soon after that, the mechanism allows everyone to agree on $1-b$.</p>
+<p>The Euclidean algorithm allows us to calculate the greatest common divisor ($\gcd$) of 
+a pair of positive integers $(x,y)$, by performing successive divisions. Supposing
+$x\geq y$, the algorithm proceeds by applying $(x,y)\mapsto (y,x\bmod y)$ until the
+smallest entry $y$ is $0$ and the result is then $x$. Its correctness is seen from the fact
+that $x\bmod y = x - y \, \lfloor x/y\rfloor$, and therefore $\gcd(x,y)=\gcd(y,x\bmod y)$.</p>
 
-<p>Regarding communication, we allow the agents to have a big memory, but we ask that messages exchanged on each round by each agent are of small size. 
-In other words, 
-even if agents are able to do sophisticated computations privately, only few bits are exchanged on each interaction.</p>
+<p>Let us get to the continued fractions. Given a pair of positive integers $(x,y)$
+with $x\geq y$ we may write</p>
 
-<p>Let us now go back to <em>SIMPLE</em> and try and understand why it does not meet our demands. 
-First we need to be slightly more precise and define what happens when two knowledgeable agents with different opinions meet. For concreteness let us say that in this case they flip opinions, except for the source of course. In the first paragraph, such a situation didn’t occur because we implicitly started from a very favourable configuration where nobody was in a ``knowledgeable state”, i.e., thought they had already seen the source.
-But in fact, if we start with everybody being knowledgeable, and being convinced of the wrong value of $b$, convergence will be very slow. Other similar simple rules share this burden of being slow, or they are demanding in terms of message size.</p>
+<script type="math/tex; mode=display">\frac{y}{x} = \frac{1}{x/y} = \cfrac{1}{\lfloor x/y \rfloor + \cfrac{x\bmod y}{y} }\,,</script>
 
-<p>Our main result is the following.</p>
+<p>and then continue the procedure with $\cfrac{x\bmod y}{y}$ provided that $x\bmod y \neq 0$. This is
+exactly the Euclidean algorithm, and observe that the quotients $\lfloor x/y\rfloor$
+that we discard in the algorithm here appear as coefficients.</p>
 
-<p><strong>Theorem</strong>
- There exists a  protocol, which solves the <em>broadcast</em> problem in a self-stabilizing manner in $\tilde{O}(\log n)$ rounds w.h.p using $3$-bit messages.</p>
+<p>Thus the Euclidean produces a continued fraction expansion</p>
 
-<p>Note these $3$ bits in principle allow to encode information such as <em>I am the source</em> but it is not enough to say <em>I saw the source $k$ rounds ago</em> for more than $\Omega(1)$ distinct values of $k$.</p>
+<script type="math/tex; mode=display">\frac{y}{x} = \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}\,,</script>
 
-<h1 id="sketch-of-proof-of-the-theorem">Sketch of proof of the Theorem</h1>
+<p>where the positive integers $m_1,\ldots,m_k$ are the successive quotients in the algorithm.</p>
 
-<p>The proof consists of three steps.</p>
+<p>More generally, we call any such expansion a continued fraction expansion and even given infinitely many coefficients $m_1,\ldots,m_k,\ldots$ we define</p>
+
+<script type="math/tex; mode=display">\cfrac{1}{m_1 + \cfrac{1}{m_2+\ddots} } = \lim_{k\to\infty}\cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}\,,</script>
+
+<p>whose convergence we do not prove here, but you can find a proof in Kinchin’s book 
+(see the reference at the end of the post).</p>
+
+<p>Rational numbers have exactly two expansions:</p>
+
+<script type="math/tex; mode=display">\frac{y}{x} = \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}= \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{(m_k-1) + \cfrac{1}{1}} }}\,,</script>
+
+<p>while irrational numbers $\alpha\in (0,1)$ have a unique (infinite) expansion, 
+which can be found applying the same Euclidean algorithm (!) to the pair $(1/\alpha,1)$.</p>
+
+<p>Some remarkable examples  (for a proof see <a href="https://arxiv.org/abs/math/0601660">this</a> 
+arXiv note or <a href="https://topologicalmusings.wordpress.com/2008/08/04/continued-fraction-for-e/">this</a>)</p>
+
+<script type="math/tex; mode=display">\frac{\sqrt{5}-1}{2} = \cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{\ddots}}}\,,</script>
+
+<script type="math/tex; mode=display">\qquad e-2 = \cfrac{1}{1+\cfrac{1}{2+\cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{4+\cfrac{1}{1+\ddots}}}}}}\,,</script>
+
+<p>the last one being made up from the concatenation of the trios $1,2n,1$ for $n=1,2,\ldots$.</p>
+
+<h3 id="notations">Notations</h3>
+<p>Given an irrational number $\alpha \in (0,1)$ with continued fraction expansion</p>
+
+<script type="math/tex; mode=display">\alpha  = \cfrac{1}{m_1 + \cfrac{1}{m_2+\ddots} }\,,</script>
+
+<p>the coefficients $m_1,m_2,\ldots \geq 1$ are called <em>partial quotients</em> or <em>digits</em>, while the partial expansions</p>
+
+<script type="math/tex; mode=display">\frac{p_k(\alpha)}{q_k(\alpha)} := \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k}}}\,,</script>
+
+<p>with 
+<script type="math/tex">\gcd(p_k(\alpha),q_k(\alpha)) = 1</script>, 
+are known as <em>convergents</em>. By convention we define $p_0=0$ and $q_0=1$ for every irrational $\alpha\in (0,1)$. The denominators $(q_k(\alpha))_{k\in \mathbb{N}}$ of the convergents are known as the <em>continuants</em> of $\alpha$.</p>
+
+<p>Of course, all of these definition can be extended to rational numbers by considering only the meaningful part ($k\leq$ length of the expansion). See <a href="http://stackoverflow.com/questions/5440688/the-guess-the-number-game-for-arbitrary-rational-numbers">here</a> for a particularly interesting application to a game of guessing a rational number!</p>
+
+<h3 id="number-of-steps-in-the-euclidean-algorithm">Number of steps in the Euclidean algorithm.</h3>
+
+<p>The depth of the continued fraction expansion of a rational number $x/y$ is exactly the number of steps $\ell:=\ell(x,y)$ performed by the Euclidean algorithm on $(x,y)$. To bound $\ell$, we remark that the denominators satisfy the following recurrence relation</p>
+
+<script type="math/tex; mode=display">q_{k+1} = m_{k+1}q_k + q_{k-1}\,,\quad q_0=1,q_{-1}=0\,.</script>
+
+<p>This is proved by induction, along with the analogous (up to the initial condition) recurrence relation for the numerators $p_k$. 
+It is evident from the recurrence relation that $q_k$ is strictly increasing, furthermore</p>
+
+<script type="math/tex; mode=display">q_{k+1} = m_{k+1}q_k + q_{k-1} \geq 2 q_{k-1}\,,</script>
+
+<p>so that $q_k \geq 2^{\frac{k-1}{2}}$.</p>
+
+<p>Picking $k=\ell(x,y)$, the previous inequality reads $y\geq 2^{\frac{\ell-1}{2}}$ so that</p>
+
+<script type="math/tex; mode=display">\ell(x,y) \leq 1 + 2 \log_2 y\,.</script>
+
+<h1 id="classical-continued-fraction-statistics">Classical Continued Fraction Statistics</h1>
+<p>We have just seen that convergents $q_k(\alpha)$ grow at least exponentially</p>
+
+<script type="math/tex; mode=display">2^{\frac{k-1}{2}} \leq q_k(\alpha)\,,</script>
+
+<p>we briefly mention that much more precise results are known when we allow $\alpha$ to be almost any irrational in $(0,1)$.</p>
+
+<p><strong>Theorem</strong> [Lévy]
+For almost every $\alpha\in (0,1)$ (w.r.t the Lebesgue -uniform- measure) we have</p>
+
+<script type="math/tex; mode=display">\lim_{k\to\infty}\frac{1}{k}\log q_k(\alpha) = \frac{\pi^2}{12 \log 2}\,.</script>
+
+<p>This result is proved by using Ergodic Theory. Continued fractions are naturally associated to the
+so called Euclidean Dynamical System arising from the Gauss map</p>
+
+<script type="math/tex; mode=display">T \colon (0,1)\to (0,1) \,,\qquad x\mapsto \left\{\tfrac{1}{x}\right\}\,,</script>
+
+<p>where ${x}:=x-\lfloor x\rfloor$ is the <em>fractional part</em> of $x$.</p>
+
+<p>Interestingly, it is also true that the frequency of $m_j=k$ tends to
+$\log_2\left(1+\frac{1}{k(k+2)}\right)$ almost surely as we take more and more quotients.
+For more on this read the notes 
+<a href="http://www.maths.manchester.ac.uk/~cwalkden/ergodic-theory/ergodic_theory.pdf">here</a> 
+or in Khinchin’s book.</p>
+
+<h1 id="best-approximations">Best approximations</h1>
+<p>Convergents are particularly important due to the fact that they provide the ``best’’ approximations to numbers in the following sense</p>
+
+<p><em>Definition</em> [Best approximations of the second kind]
+Let $\alpha \in (0,1)$ be a real number. Then the fraction $\tfrac{p}{q}$ with $q&gt;0$ is said to be a best approximation of the second kind for $\alpha$ if and only if</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+|q \alpha - p| < |q^\prime \alpha - p^\prime| %]]></script>
+
+<p>for any other fraction $\tfrac{p^\prime}{q^\prime}$ with $0&lt;
+q \prime \leq q$.</p>
+
+<p>Remark that 
+<script type="math/tex">|q \alpha - p| = \frac{| \alpha - p / q|}{1/q}</script> so that this ``objective function’’ can be thought of as the error of approximating $\alpha$ by $p/q$, relative to the size of the denominator $q$. We are ready to state the relation with continued fractions</p>
+
+<p><strong>Theorem</strong> [See Khinchin 97]
+Best approximations of the second kind are necessarily convergents, and conversely, every convergent is a best approximation of the second kind, with exception of the trivial case of</p>
+
+<script type="math/tex; mode=display">\alpha = \frac{1}{2},\qquad \frac{p_0}{q_0} = 0\,.</script>
+
+<p>Concretely, this means that if we may choose from the set of fractions whose denominators are at most $n$, the best approximation is given by $\frac{p_k(\alpha)}{q_k(\alpha)}$ with $k:= k(\alpha,n)$ is the only index $k$ for which $q_k(\alpha)\leq n &lt; q_{k+1}(\alpha)$.</p>
+
+<p>We remark that it is the continuants under the condition $q_k(\alpha)\leq n &lt; q_{k+1}(\alpha)$ and $n\to \infty$ that will eventually interest us, rather than the classical fixed depth $k\to \infty$.</p>
+
+<h1 id="references">References.</h1>
 
 <ul>
-  <li>We first show that the problem can be reduced to that of agreeing on a counter modulo $O(\log n)$.</li>
-  <li>We then build such a counter  in $\tilde{O}(\log n)$ rounds using large messages.</li>
-  <li>A message reduction tool is invoked to reduce the message size down to $O(1)$, paying only a small $o(\log n)$ multiplicative overhead in the number of rounds.</li>
+  <li>Aleksandr Ya. Khinchin. Continued Fractions.  <em>New York: Dover Publications</em>, 1997.</li>
+  <li>M. Einsiedler and T. Ward. Ergodic Theory: with a view towards Number Theory. <em>Graduate Texts
+in Mathematics. Springer, 2010.</em></li>
+  <li>N. P. Fogg , V. Berthé, S. Ferenczi , C. Mauduit and Anne Siegel: Substitutions in Dynamics, Arithmetics, and Combinatorics <em>Lecture Notes in Mathematics, Vol. 1794.</em></li>
 </ul>
-
-<h2 id="step-1">Step $(1)$</h2>
-
-<p>Under the assumption that all agents share the same clock modulo $T = C \log n$ for a big constant $C$, the following trick shows how to obtain convergence  in $O(\log n)$ time. Each phase of length $T$ is subdivided into two subphases of length $T/2$, the <em>morning</em> and the <em>evening</em>. In the morning, non-source agents are <em>sensitive</em> to opinion $0$. This means that whenever they see another agent displaying $0$, they turn their displayed bit to $0$, but if they see $1$ they ignore it. Then, in the evening, they do the opposite, namely they switch the displayed bit to $1$ as soon as they see a $1$.</p>
-
-<p>Consider the phase (i.e., morning+evening) starting after initialization.  If $b=0$ after morning is over at time $T/2$, every displayed bit is $0$ w.h.p., and remains there forever. Otherwise, if $b=1$, after the first evening, $[T/2+1, T]$, all displayed bits are set to $1$ w.h.p., and remain $1$ forever. Note that a common time notion is required to achieve correctness, and this cannot be assumed in a self-stabilizing framework as the common clock is a part of the memory which could be initially corrupted.</p>
-
-<h2 id="step-2">Step $(2)$</h2>
-<p>Step $(2)$ is based on the protocol <em>MAJORITY</em> from the paper <em><a href="http://vesta.informatik.rwth-aachen.de/opus/volltexte/2010/2429/pdf/09371.ScheidelerChristian.Paper.2429.pdf">Stabilizing consensus with the power of two choices</a></em>. To design a clock modulo $T$ each agent displays $\log T$ bits corresponding to the binary expansion of a number $&lt; T$. On each round, each agent samples the counters of $2$ other agents uniformly at random. Then <em>3-MAJORITY</em> is applied bitwise and the counters are also incremented on every round.</p>
-
-<p>At this stage, convergence of the counters may seem counter-intuitive. Each bit of each counter is affected both by the operation of incrementing and also by the majority rule. It turns out however that this solution works in $O(\log T \log n)$ rounds provided $T$ is a power of $2$. However it uses $\log T$ bits messages and later we want $T$ to be of order $\log  n » 1$.</p>
-
-<h2 id="step-3">Step $(3)$</h2>
-
-<p>In this part, our main lemma is the following.</p>
-
-<p><strong>Informal lemma</strong>
-In our context, any protocol  $\Pi$ using $\ell$ bits messages can be emulated by another one using $\lceil \log \ell \rceil +1$ bits messages, at the cost of only a small overhead in the running time.</p>
-
-<p><em>Informal proof</em>
-We know from the previous step how to design a counter modulo $\ell$ using $\lceil \log \ell \rceil $ bits. This can be interpreted as an index saying which bit of the $\Pi$-message  to display. Looping over indices of $\Pi$ allows, within $\ell$ rounds to emulate \emph{one} round of $\Pi$.</p>
-
-<p>The lemma can be applied to any protocol, and in particular… to the clock synchronization protocol we saw in Step $2$. This reduces the message size from $\log T$ to $\lceil \log \log T\rceil +1$. We can keep iterating this and
-we are able to reduce the message size until reaching the fixed point of $T \mapsto \lceil \log T \rceil + 1$ which happens to be $3$.</p>
-
-<h1 id="open-questions">Open questions</h1>
-<p>Does there exist a $1$ bit efficient solution to the <em>broadcast</em> problem ? A solution that does not build a clock would be of special interest to us.</p>
 
   </div>
   

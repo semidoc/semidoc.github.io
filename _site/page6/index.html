@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        jax: ["input/TeX","output/HTML-CSS"],
+        extensions: ["tex2jax.js"],
+        tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+        displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+        processEscapes: true
+        },
+     "HTML-CSS": {
+      styles: {
+        ".MathJax .mo, .MathJax .mi": {}
+      }
+    }
+    });
+    </script>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+    });
+
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    </script>
+
+<script type="text/javascript"
+        src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <title>
+    
+      Semidoc &middot; Blog
+    
+  </title>
+
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/theorems.css">
+
+  <!-- Icons -->
+  <!--<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-144-precomposed.png">
+                                 <link rel="shortcut icon" href="/public/favicon.ico">-->
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <div class="container content">
+      <div class="masthead">
+        <h3 class="masthead-title">
+          <a href="/" title="Home">Semidoc</a>
+
+          
+              &nbsp;&nbsp;&nbsp;<small><a href="/about/">About</a></small>
+          
+              &nbsp;&nbsp;&nbsp;<small><a href="/archive/">Archive</a></small>
+          
+
+        </h3>
+      </div>
+
+      <div class="posts">
+  
+  <div class="post">
+    <h1 class="post-title">
+      <a href="/zijlstra-lwe">
+        Learning with Errors- based Cryptography
+      </a>
+    </h1>
+
+    <span class="post-date">23 Jun 2017</span>
+
+    <p>Hi! The current blog post has been written by <strong>Timo Zijlstra</strong>, who is doing an internship at the IRIF, and gave a talk at the seminar a few weeks ago.</p>
+
+<hr />
+
+<p>Cryptographic primitives such as encryption and signature schemes rely on computationally hard problems. A good scheme is constructed in such a way that any method that breaks the scheme automatically yields an algorithm that solves the underlying hard problem. The <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA encryption scheme</a>, for example, relies on the fact that there is no known algorithm that <a href="https://en.wikipedia.org/wiki/Integer_factorization">efficiently factorizes large integers</a>. If someone would be able to break RSA, then this would imply a method to factorize large integers. This would be a major breakthrough in mathematics, since the factorization problem has been intensively studied. Therefore, it is safe to assume that RSA cannot be broken. Most of implemented cryptography relies on the hardness of the factorization problem (RSA) or the <a href="https://en.wikipedia.org/wiki/Discrete_logarithm">discrete logarithm problem</a> (<a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic Curve Cryptography</a>). However, <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor’s quantum algorithm</a> can be applied to both of these problems, making the cryptosystems unsafe against quantum adversaries.</p>
+
+<p>This is the reason why we need to find mathematical problems that are computationally hard even for quantum computers. The best candidates for use in post-quantum cryptography are <a href="https://en.wikipedia.org/wiki/Lattice_problem">lattice problems</a> such as the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Shortest_vector_problem_.28SVP.29">Shortest Vector Problem</a> (SVP) and the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Closest_vector_problem_.28CVP.29">Closest Vector Problem</a> (CVP). There is currently no known (quantum) algorithm that solves these problems efficiently.</p>
+
+<p>One lattice problem that is particularly adaptable for cryptographic applications is the <strong>Learning With Errors</strong> (LWE) problem. It consists of solving a system of approximate linear equations over the integers modulo some prime $q$. Let 
+<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
+be a secret vector and 
+<script type="math/tex">\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}</script> 
+vectors taken from the uniformly random distribution over 
+<script type="math/tex">\mathbb{Z}_q^n</script>
+. Given the system of approximate equations:</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+\textbf{a}^{(1)} \cdot \textbf{s} &\approx b_1 \\
+&\vdots \\
+\textbf{a}^{(m)} \cdot \textbf{s} &\approx b_m,
+\end{align*} %]]></script>
+
+<p>where the approximation is ‘close’ in a sense that will be made clear later, the LWE-problem is to find 
+<script type="math/tex">\textbf{s}</script>. 
+Note that if the approximations were equalities, then it would be easy to solve the system using <a href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian elimination</a>. This method does not work for LWE though, because we cannot obtain a new approximation by adding an arbitrary number of multiples of approximate equations. The cumulative approximation error would grow so large that there is no information left in the ‘approximation’ obtained by summation and scalar multiplication. It is shown by Regev<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, that a (quantum) algorithm that solves LWE would imply a quantum algorithm that solves several believed to be hard lattice problems, among which SVP.</p>
+
+<p>More formally, the LWE-distribution is defined as follows.</p>
+
+<p><strong>Definition</strong>
+Let 
+<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
+be a secret vector and 
+<script type="math/tex">\chi</script> 
+an error distribution over 
+<script type="math/tex">\mathbb{Z}</script>. 
+The LWE distribution 
+<script type="math/tex">\mathcal{A}_{s, \chi}</script> 
+is sampled by taking a vector 
+<script type="math/tex">\textbf{a} \leftarrow \mathbb{Z}_q^n</script> 
+and an integer 
+<script type="math/tex">e \leftarrow \chi</script> 
+and outputting the pair 
+<script type="math/tex">(\textbf{a}, b:= \textbf{a} \cdot \textbf{s} + e)</script>.</p>
+
+<p>This distribution is pseudorandom: given $m$ independent samples from either (1) the uniform distribution, or (2) the LWE- distribution, we cannot determine which is the case. To distinguish between the uniform and the LWE- distribution is equally hard as solving the LWE-problem, that is, finding the secret vector $\textbf{s}$. This makes the construction of LWE-based semantically secure cryptosystems possible, such as Regev’s encryption scheme:</p>
+
+<ul>
+  <li>Key generation. The private key is a random vector $\textbf{s} \in \mathbb{Z}_q^n$. To create a public key, we take $m$ vectors $\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}$ independently from the uniform distribution, and $e_1, \dots, e_m$ from $\chi$. The public key is given by the $m$ LWE samples $(\textbf{a}^{(i)}, b_i)$, where $b_i = \textbf{a}^{(i)} \cdot \textbf{s} + e_i$ for $i$ from 1 to $m$. In matrix notation: $\textbf{b} = A\textbf{s} + \textbf{e}$.</li>
+  <li>Encryption. To encrypt a bit $x$, we take a random vector $v \in {0, 1}^m$ and output the pair</li>
+</ul>
+
+<script type="math/tex; mode=display">(\textbf{c}_1, c_2) = \big( A\textbf{v}, \textbf{b} \cdot \textbf{v} + x \cdot \left\lfloor \frac{q}{2} \right\rfloor \big),</script>
+
+<p>that is, we take a subset of the row vectors and encrypt the bit in the subset sum of the samples.</p>
+
+<ul>
+  <li>
+    <p>Decryption. Using the secret key $\textbf{s}$, compute:
+<script type="math/tex">% <![CDATA[
+\begin{align*}
+  c_2 - \textbf{c}_1 \cdot \textbf{s} &= \left(A\textbf{s} + \textbf{e}\right) \cdot \textbf{v} + x \left\lfloor \frac{q}{2} \right\rfloor - (A\textbf{v})\cdot \textbf{s} 
+  \\
+  &= (A\textbf{s})\cdot \textbf{v} - (A\textbf{v})\cdot \textbf{s} + \textbf{e}\cdot \textbf{v} + x \left\lfloor \frac{q}{2}\right\rfloor
+  \\
+  &\approx  x \left\lfloor \frac{q}{2}\right\rfloor, 
+  \end{align*} %]]></script></p>
+
+    <p>since both $\textbf{e}$ and $\textbf{v}$ are vectors of small norm. If this outcome is closer to zero than to $\left\lfloor \frac{q}{2}\right\rfloor$, then the decryption of $(\textbf{c}_1, c_2)$ is $0$, else it is $1$.</p>
+  </li>
+</ul>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>O. Regev. <a href="http://www.cims.nyu.edu/~regev/papers/qcrypto.pdf">On lattices, learning with errors, random linear codes, and cryptography</a>. J. ACM, 56(6):1–40, 2009. Preliminary version in STOC 2005.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+  
+</div>
+
+<div class="pagination">
+  
+    <a class="pagination-item older" href="/page7/">Older</a>
+  
+  
+    
+      <a class="pagination-item newer" href="/page5/">Newer</a>
+    
+  
+</div>
+
+
+      
+
+
+
+      <div class="footer">
+        <p>
+          &copy; 2017. All rights reserved.
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>
