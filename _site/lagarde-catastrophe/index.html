@@ -87,7 +87,7 @@
   <span class="post-date">11 Sep 2017</span>
   <p>Hi! Today <a href="https://www.irif.fr/~glagarde/">Guillaume Lagarde</a> 
 gives an overview of the recent preprint he has with
-his advisor Sylvain Perifel: 
+his advisor <a href="https://www.irif.fr/~sperifel/">Sylvain Perifel</a>: 
 <a href="https://arxiv.org/abs/1707.04312">Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</a>.
 He presented parts of it at the PhD seminar last spring.</p>
 
@@ -105,55 +105,60 @@ well happen. This is what we will overview in this post.</p>
 
 <h2 id="introduction-to-lz78-and-notations">Introduction to LZ’78 and notations</h2>
 
-<p><a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv (LZ in short) algorithms</a> 
-refer to a bunch of lossless
-compression techniques introduced by 
-<a href="https://en.wikipedia.org/wiki/Abraham_Lempel">Abraham Lempel</a> and 
-<a href="https://en.wikipedia.org/wiki/Jacob_Ziv">Jacob Ziv</a> that
-are used as key ingredients in various places such as 
+<p><a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv (LZ in short)
+algorithms</a> refer to a
+bunch of lossless compression techniques introduced by <a href="https://en.wikipedia.org/wiki/Abraham_Lempel">Abraham
+Lempel</a> and <a href="https://en.wikipedia.org/wiki/Jacob_Ziv">Jacob
+Ziv</a> that are used as key
+ingredients in various places such as
 <em><a href="https://en.wikipedia.org/wiki/DEFLATE">deflate</a></em>,
-<em><a href="https://en.wikipedia.org/wiki/GIF">gif</a></em>, 
-<em><a href="https://en.wikipedia.org/wiki/Gzip">gzip</a></em>, etc.<br />
-The version we consider is LZ’78, and works by
-cutting the word <script type="math/tex">w</script> we want to compress into substrings, called
-blocks, <script type="math/tex">w = m_1m_2\dots m_k</script>, such that each block <script type="math/tex">m_i</script>, except
-maybe the last one, is an extension of a previous block, that is:
-<script type="math/tex">m_i = m_j.a</script> for some letter <script type="math/tex">a</script>.</p>
+<em><a href="https://en.wikipedia.org/wiki/GIF">gif</a></em>,
+<em><a href="https://en.wikipedia.org/wiki/Gzip">gzip</a></em>, etc.  The version we
+consider is LZ’78, and works by cutting the word <script type="math/tex">w</script> we want to
+compress into substrings, called blocks, <script type="math/tex">w = m_1m_2\dots m_k</script>,
+such that each block <script type="math/tex">m_i</script>, except maybe the last one, is a maximal
+extension of a previous block, that is: <script type="math/tex">m_i = m_j.a</script> for some
+letter <script type="math/tex">a</script> and <script type="math/tex">m_i</script> is not equal to <script type="math/tex">m_l</script>, for <script type="math/tex">% <![CDATA[
+l < i %]]></script>.</p>
 
-<p>// Peut-être mettre un coup d’exemple déjà ici. en expliquant les deux-trois 
-premiers blocs.</p>
-
-<p>It is not hard to see that
-there is a unique cut that satisfies this property. Then, the
-compression algorithm LZ’78 encodes each block <script type="math/tex">m_i</script> as a <em>pointer</em>
-to its <em>predecessor</em> <script type="math/tex">m_j</script> together with the letter <script type="math/tex">a</script>.</p>
-
-<p>For example, the word <script type="math/tex">w = 00010110100001</script> is cut as</p>
+<p>For example, consider the word <script type="math/tex">w = 00010110100001</script>. The first
+block is always the first letter (it is the extension of the empty
+word <script type="math/tex">\epsilon</script>), so that <script type="math/tex">m_1 = 0</script>. Then, <script type="math/tex">m_2 = 00</script>, since
+this is the smallest prefix of <script type="math/tex">0010110100001</script> which is not equal to
+a word in the set <script type="math/tex">\{\epsilon,0\}</script>. Then, <script type="math/tex">m_3 = 1</script> since this is
+the smallest prefix of <script type="math/tex">10110100001</script> which is not equal to a word in
+<script type="math/tex">\{\epsilon,0,00\}</script>, and so on. In the end, <script type="math/tex">w</script> is cut as</p>
 
 <script type="math/tex; mode=display">0|00|1|01|10|100|001</script>
 
-<p>and is thus encoded as</p>
+<p>It is not hard to see that there is a unique cut that satisfies this
+property. Then, the compression algorithm LZ’78 encodes each block
+<script type="math/tex">m_i</script> as a couple <script type="math/tex">(p_i,a_i)</script> where <script type="math/tex">p_i</script> is a <em>pointer</em> to its
+<em>predecessor</em> <script type="math/tex">m_j</script> together with the letter <script type="math/tex">a_i</script> such that <script type="math/tex">m_i
+= m_j.a_i</script>.</p>
+
+<p>The previous word <script type="math/tex">w</script> is thus encoded as</p>
 
 <script type="math/tex; mode=display">(\epsilon,0);(0,0);(\epsilon,1);(0,1);(2,0);(4,0);(1,1)</script>
 
-<p>It can be shown that the order of the compression size</p>
-
-<p>// à définir ?</p>
-
-<p>is
-<script type="math/tex">\Theta(k\log k)</script> where <script type="math/tex">k</script> is the number of blocks.  The
-<em>dictionnary</em> of a word <script type="math/tex">w</script>, written <script type="math/tex">D(w)</script> will be the set of all
-the blocks <script type="math/tex">m_i</script>. With this notation in hand, the size of the
-compression can be rephrased as <script type="math/tex">\Theta(|D(w)| \log |D(w)|)</script>. A
-word is said to be <em>incompressible</em> if the size of the compression is
-of the order of the size of the word. Equivalently, a word is
-incompressible if <script type="math/tex">|D(w)|= \Theta(\frac{|w|}{\log |w|})</script>.</p>
+<p>The compression size is the number of bits needed to represent the
+compressed version of the word and is equal to <script type="math/tex">\Theta(\sum_{i=1}^k
+(|p_i| + 1))</script>. In fact, it can be shown that the order of the
+compression size is <script type="math/tex">\Theta(k\log k)</script> where <script type="math/tex">k</script> is the number of
+blocks; this shows that the important and unique parameter needed is
+<script type="math/tex">k</script>, the number of blocks. The <em>dictionnary</em> of a word <script type="math/tex">w</script>,
+written <script type="math/tex">D(w)</script> will be the set of all the blocks <script type="math/tex">m_i</script>. With this
+notation in hand, the size of the compression can be rephrased as
+<script type="math/tex">\Theta(|D(w)| \log |D(w)|)</script>. A word is said to be <em>incompressible</em>
+if the size of the compression is of the order of the size of the
+word. Equivalently, a word is incompressible if <script type="math/tex">|D(w)|=
+\Theta\left(\frac{|w|}{\log |w|}\right)</script>.</p>
 
 <p>The most compressible words are obtained by taking the concatenation
 of the prefixes of any word <script type="math/tex">x_0.x_1\dots x_{n-1}</script>. That is, the
 most compressible words are of the form <script type="math/tex">w
 =x_0.(x_0.x_1)(x_0.x_1.x_2)...(x_0.x_1\dots x_{n-2}.x_{n-1})</script>. The
-size of the dictionnary of such word is <script type="math/tex">\Theta(|w|^{1/2})</script>.</p>
+size of the dictionnary of such word is <script type="math/tex">\Theta\left(|w|^{1/2}\right)</script>.</p>
 
 <h2 id="one-bit-catastrophe-and-results">One-bit catastrophe and results</h2>
 
@@ -185,7 +190,7 @@ which the size of the dictionnary is <script type="math/tex">o\left(\frac{|w|}{\
 remains compressible when we add any letter in front of it, i.e
 <script type="math/tex">|D(aw)| = o\left(\frac{|aw|}{\log |aw|}\right)</script>.</p>
 
-<p>Theorem 2 also tell us that for the most compressible words, the
+<p>Theorem 2 also tells us that for the most compressible words, the
 variation can change from <script type="math/tex">\Theta \left(|w|^{1/2}\right)</script> to
 <script type="math/tex">\Theta \left(|w|^{3/4}\right)</script>.</p>
 
@@ -196,7 +201,7 @@ is a word <script type="math/tex">w</script> such that <script type="math/tex">|
 = \Theta\left(|0w|^{3/4}\right)</script>. For that, we consider a word <script type="math/tex">w</script> which is
 the concatenation of the prefixes of a word <script type="math/tex">x</script>, where <script type="math/tex">x</script> has a
 maximal number of different substrings: <script type="math/tex">x</script> is a 
-<a href="De Bruijn sequence">de Bruijn word</a>;
+<a href="https://en.wikipedia.org/wiki/De_Bruijn_sequence">de Bruijn word</a>;
 this alone should be sufficient to get a weak catastrophe (simulations
 say!), but we were not able to prove it directly. Instead, we need to
 add in an adaptative way small words between the prefixes, called
@@ -211,6 +216,16 @@ weak catastrophes at the same time. Then by tuning some parameters
 like the size or the number of weak catastrophes, together coupled
 with new and independent gadgets between the words, we get a
 catastrophe.</p>
+
+<h2 id="open-questions">Open questions</h2>
+
+<p>Is it possible to push the limits as far as to get a catastrophe where the
+compression ratio changes from <script type="math/tex">0</script> to <script type="math/tex">1</script>? This would yield as the
+worst possible configuration.</p>
+
+<p>The main challenge, to our mind, is to remove the gadgets in our
+constructions. This would mean that the <em>weak catastrophe</em> is the
+typical case for optimally compressible words.</p>
 
 </div>
 
