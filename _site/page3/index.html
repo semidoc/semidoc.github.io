@@ -86,144 +86,154 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/rotondo-sturmian">
-        Sturmian words
+      <a href="/lagarde-catastrophe">
+        One-bit catastrophe
       </a>
     </h1>
 
-    <span class="post-date">07 Sep 2017</span>
+    <span class="post-date">11 Sep 2017</span>
 
-    <p>Hi, this is the second post by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a>.
-This one is about sturmian words, and sometimes refers to the first post about 
-continued fractions, that you can found <a href="https://semidoc.github.io/rotondo-fractions">here</a>.</p>
+    <p>Hi! Today <a href="https://www.irif.fr/~glagarde/">Guillaume Lagarde</a> 
+gives an overview of the recent preprint he has with
+his advisor <a href="https://www.irif.fr/~sperifel/">Sylvain Perifel</a>: 
+<a href="https://arxiv.org/abs/1707.04312">Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</a>.
+He presented parts of it at the PhD seminar last spring.</p>
 
-<hr />
+<h2 id="a-strange-scenario">A strange scenario</h2>
 
-<p>Sturmian words are infinite words ${\bf{u}}=u_0u_1\ldots\in \mathcal{A}^\infty$ 
-(sequences of symbols $u_i$ from an alphabet $\mathcal{A}$) that have numerous 
-characterizations, as the coding of digital lines, as rotation sequences, minimal 
-complexity sequences…</p>
+<p>Imagine you compressed a file using your favorite compression
+algorithm, but you realize that there was a typo in the file. 
+You then correct it, adding a single bit to the original file.</p>
 
-<h3 id="a-first-definition">A first definition</h3>
-<p><em>Definition</em> [Sturmian word]
-Consider $\alpha,\beta \in [0,1)$ with $\alpha$ irrational. We define infinite words
-<script type="math/tex">\left(\underline{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
-and 
-<script type="math/tex">\left(\bar{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
-by</p>
+<p>Compress it again and you get a much
+larger compressed file… for just a one-bit difference! Much
+compression algorithms do not have this strange behavior, but for
+LZ’78, one of the most famous of them, this surprising scenario might
+well happen. This is what we will overview in this post.</p>
 
-<script type="math/tex; mode=display">\underline{s}_{\alpha,\beta}(n)= \left\lfloor (n+1)\,\alpha +\beta \right\rfloor - \left\lfloor n\,\alpha +\beta \right\rfloor\, ,</script>
+<h2 id="introduction-to-lz78-and-notations">Introduction to LZ’78 and notations</h2>
 
-<p>and</p>
+<p><a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv (LZ in short)
+algorithms</a> refer to a
+bunch of lossless compression techniques introduced by <a href="https://en.wikipedia.org/wiki/Abraham_Lempel">Abraham
+Lempel</a> and <a href="https://en.wikipedia.org/wiki/Jacob_Ziv">Jacob
+Ziv</a> that are used as key
+ingredients in various places such as
+<em><a href="https://en.wikipedia.org/wiki/DEFLATE">deflate</a></em>,
+<em><a href="https://en.wikipedia.org/wiki/GIF">gif</a></em>,
+<em><a href="https://en.wikipedia.org/wiki/Gzip">gzip</a></em>, etc.  The version we
+consider is LZ’78, and works by cutting the word <script type="math/tex">w</script> we want to
+compress into substrings, called blocks, <script type="math/tex">w = m_1m_2\dots m_k</script>,
+such that each block <script type="math/tex">m_i</script>, except maybe the last one, is a maximal
+extension of a previous block, that is: <script type="math/tex">m_i = m_j.a</script> for some
+letter <script type="math/tex">a</script> and <script type="math/tex">m_i</script> is not equal to <script type="math/tex">m_l</script>, for <script type="math/tex">% <![CDATA[
+l < i %]]></script>.</p>
 
-<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)= \left\lceil (n+1)\,\alpha +\beta \right\rceil - \left\lceil n\,\alpha +\beta \right\rceil\,,</script>
+<p>For example, consider the word <script type="math/tex">w = 00010110100001</script>. The first
+block is always the first letter (it is the extension of the empty
+word <script type="math/tex">\epsilon</script>), so that <script type="math/tex">m_1 = 0</script>. Then, <script type="math/tex">m_2 = 00</script>, since
+this is the smallest prefix of <script type="math/tex">0010110100001</script> which is not equal to
+a word in the set <script type="math/tex">\{\epsilon,0\}</script>. Then, <script type="math/tex">m_3 = 1</script> since this is
+the smallest prefix of <script type="math/tex">10110100001</script> which is not equal to a word in
+<script type="math/tex">\{\epsilon,0,00\}</script>, and so on. In the end, <script type="math/tex">w</script> is cut as</p>
 
-<p>for each $n\in \mathbb{N}$. A binary word ${\bf{u}} \in {0,1}^\infty$ is 
-Sturmian if and only if it is of the form 
-<script type="math/tex">u_n = \underline{s}_{\alpha,\beta}(n),\,\forall n</script>,
-or 
-<script type="math/tex">u_n = \bar{s}_{\alpha,\beta}(n),\,\forall n</script> 
-for some $\alpha,\beta$ as above. The irrational number $\alpha$ is called the 
-<em>slope</em> of the word $\bf{u}$.</p>
+<script type="math/tex; mode=display">0|00|1|01|10|100|001</script>
 
-<p><strong>Remark</strong> Observe that if ${\bf{u}}=\underline{s}_{\alpha,\beta}$</p>
+<p>It is not hard to see that there is a unique cut that satisfies this
+property. Then, the compression algorithm LZ’78 encodes each block
+<script type="math/tex">m_i</script> as a couple <script type="math/tex">(p_i,a_i)</script> where <script type="math/tex">p_i</script> is a <em>pointer</em> to its
+<em>predecessor</em> <script type="math/tex">m_j</script> together with the letter <script type="math/tex">a_i</script> such that <script type="math/tex">m_i
+= m_j.a_i</script>.</p>
 
-<script type="math/tex; mode=display">\lim_{n\to\infty} \frac{|u_0\ldots u_{n-1}|_1}{n} = \lim_{n\to\infty} \frac{1}{n}\,\sum_{i=0}^{n-1}u_i = \lim_{n\to\infty} \frac{\left\lfloor n\,\alpha +\beta \right\rfloor-\left\lfloor \beta \right\rfloor}{n} = \alpha\,,</script>
+<p>The previous word <script type="math/tex">w</script> is thus encoded as</p>
 
-<p>where 
-<script type="math/tex">|\cdot|_1</script>
-denotes the number of ones in the word. Thus $\alpha$ represents the <em>frequency</em> 
-of ones. Clearly the same result is true when 
-<script type="math/tex">{\bf{u}}=\bar{s}_{\alpha,\beta}</script> 
-by the same argument.</p>
+<script type="math/tex; mode=display">(\epsilon,0);(0,0);(\epsilon,1);(0,1);(2,0);(4,0);(1,1)</script>
 
-<h3 id="sturmian-words-as-circle-rotations">Sturmian words as circle rotations</h3>
-<p>The above definition can be seen more intuitively as the binary coding of the 
-trajectory of a point on a circle of circumference $1$. This circle is realized 
-as the interval $[0,1]$ identifying $0$ and $1$, that is, taking fractional 
-parts $x\mapsto {x}$ or, equivalently, modulo one $x\mapsto x \bmod 1$.</p>
+<p>The compression size is the number of bits needed to represent the
+compressed version of the word and is equal to <script type="math/tex">\Theta(\sum_{i=1}^k
+(|p_i| + 1))</script>. In fact, it can be shown that the order of the
+compression size is <script type="math/tex">\Theta(k\log k)</script> where <script type="math/tex">k</script> is the number of
+blocks; this shows that the important and unique parameter needed is
+<script type="math/tex">k</script>, the number of blocks. The <em>dictionnary</em> of a word <script type="math/tex">w</script>,
+written <script type="math/tex">D(w)</script> will be the set of all the blocks <script type="math/tex">m_i</script>. With this
+notation in hand, the size of the compression can be rephrased as
+<script type="math/tex">\Theta(|D(w)| \log |D(w)|)</script>. A word is said to be <em>incompressible</em>
+if the size of the compression is of the order of the size of the
+word. Equivalently, a word is incompressible if <script type="math/tex">|D(w)|=
+\Theta\left(\frac{|w|}{\log |w|}\right)</script>.</p>
 
-<p>Indeed, observe that</p>
+<p>The most compressible words are obtained by taking the concatenation
+of the prefixes of any word <script type="math/tex">x_0.x_1\dots x_{n-1}</script>. That is, the
+most compressible words are of the form <script type="math/tex">w
+=x_0.(x_0.x_1)(x_0.x_1.x_2)...(x_0.x_1\dots x_{n-2}.x_{n-1})</script>. The
+size of the dictionnary of such word is <script type="math/tex">\Theta\left(|w|^{1/2}\right)</script>.</p>
 
-<script type="math/tex; mode=display">% <![CDATA[
-\bar{s}_{\alpha,\beta}(n)=   1 \Longleftrightarrow n\alpha + \beta \leq m < (n+1)\alpha + \beta %]]></script>
+<h2 id="one-bit-catastrophe-and-results">One-bit catastrophe and results</h2>
 
-<p>for some integer $m$. By taking $\bmod 1$ it is immediately seen that this means 
-that</p>
+<p>The <em>one-bit catastrophe question</em> asks whether there exists a
+compressible (infinite) word <script type="math/tex">w</script> such that <script type="math/tex">0w</script> is
+incompressible. We answer positively this question by showing our main
+theorem:</p>
 
-<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 1 \Longleftrightarrow \{n\alpha + \beta\} \in I_1  := [1-\alpha,1)\,,</script>
+<p><strong>Theorem 1:</strong> There exists an infinite word <script type="math/tex">w</script> such that the
+compression ratio changes from <script type="math/tex">0</script> to at least <script type="math/tex">\frac{1}{6075}</script> by
+adding one single bit in front of <script type="math/tex">w</script>.</p>
 
-<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 0 \Longleftrightarrow \{n\alpha + \beta\} \in I_0  := [0,1-\alpha)\,.</script>
+<p>In fact, this result is not as tragic as it seems. Indeed, for the
+ratio to change, the word <script type="math/tex">w</script> needs to be compressible, but very
+slowly; in symbol <script type="math/tex">|D(w)| = \Omega\left(\frac{|w|}{\log^2 |w|}\right)</script> – this
+is quite close to an incompressible word!</p>
 
-<p>A similar definition can be done for 
-<script type="math/tex">\underline{s}_{\alpha,\beta}(n)</script> 
-by reversing the close-open in the border of the intervals. In terms of the 
-circle, this reads: start from a point 
-<script type="math/tex">y_0=\beta</script> 
-on the circle and rotate an arc-length of $\alpha$ on each discrete time 
-<script type="math/tex">y_{k+1} = (\alpha + y_k)\bmod 1</script>, 
-then code the resulting points by $1$ when they belong to 
-<script type="math/tex">I_1</script> 
-and 
-$0$ when they belong to 
-<script type="math/tex">I_0</script>.</p>
+<p>More generally, we can be more precise by considering the possible
+variations of the compression size on finite words:</p>
 
-<p><img src="assets/rotondo_plot4.png" alt="" class="center-image" height="300px" /></p>
+<p><strong>Theorem 2</strong> For any finite word <script type="math/tex">w\in\{0,1\}</script> and any letter <script type="math/tex">a</script></p>
 
-<h3 id="factors-of-sturmian-words">Factors of Sturmian words.</h3>
+<script type="math/tex; mode=display">|D(aw)| \leq 3\sqrt{|w|.|D(w)|}.</script>
 
-<p>The finite patterns appearing within our infinite words ${\bf{u}}$ are a 
-fundamental object of study in the field of Combinatorics of Words. We say that 
-$w\in {0,1}^m$ is a <em>factor</em> of ${\bf{u}}$ if, for some index $i\geq 0$, we have</p>
+<p>Moreover, we can show that this result is tight up to a multiplicative constant.</p>
 
-<script type="math/tex; mode=display">w_1\ldots w_m = u_i \ldots u_{i+m-1}\,,</script>
+<p>In particular, Theorem 2 tells us that any compressible word <script type="math/tex">w</script> for
+which the size of the dictionnary is <script type="math/tex">o\left(\frac{|w|}{\log^2 |w|}\right)</script>
+remains compressible when we add any letter in front of it, i.e
+<script type="math/tex">|D(aw)| = o\left(\frac{|aw|}{\log |aw|}\right)</script>.</p>
 
-<p>and say that $m$ is its <em>length</em>.</p>
+<p>Theorem 2 also tells us that for the most compressible words, the
+variation can change from <script type="math/tex">\Theta \left(|w|^{1/2}\right)</script> to
+<script type="math/tex">\Theta \left(|w|^{3/4}\right)</script>.</p>
 
-<p>We have seen that digits in a Sturmian word ${\bf{u}}$ correspond to intervals 
-$I_0$ and $I_1$, this process can be iterated to explain what happens with 
-larger factors $w\in {0,1}^m$. The result being that factors are in 
-correspondance with the circle intervals delimited by</p>
+<h2 id="high-level-ideas-of-the-proofs">High level ideas of the proofs</h2>
 
-<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+<p>The first step is to understand how to get a <em>weak</em> catastrophe, that
+is a word <script type="math/tex">w</script> such that <script type="math/tex">|D(w)| = \Theta\left(|w|^{1/2}\right)</script> and <script type="math/tex">|D(0w)|
+= \Theta\left(|0w|^{3/4}\right)</script>. For that, we consider a word <script type="math/tex">w</script> which is
+the concatenation of the prefixes of a word <script type="math/tex">x</script>, where <script type="math/tex">x</script> has a
+maximal number of different substrings: <script type="math/tex">x</script> is a 
+<a href="https://en.wikipedia.org/wiki/De_Bruijn_sequence">de Bruijn word</a>;
+this alone should be sufficient to get a weak catastrophe (simulations
+say!), but we were not able to prove it directly. Instead, we need to
+add in an adaptative way small words between the prefixes, called
+gadgets, in order to have more control on the parsing of <script type="math/tex">w</script> and
+<script type="math/tex">0w</script> simultaneously.</p>
 
-<p>modulo $1$.</p>
+<p>With this <em>weak</em> catastrophe in hand, the idea is now to create the
+<em>true catastrophe</em> (from compressible to incompressible word). We do
+that by creating probabilistically a lot of “independent de
+Bruijn-style words” which will be used to create a lot of independent
+weak catastrophes at the same time. Then by tuning some parameters
+like the size or the number of weak catastrophes, together coupled
+with new and independent gadgets between the words, we get a
+catastrophe.</p>
 
-<p><img src="assets/rotondo_plot3.png" alt="" class="center-image" height="300px" /></p>
+<h2 id="open-questions">Open questions</h2>
 
-<p><strong>Remark</strong> [Complexity of a Sturmian word]
-Since $\alpha$ is irrational, the points</p>
+<p>Is it possible to push the limits as far as to get a catastrophe where the
+compression ratio changes from <script type="math/tex">0</script> to <script type="math/tex">1</script>? This would yield as the
+worst possible configuration.</p>
 
-<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
-
-<p>modulo $1$ are all distinct.</p>
-
-<p>Thus the the above points delimit $m+1$ circle intervals: we have $m+1$ factors 
-$w\in {0,1}^m$ of length $m$ appearing in $\bf{u}$. This is the smallest 
-possible number of factors of length $m$ in the sense that, if we had at most 
-$m$ factors of length $m$ for some $m$, our words would be eventually periodic.</p>
-
-<p>The intervals-factor correspondence is independent from $\beta$. In particular, 
-the set of factors of length $m$ appearing within ${\bf{u}}$ depends only on the 
-choice of $\alpha$. Furthermore, the sequence ${n\alpha}$ is <em>equidistributed</em> 
-(also known as <a href="https://en.wikipedia.org/wiki/Equidistributed_sequence">uniform distribution $\bmod. 1$</a>) 
-meaning that the proportion of the time it spends on an interval $I$ tends to 
-its length 
-<script type="math/tex">\left| I \right|</script>. 
-Thus the initial point $y_0=\beta$ is not really important for our purposes.</p>
-
-<p>The smallest (least frequent) interval delimited by</p>
-
-<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
-
-<p>in fact corresponds to the one given by $0$ and 
-<script type="math/tex">\{-q_k\alpha\}</script>, 
-where 
-<script type="math/tex">% <![CDATA[
-q_k(\alpha)\leq m < q_{k+1}(\alpha) %]]></script>, 
-and has length 
-<script type="math/tex">\Gamma(\alpha,m) := |q_k \alpha - p_k|</script>, 
-by the Theorem of the <em>Best approximation</em> section in the previous post.</p>
+<p>The main challenge, to our mind, is to remove the gadgets in our
+constructions. This would mean that the <em>weak catastrophe</em> is the
+typical case for optimally compressible words.</p>
 
   </div>
   
