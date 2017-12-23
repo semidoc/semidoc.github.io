@@ -86,154 +86,107 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/lagarde-catastrophe">
-        One-bit catastrophe
+      <a href="/information-communication">
+        Communication complexity and information theory
       </a>
     </h1>
 
-    <span class="post-date">11 Sep 2017</span>
+    <span class="post-date">11 Dec 2017</span>
 
-    <p>Hi! Today <a href="https://www.irif.fr/~glagarde/">Guillaume Lagarde</a> 
-gives an overview of the recent preprint he has with
-his advisor <a href="https://www.irif.fr/~sperifel/">Sylvain Perifel</a>: 
-<a href="https://arxiv.org/abs/1707.04312">Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</a>.
-He presented parts of it at the PhD seminar last spring.</p>
+    <p>I have attended the <a href="https://www.irif.fr/~nschaban/GT-COA/">annual meeting for the complexity and algorithms working 
+group of the CNRS</a> a few weeks ago, and 
+I wanted to review some parts of it. This is the first element of a series of 
+posts. The talks at this meeting were quite 
+technical, and I cannot give a deep overview of each them. So instead 
+I will just write about some details that caught my attention, and that are easy 
+to explain, or as today, give a very succinct	 summary of the story. 
+For most of the talks, the post will deal with basic considerations, and 
+not with the new things developped by the speakers. 
+For comments: feuilloley [at] irif [dot] fr.</p>
 
-<h2 id="a-strange-scenario">A strange scenario</h2>
+<hr />
+<p>The first talk was actually a lecture,
+entitled <em>Information Theory and Communication Protocols</em> by Florent Urrutia 
+from <a href="https://www.irif.fr/en/index">IRIF at Paris Diderot university</a>.</p>
 
-<p>Imagine you compressed a file using your favorite compression
-algorithm, but you realize that there was a typo in the file. 
-You then correct it, adding a single bit to the original file.</p>
+<h2 id="communication-complexity">Communication complexity</h2>
 
-<p>Compress it again and you get a much
-larger compressed file… for just a one-bit difference! Much
-compression algorithms do not have this strange behavior, but for
-LZ’78, one of the most famous of them, this surprising scenario might
-well happen. This is what we will overview in this post.</p>
+<p>In a nutshell, <a href="https://en.wikipedia.org/wiki/Communication_complexity">communication complexity</a>
+measures the number of bits that some agents must exchange to complete a task. 
+More precisely, in the basic setting there are two players, 
+Alice and Bob, and each of them is given 
+half of an input bit string. They bith have to output the result of a boolean
+function of the (whole) input. A task is for example to output the 
+parity of the number of 1s in the input string.
+Before the output they can communicate, that is exchange some bit strings.
+Then an easy protocol is to send each other all the (half-)inputs they have and 
+then to compute the output in parallel. The basic question is: for which tasks
+you can do better, that is sending less bits than the size of the input?</p>
 
-<h2 id="introduction-to-lz78-and-notations">Introduction to LZ’78 and notations</h2>
+<h2 id="information-theory">Information theory</h2>
+<p>In another nutshell, <a href="https://en.wikipedia.org/wiki/Information_theory">information theory</a> 
+measure the amount of information contained in some message. This has been 
+introduced by Shannon in the forties, or even earlier, and is used in many 
+contexts. 
+It requires formulas, with logs, sup, infs etc. to 
+make this precise, and I do not want to dive into this. If you know about 
+<a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">Shannon entropy</a>, 
+<a href="https://en.wikipedia.org/wiki/Mutual_information">mutual information</a> etc., 
+you know what I mean. Otherwise, no problem, it is not really
+necessary for this post. Now, very roughly speaking, information complexity measures 
+the amount of information that one needs to reveal to solve some task under some 
+distribution, and its definition is based on the one of the entropy.</p>
 
-<p><a href="https://en.wikipedia.org/wiki/LZ77_and_LZ78">Lempel-Ziv (LZ in short)
-algorithms</a> refer to a
-bunch of lossless compression techniques introduced by <a href="https://en.wikipedia.org/wiki/Abraham_Lempel">Abraham
-Lempel</a> and <a href="https://en.wikipedia.org/wiki/Jacob_Ziv">Jacob
-Ziv</a> that are used as key
-ingredients in various places such as
-<em><a href="https://en.wikipedia.org/wiki/DEFLATE">deflate</a></em>,
-<em><a href="https://en.wikipedia.org/wiki/GIF">gif</a></em>,
-<em><a href="https://en.wikipedia.org/wiki/Gzip">gzip</a></em>, etc.  The version we
-consider is LZ’78, and works by cutting the word <script type="math/tex">w</script> we want to
-compress into substrings, called blocks, <script type="math/tex">w = m_1m_2\dots m_k</script>,
-such that each block <script type="math/tex">m_i</script>, except maybe the last one, is a maximal
-extension of a previous block, that is: <script type="math/tex">m_i = m_j.a</script> for some
-letter <script type="math/tex">a</script> and <script type="math/tex">m_i</script> is not equal to <script type="math/tex">m_l</script>, for <script type="math/tex">% <![CDATA[
-l < i %]]></script>.</p>
+<h2 id="information-as-a-lower-bound-on-communication">Information as a lower bound on communication</h2>
+<p>The focus of the course was to look at the relation between these two fields.
+The main point, that is very powerful, can be stated as a naive sentence: the 
+number of bits communicated in any protocol to solve the task 
+must be larger than the information the players have 
+to reveal in theory one to the other when communicating. Namely, the communication 
+complexity must be at least 
+the information complexity. As I have not properly defined the two notions, this 
+may sound quite useless, I will try to convince the reader that it is intersting. 
+What is surprizing is that these two notions are 
+quite different in the way they are defined. The first one is defined as a simple 
+worst-case measure and has a quite combinatorial flavour, it really counts bits. 
+Indeed it is for example possible 
+to prove lower bound on communication complexity by studying some combinatorics 
+of 0-1 matrices.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>
+The later is defined as an infimum (over communication protocols) of a supremum 
+over distributions of inputs of an (entropy-like) function that is based on a 
+sum of logs. A pretty non-combinatorical object.</p>
 
-<p>For example, consider the word <script type="math/tex">w = 00010110100001</script>. The first
-block is always the first letter (it is the extension of the empty
-word <script type="math/tex">\epsilon</script>), so that <script type="math/tex">m_1 = 0</script>. Then, <script type="math/tex">m_2 = 00</script>, since
-this is the smallest prefix of <script type="math/tex">0010110100001</script> which is not equal to
-a word in the set <script type="math/tex">\{\epsilon,0\}</script>. Then, <script type="math/tex">m_3 = 1</script> since this is
-the smallest prefix of <script type="math/tex">10110100001</script> which is not equal to a word in
-<script type="math/tex">\{\epsilon,0,00\}</script>, and so on. In the end, <script type="math/tex">w</script> is cut as</p>
+<p>I guess this inequality mainly means that these definitions are the right ones..!</p>
 
-<script type="math/tex; mode=display">0|00|1|01|10|100|001</script>
+<h2 id="further">Further</h2>
+<p>Now, it is not true that communication complexity is equal to information 
+complexity, there can even be an exponential gap between those, but this happens 
+in some very special contexts. See the paper <em><a href="https://pdfs.semanticscholar.org/fd13/ba5bb068e7887fb450ef6c2cc2a849652db2.pdf">Exponential Separation of 
+Information and
+Communication for Boolean Functions</a></em> 
+(not for beginners).</p>
 
-<p>It is not hard to see that there is a unique cut that satisfies this
-property. Then, the compression algorithm LZ’78 encodes each block
-<script type="math/tex">m_i</script> as a couple <script type="math/tex">(p_i,a_i)</script> where <script type="math/tex">p_i</script> is a <em>pointer</em> to its
-<em>predecessor</em> <script type="math/tex">m_j</script> together with the letter <script type="math/tex">a_i</script> such that <script type="math/tex">m_i
-= m_j.a_i</script>.</p>
+<p>Nevertheless, this approach is very powerful, and almost all the lower bounds 
+we have on 
+communication complexity can be phrased as information complexity lower bounds 
+XXXXXXXX REF XXXXXXXXXXXXXX.</p>
 
-<p>The previous word <script type="math/tex">w</script> is thus encoded as</p>
+<h2 id="multi-party-communication-the-more-the-merrier-maybe-not">Multi-party communication (the more the merrier… maybe not)</h2>
+<p>Multi-party communication is the setting in which the input is split between 
+more than two players. In this new setting it is knwon that lower bounds are 
+difficult to get. A natural step is to use information complexity. 
+But this is not easy. One first reason for this is that  there are different 
+ways to define the information revealed during the protocol, and that none of 
+ones we know gives very good bounds.</p>
 
-<script type="math/tex; mode=display">(\epsilon,0);(0,0);(\epsilon,1);(0,1);(2,0);(4,0);(1,1)</script>
-
-<p>The compression size is the number of bits needed to represent the
-compressed version of the word and is equal to <script type="math/tex">\Theta(\sum_{i=1}^k
-(|p_i| + 1))</script>. In fact, it can be shown that the order of the
-compression size is <script type="math/tex">\Theta(k\log k)</script> where <script type="math/tex">k</script> is the number of
-blocks; this shows that the important and unique parameter needed is
-<script type="math/tex">k</script>, the number of blocks. The <em>dictionnary</em> of a word <script type="math/tex">w</script>,
-written <script type="math/tex">D(w)</script> will be the set of all the blocks <script type="math/tex">m_i</script>. With this
-notation in hand, the size of the compression can be rephrased as
-<script type="math/tex">\Theta(|D(w)| \log |D(w)|)</script>. A word is said to be <em>incompressible</em>
-if the size of the compression is of the order of the size of the
-word. Equivalently, a word is incompressible if <script type="math/tex">|D(w)|=
-\Theta\left(\frac{|w|}{\log |w|}\right)</script>.</p>
-
-<p>The most compressible words are obtained by taking the concatenation
-of the prefixes of any word <script type="math/tex">x_0.x_1\dots x_{n-1}</script>. That is, the
-most compressible words are of the form <script type="math/tex">w
-=x_0.(x_0.x_1)(x_0.x_1.x_2)...(x_0.x_1\dots x_{n-2}.x_{n-1})</script>. The
-size of the dictionnary of such word is <script type="math/tex">\Theta\left(|w|^{1/2}\right)</script>.</p>
-
-<h2 id="one-bit-catastrophe-and-results">One-bit catastrophe and results</h2>
-
-<p>The <em>one-bit catastrophe question</em> asks whether there exists a
-compressible (infinite) word <script type="math/tex">w</script> such that <script type="math/tex">0w</script> is
-incompressible. We answer positively this question by showing our main
-theorem:</p>
-
-<p><strong>Theorem 1:</strong> There exists an infinite word <script type="math/tex">w</script> such that the
-compression ratio changes from <script type="math/tex">0</script> to at least <script type="math/tex">\frac{1}{6075}</script> by
-adding one single bit in front of <script type="math/tex">w</script>.</p>
-
-<p>In fact, this result is not as tragic as it seems. Indeed, for the
-ratio to change, the word <script type="math/tex">w</script> needs to be compressible, but very
-slowly; in symbol <script type="math/tex">|D(w)| = \Omega\left(\frac{|w|}{\log^2 |w|}\right)</script> – this
-is quite close to an incompressible word!</p>
-
-<p>More generally, we can be more precise by considering the possible
-variations of the compression size on finite words:</p>
-
-<p><strong>Theorem 2</strong> For any finite word <script type="math/tex">w\in\{0,1\}</script> and any letter <script type="math/tex">a</script></p>
-
-<script type="math/tex; mode=display">|D(aw)| \leq 3\sqrt{|w|.|D(w)|}.</script>
-
-<p>Moreover, we can show that this result is tight up to a multiplicative constant.</p>
-
-<p>In particular, Theorem 2 tells us that any compressible word <script type="math/tex">w</script> for
-which the size of the dictionnary is <script type="math/tex">o\left(\frac{|w|}{\log^2 |w|}\right)</script>
-remains compressible when we add any letter in front of it, i.e
-<script type="math/tex">|D(aw)| = o\left(\frac{|aw|}{\log |aw|}\right)</script>.</p>
-
-<p>Theorem 2 also tells us that for the most compressible words, the
-variation can change from <script type="math/tex">\Theta \left(|w|^{1/2}\right)</script> to
-<script type="math/tex">\Theta \left(|w|^{3/4}\right)</script>.</p>
-
-<h2 id="high-level-ideas-of-the-proofs">High level ideas of the proofs</h2>
-
-<p>The first step is to understand how to get a <em>weak</em> catastrophe, that
-is a word <script type="math/tex">w</script> such that <script type="math/tex">|D(w)| = \Theta\left(|w|^{1/2}\right)</script> and <script type="math/tex">|D(0w)|
-= \Theta\left(|0w|^{3/4}\right)</script>. For that, we consider a word <script type="math/tex">w</script> which is
-the concatenation of the prefixes of a word <script type="math/tex">x</script>, where <script type="math/tex">x</script> has a
-maximal number of different substrings: <script type="math/tex">x</script> is a 
-<a href="https://en.wikipedia.org/wiki/De_Bruijn_sequence">de Bruijn word</a>;
-this alone should be sufficient to get a weak catastrophe (simulations
-say!), but we were not able to prove it directly. Instead, we need to
-add in an adaptative way small words between the prefixes, called
-gadgets, in order to have more control on the parsing of <script type="math/tex">w</script> and
-<script type="math/tex">0w</script> simultaneously.</p>
-
-<p>With this <em>weak</em> catastrophe in hand, the idea is now to create the
-<em>true catastrophe</em> (from compressible to incompressible word). We do
-that by creating probabilistically a lot of “independent de
-Bruijn-style words” which will be used to create a lot of independent
-weak catastrophes at the same time. Then by tuning some parameters
-like the size or the number of weak catastrophes, together coupled
-with new and independent gadgets between the words, we get a
-catastrophe.</p>
-
-<h2 id="open-questions">Open questions</h2>
-
-<p>Is it possible to push the limits as far as to get a catastrophe where the
-compression ratio changes from <script type="math/tex">0</script> to <script type="math/tex">1</script>? This would yield as the
-worst possible configuration.</p>
-
-<p>The main challenge, to our mind, is to remove the gadgets in our
-constructions. This would mean that the <em>weak catastrophe</em> is the
-typical case for optimally compressible words.</p>
+<h2 id="footnotes">Footnotes</h2>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>See the classic <em>rectangle method</em>, for example in <a href="https://pdfs.semanticscholar.org/6094/392d07d36c086a988493686b73ebca39169b.pdf">this survey</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   </div>
   

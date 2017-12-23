@@ -86,94 +86,144 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/zijlstra-lwe">
-        Learning with Errors- based Cryptography
+      <a href="/rotondo-sturmian">
+        Sturmian words
       </a>
     </h1>
 
-    <span class="post-date">23 Jun 2017</span>
+    <span class="post-date">07 Sep 2017</span>
 
-    <p>Hi! The current blog post has been written by <strong>Timo Zijlstra</strong>, who is doing an internship at the IRIF, and gave a talk at the seminar a few weeks ago.</p>
+    <p>Hi, this is the second post by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a>.
+This one is about sturmian words, and sometimes refers to the first post about 
+continued fractions, that you can found <a href="https://semidoc.github.io/rotondo-fractions">here</a>.</p>
 
 <hr />
 
-<p>Cryptographic primitives such as encryption and signature schemes rely on computationally hard problems. A good scheme is constructed in such a way that any method that breaks the scheme automatically yields an algorithm that solves the underlying hard problem. The <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA encryption scheme</a>, for example, relies on the fact that there is no known algorithm that <a href="https://en.wikipedia.org/wiki/Integer_factorization">efficiently factorizes large integers</a>. If someone would be able to break RSA, then this would imply a method to factorize large integers. This would be a major breakthrough in mathematics, since the factorization problem has been intensively studied. Therefore, it is safe to assume that RSA cannot be broken. Most of implemented cryptography relies on the hardness of the factorization problem (RSA) or the <a href="https://en.wikipedia.org/wiki/Discrete_logarithm">discrete logarithm problem</a> (<a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic Curve Cryptography</a>). However, <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor’s quantum algorithm</a> can be applied to both of these problems, making the cryptosystems unsafe against quantum adversaries.</p>
+<p>Sturmian words are infinite words ${\bf{u}}=u_0u_1\ldots\in \mathcal{A}^\infty$ 
+(sequences of symbols $u_i$ from an alphabet $\mathcal{A}$) that have numerous 
+characterizations, as the coding of digital lines, as rotation sequences, minimal 
+complexity sequences…</p>
 
-<p>This is the reason why we need to find mathematical problems that are computationally hard even for quantum computers. The best candidates for use in post-quantum cryptography are <a href="https://en.wikipedia.org/wiki/Lattice_problem">lattice problems</a> such as the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Shortest_vector_problem_.28SVP.29">Shortest Vector Problem</a> (SVP) and the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Closest_vector_problem_.28CVP.29">Closest Vector Problem</a> (CVP). There is currently no known (quantum) algorithm that solves these problems efficiently.</p>
+<h3 id="a-first-definition">A first definition</h3>
+<p><em>Definition</em> [Sturmian word]
+Consider $\alpha,\beta \in [0,1)$ with $\alpha$ irrational. We define infinite words
+<script type="math/tex">\left(\underline{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
+and 
+<script type="math/tex">\left(\bar{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
+by</p>
 
-<p>One lattice problem that is particularly adaptable for cryptographic applications is the <strong>Learning With Errors</strong> (LWE) problem. It consists of solving a system of approximate linear equations over the integers modulo some prime $q$. Let 
-<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
-be a secret vector and 
-<script type="math/tex">\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}</script> 
-vectors taken from the uniformly random distribution over 
-<script type="math/tex">\mathbb{Z}_q^n</script>
-. Given the system of approximate equations:</p>
+<script type="math/tex; mode=display">\underline{s}_{\alpha,\beta}(n)= \left\lfloor (n+1)\,\alpha +\beta \right\rfloor - \left\lfloor n\,\alpha +\beta \right\rfloor\, ,</script>
+
+<p>and</p>
+
+<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)= \left\lceil (n+1)\,\alpha +\beta \right\rceil - \left\lceil n\,\alpha +\beta \right\rceil\,,</script>
+
+<p>for each $n\in \mathbb{N}$. A binary word ${\bf{u}} \in {0,1}^\infty$ is 
+Sturmian if and only if it is of the form 
+<script type="math/tex">u_n = \underline{s}_{\alpha,\beta}(n),\,\forall n</script>,
+or 
+<script type="math/tex">u_n = \bar{s}_{\alpha,\beta}(n),\,\forall n</script> 
+for some $\alpha,\beta$ as above. The irrational number $\alpha$ is called the 
+<em>slope</em> of the word $\bf{u}$.</p>
+
+<p><strong>Remark</strong> Observe that if ${\bf{u}}=\underline{s}_{\alpha,\beta}$</p>
+
+<script type="math/tex; mode=display">\lim_{n\to\infty} \frac{|u_0\ldots u_{n-1}|_1}{n} = \lim_{n\to\infty} \frac{1}{n}\,\sum_{i=0}^{n-1}u_i = \lim_{n\to\infty} \frac{\left\lfloor n\,\alpha +\beta \right\rfloor-\left\lfloor \beta \right\rfloor}{n} = \alpha\,,</script>
+
+<p>where 
+<script type="math/tex">|\cdot|_1</script>
+denotes the number of ones in the word. Thus $\alpha$ represents the <em>frequency</em> 
+of ones. Clearly the same result is true when 
+<script type="math/tex">{\bf{u}}=\bar{s}_{\alpha,\beta}</script> 
+by the same argument.</p>
+
+<h3 id="sturmian-words-as-circle-rotations">Sturmian words as circle rotations</h3>
+<p>The above definition can be seen more intuitively as the binary coding of the 
+trajectory of a point on a circle of circumference $1$. This circle is realized 
+as the interval $[0,1]$ identifying $0$ and $1$, that is, taking fractional 
+parts $x\mapsto {x}$ or, equivalently, modulo one $x\mapsto x \bmod 1$.</p>
+
+<p>Indeed, observe that</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-\begin{align*}
-\textbf{a}^{(1)} \cdot \textbf{s} &\approx b_1 \\
-&\vdots \\
-\textbf{a}^{(m)} \cdot \textbf{s} &\approx b_m,
-\end{align*} %]]></script>
+\bar{s}_{\alpha,\beta}(n)=   1 \Longleftrightarrow n\alpha + \beta \leq m < (n+1)\alpha + \beta %]]></script>
 
-<p>where the approximation is ‘close’ in a sense that will be made clear later, the LWE-problem is to find 
-<script type="math/tex">\textbf{s}</script>. 
-Note that if the approximations were equalities, then it would be easy to solve the system using <a href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian elimination</a>. This method does not work for LWE though, because we cannot obtain a new approximation by adding an arbitrary number of multiples of approximate equations. The cumulative approximation error would grow so large that there is no information left in the ‘approximation’ obtained by summation and scalar multiplication. It is shown by Regev<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, that a (quantum) algorithm that solves LWE would imply a quantum algorithm that solves several believed to be hard lattice problems, among which SVP.</p>
+<p>for some integer $m$. By taking $\bmod 1$ it is immediately seen that this means 
+that</p>
 
-<p>More formally, the LWE-distribution is defined as follows.</p>
+<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 1 \Longleftrightarrow \{n\alpha + \beta\} \in I_1  := [1-\alpha,1)\,,</script>
 
-<p><strong>Definition</strong>
-Let 
-<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
-be a secret vector and 
-<script type="math/tex">\chi</script> 
-an error distribution over 
-<script type="math/tex">\mathbb{Z}</script>. 
-The LWE distribution 
-<script type="math/tex">\mathcal{A}_{s, \chi}</script> 
-is sampled by taking a vector 
-<script type="math/tex">\textbf{a} \leftarrow \mathbb{Z}_q^n</script> 
-and an integer 
-<script type="math/tex">e \leftarrow \chi</script> 
-and outputting the pair 
-<script type="math/tex">(\textbf{a}, b:= \textbf{a} \cdot \textbf{s} + e)</script>.</p>
+<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 0 \Longleftrightarrow \{n\alpha + \beta\} \in I_0  := [0,1-\alpha)\,.</script>
 
-<p>This distribution is pseudorandom: given $m$ independent samples from either (1) the uniform distribution, or (2) the LWE- distribution, we cannot determine which is the case. To distinguish between the uniform and the LWE- distribution is equally hard as solving the LWE-problem, that is, finding the secret vector $\textbf{s}$. This makes the construction of LWE-based semantically secure cryptosystems possible, such as Regev’s encryption scheme:</p>
+<p>A similar definition can be done for 
+<script type="math/tex">\underline{s}_{\alpha,\beta}(n)</script> 
+by reversing the close-open in the border of the intervals. In terms of the 
+circle, this reads: start from a point 
+<script type="math/tex">y_0=\beta</script> 
+on the circle and rotate an arc-length of $\alpha$ on each discrete time 
+<script type="math/tex">y_{k+1} = (\alpha + y_k)\bmod 1</script>, 
+then code the resulting points by $1$ when they belong to 
+<script type="math/tex">I_1</script> 
+and 
+$0$ when they belong to 
+<script type="math/tex">I_0</script>.</p>
 
-<ul>
-  <li>Key generation. The private key is a random vector $\textbf{s} \in \mathbb{Z}_q^n$. To create a public key, we take $m$ vectors $\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}$ independently from the uniform distribution, and $e_1, \dots, e_m$ from $\chi$. The public key is given by the $m$ LWE samples $(\textbf{a}^{(i)}, b_i)$, where $b_i = \textbf{a}^{(i)} \cdot \textbf{s} + e_i$ for $i$ from 1 to $m$. In matrix notation: $\textbf{b} = A\textbf{s} + \textbf{e}$.</li>
-  <li>Encryption. To encrypt a bit $x$, we take a random vector $v \in {0, 1}^m$ and output the pair</li>
-</ul>
+<p><img src="assets/rotondo_plot4.png" alt="" class="center-image" height="300px" /></p>
 
-<script type="math/tex; mode=display">(\textbf{c}_1, c_2) = \big( A\textbf{v}, \textbf{b} \cdot \textbf{v} + x \cdot \left\lfloor \frac{q}{2} \right\rfloor \big),</script>
+<h3 id="factors-of-sturmian-words">Factors of Sturmian words.</h3>
 
-<p>that is, we take a subset of the row vectors and encrypt the bit in the subset sum of the samples.</p>
+<p>The finite patterns appearing within our infinite words ${\bf{u}}$ are a 
+fundamental object of study in the field of Combinatorics of Words. We say that 
+$w\in {0,1}^m$ is a <em>factor</em> of ${\bf{u}}$ if, for some index $i\geq 0$, we have</p>
 
-<ul>
-  <li>
-    <p>Decryption. Using the secret key $\textbf{s}$, compute:
+<script type="math/tex; mode=display">w_1\ldots w_m = u_i \ldots u_{i+m-1}\,,</script>
+
+<p>and say that $m$ is its <em>length</em>.</p>
+
+<p>We have seen that digits in a Sturmian word ${\bf{u}}$ correspond to intervals 
+$I_0$ and $I_1$, this process can be iterated to explain what happens with 
+larger factors $w\in {0,1}^m$. The result being that factors are in 
+correspondance with the circle intervals delimited by</p>
+
+<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+
+<p>modulo $1$.</p>
+
+<p><img src="assets/rotondo_plot3.png" alt="" class="center-image" height="300px" /></p>
+
+<p><strong>Remark</strong> [Complexity of a Sturmian word]
+Since $\alpha$ is irrational, the points</p>
+
+<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+
+<p>modulo $1$ are all distinct.</p>
+
+<p>Thus the the above points delimit $m+1$ circle intervals: we have $m+1$ factors 
+$w\in {0,1}^m$ of length $m$ appearing in $\bf{u}$. This is the smallest 
+possible number of factors of length $m$ in the sense that, if we had at most 
+$m$ factors of length $m$ for some $m$, our words would be eventually periodic.</p>
+
+<p>The intervals-factor correspondence is independent from $\beta$. In particular, 
+the set of factors of length $m$ appearing within ${\bf{u}}$ depends only on the 
+choice of $\alpha$. Furthermore, the sequence ${n\alpha}$ is <em>equidistributed</em> 
+(also known as <a href="https://en.wikipedia.org/wiki/Equidistributed_sequence">uniform distribution $\bmod. 1$</a>) 
+meaning that the proportion of the time it spends on an interval $I$ tends to 
+its length 
+<script type="math/tex">\left| I \right|</script>. 
+Thus the initial point $y_0=\beta$ is not really important for our purposes.</p>
+
+<p>The smallest (least frequent) interval delimited by</p>
+
+<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
+
+<p>in fact corresponds to the one given by $0$ and 
+<script type="math/tex">\{-q_k\alpha\}</script>, 
+where 
 <script type="math/tex">% <![CDATA[
-\begin{align*}
-  c_2 - \textbf{c}_1 \cdot \textbf{s} &= \left(A\textbf{s} + \textbf{e}\right) \cdot \textbf{v} + x \left\lfloor \frac{q}{2} \right\rfloor - (A\textbf{v})\cdot \textbf{s} 
-  \\
-  &= (A\textbf{s})\cdot \textbf{v} - (A\textbf{v})\cdot \textbf{s} + \textbf{e}\cdot \textbf{v} + x \left\lfloor \frac{q}{2}\right\rfloor
-  \\
-  &\approx  x \left\lfloor \frac{q}{2}\right\rfloor, 
-  \end{align*} %]]></script></p>
-
-    <p>since both $\textbf{e}$ and $\textbf{v}$ are vectors of small norm. If this outcome is closer to zero than to $\left\lfloor \frac{q}{2}\right\rfloor$, then the decryption of $(\textbf{c}_1, c_2)$ is $0$, else it is $1$.</p>
-  </li>
-</ul>
-
-<hr />
-
-<div class="footnotes">
-  <ol>
-    <li id="fn:1">
-      <p>O. Regev. <a href="http://www.cims.nyu.edu/~regev/papers/qcrypto.pdf">On lattices, learning with errors, random linear codes, and cryptography</a>. J. ACM, 56(6):1–40, 2009. Preliminary version in STOC 2005.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
+q_k(\alpha)\leq m < q_{k+1}(\alpha) %]]></script>, 
+and has length 
+<script type="math/tex">\Gamma(\alpha,m) := |q_k \alpha - p_k|</script>, 
+by the Theorem of the <em>Best approximation</em> section in the previous post.</p>
 
   </div>
   

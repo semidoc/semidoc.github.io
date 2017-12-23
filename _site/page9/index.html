@@ -86,88 +86,145 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/boczkowski-3-bits">
-        Fast self-stabilizing bit dissemination
+      <a href="/exploration">
+        Exploring, evacuating and finding treasures, without a map
       </a>
     </h1>
 
-    <span class="post-date">09 Mar 2017</span>
+    <span class="post-date">29 Jun 2017</span>
 
-    <h3 id="introduction">Introduction</h3>
-<p>(The introduction is in French and English, the text itself is in English)</p>
+    <p>Hi there! I have come back from the 
+<a href="https://sirocco2017.lif.univ-mrs.fr/">Sirocco conference</a> a few days ago, 
+and there I saw a couple of talks on fun and easy-to-explain topics, so here is a post about it.</p>
 
-<p>fr : Bonjour, et bienvenue pour le premier vrai post de ce blog. Aujourd’hui <a href="https://www.irif.fr/~lboczko/">Lucas Boczkowski</a> résume (en anglais) l’exposé qu’il a donné au séminaire des doctorants le 22 février 2017 à propos de l’article <a href="https://arxiv.org/abs/1602.04419"><em>Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits</em></a>, présenté avec ses co-auteurs à SODA 2017. Si vous avez des commentaires n’hésitez pas à les envoyer, à Lucas ou bien à moi (respectivement lboczko et feuilloley at irif.fr).</p>
+<h1 id="cow-path-problem">Cow path problem</h1>
+<p>You may know the following problem, or a variant of it:</p>
 
-<p>en: Hi everyone, and welcome to the first real post of this blog. The following text is a summary (in English) by <a href="https://www.irif.fr/~lboczko/">Lucas Boczkowski</a> of the talk he gave at the PhD seminar on the 22nd of February 2017. It is about the paper he and his coauthors presented at SODA this year: <a href="https://arxiv.org/abs/1602.04419"><em>Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits</em></a>. For any comment, send an email to Lucas or to me (respectively lboczko and feuilloley at irif.fr).</p>
+<p>A cow is looking for a treasure, 
+that is located at an unknown position of a path. 
+The cow cannot see very well, so it can only detect the treasure if it is just below its eyes.
+The question is: what is a good strategy to find the treasure while
+walking as little as possible? More precisely, if there are $d$ steps from the 
+starting point to the treasure (and $d$ is unknown), is it possible to find it after $O(d)$ steps?<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
 
-<h1 id="setup-and-result">Setup and result</h1>
-<p>Consider the following scenario.
-A school of $n$ fish has to decide whether to keep moving forward or change direction. We model an answer to this question by a binary bit $b \in {0,1}$.
-An informed source, perhaps a fish who saw a predator, is convinced on what the correct choice of $b$ should be and she wishes to spread  it to her peers. On each round every fish looks at $O(1)$ randomly chosen other fish.
-If they see the source or someone who knows $b$ they learn it themselves.</p>
+<p>I will explain the solution in the next paragraph, but I guess it is better to find it by 
+yourself, if you do not know it already (it is not super tricky).</p>
 
-<p>We will be interested in information spreading of the kind we just described.
-Let us denote  by <em>SIMPLE</em> this simple example. It can be shown that <em>SIMPLE</em> only needs $O(\log n)$ rounds to finish with high probability (w.h.p). 
-In this work, we seek to understand what are the harshest conditions under which such efficient spreading of information can be implemented.
-Our result is a generalization to a more general context that still runs in $\tilde{O}(\log n)$ rounds.</p>
+<p>For sure, the cow cannot go straight in one direction, as 
+the treasure may be in the other direction. But when it turns back, it may be the case 
+that the direction was good, and that the treasure is just a few steps further. 
+The solution is basically to do a first step in one arbitrary direction, say the right, 
+then to go back to the starting point, to do two steps to the left, 
+to go back, do four steps to the right etc. doubling the distance every time.</p>
 
-<p>To begin with, it should be pointed out that <em>SIMPLE</em> already has some nice features. Agents interact <em>stochastically</em> and <em>anonymously</em>. When they interact they only need to exchange one bit which is $b$. In fact, we should be more precise and say they actually exchange two bits one saying if they are <em>knowledgeable</em> and the other possibly giving the value $b$.</p>
+<p>The cow will eventually find the treasure, as it goes arbitrarily far in both directions.
+As for the distance travelled, the last movement from the starting point to the treasure is 
+basically of the same order of magnitude as the whole distance walked from the very 
+start of the procedure. This kind of exponential increase is often used in 
+algorithms, see for example 
+the <a href="https://en.wikipedia.org/wiki/Exponential_search">exponential search</a>. 
+Another example is the case when one 
+has an efficient algorithm for a task, but this algorithm requires some upper 
+bound on a parameter of the input ; then one can guess 
+a small value for the parameter, and then, if the  algorithm fails with this parameter, 
+double this value, try again, etc.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
 
-<p>On top of this, we add a requirement known as <em>self-stabilization</em>. This means that no matter what the agents inner state is at the beginning of the protocol, they should after some (hopefully short) time get to know the source bit $b$. Even if initially most fish wanted to go forward, if the informed source saw a predator, she will manage to influence the whole school.
-The self-stabilizing requirement  can be a daunting one. Indeed, the more complex a protocol is, the more states the agents are allowed to have, the more cases a proof of self-stabilization needs to handle.
-Another view on self-stabilization is that if the source for some reason, in the middle of the execution of the protocol changes her mind from $b$ to $1-b$ then soon after that, the mechanism allows everyone to agree on $1-b$.</p>
+<p>Note that the cow path problem is also known under the less bucolic name of 
+<a href="https://en.wikipedia.org/wiki/Linear_search_problem">linear search problem</a>.</p>
 
-<p>Regarding communication, we allow the agents to have a big memory, but we ask that messages exchanged on each round by each agent are of small size. 
-In other words, 
-even if agents are able to do sophisticated computations privately, only few bits are exchanged on each interaction.</p>
+<h1 id="competitive-ratio">Competitive ratio</h1>
+<p>In the algorithm above, the ratio between the time it takes to find the treasure 
+if you do not know where it is, and the time it takes to reach it if you know where it is, 
+is constant. In analogy with <a href="https://en.wikipedia.org/wiki/Online_algorithm">online algorithms</a>, 
+this ratio is called the <em>competitive ratio</em>, and it
+is the usual way to measure how efficient a search algorithm is. The first step is 
+to prove that a constant ratio strategy exists, and then to improve this constant.
+For example in the cow path problem, the strategy above leads to an optimal ratio of 9, and it 
+is possible to get a smaller constant with a randomized strategy.<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup></p>
 
-<p>Let us now go back to <em>SIMPLE</em> and try and understand why it does not meet our demands. 
-First we need to be slightly more precise and define what happens when two knowledgeable agents with different opinions meet. For concreteness let us say that in this case they flip opinions, except for the source of course. In the first paragraph, such a situation didn’t occur because we implicitly started from a very favourable configuration where nobody was in a ``knowledgeable state”, i.e., thought they had already seen the source.
-But in fact, if we start with everybody being knowledgeable, and being convinced of the wrong value of $b$, convergence will be very slow. Other similar simple rules share this burden of being slow, or they are demanding in terms of message size.</p>
+<h1 id="more-roads-diverged-in-a-yellow-wood">More roads diverged in a yellow wood…</h1>
+<p>So now what happens if the cow stands at the intersection of $m$ paths 
+(the previous case being $m=2$)? It is natural to visit every path
+one after the other, increasing the distance travelled. 
+To minimize the competitive ratio, 
+the best strategy is to fix some ordering on the path, and to visit them in the ordering
+(1, 2, …, m, 1, 2, etc.), and every time a new path is taken 
+to multiply the distance by $m/(m-1)$.</p>
 
-<p>Our main result is the following.</p>
-
-<p><strong>Theorem</strong>
- There exists a  protocol, which solves the <em>broadcast</em> problem in a self-stabilizing manner in $\tilde{O}(\log n)$ rounds w.h.p using $3$-bit messages.</p>
-
-<p>Note these $3$ bits in principle allow to encode information such as <em>I am the source</em> but it is not enough to say <em>I saw the source $k$ rounds ago</em> for more than $\Omega(1)$ distinct values of $k$.</p>
-
-<h1 id="sketch-of-proof-of-the-theorem">Sketch of proof of the Theorem</h1>
-
-<p>The proof consists of three steps.</p>
+<h1 id="and-more-cows-were-grazing">…and more cows were grazing</h1>
+<p>Then one can again improve the story by adding more cows (usually less than the 
+number of paths, otherwise it is less funny<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>).
+Then the finishing time can be defined in several ways:</p>
 
 <ul>
-  <li>We first show that the problem can be reduced to that of agreeing on a counter modulo $O(\log n)$.</li>
-  <li>We then build such a counter  in $\tilde{O}(\log n)$ rounds using large messages.</li>
-  <li>A message reduction tool is invoked to reduce the message size down to $O(1)$, paying only a small $o(\log n)$ multiplicative overhead in the number of rounds.</li>
+  <li>the simplest way is to say that the game finishes when one of the cows find the treasure,</li>
+  <li>but maybe you want all the cows to be around the treasure. This case is usually called an <em>evacuation problem</em>, because it represents the situation in which the agents are looking for an exit, and every agent has to be evacuated.</li>
 </ul>
 
-<h2 id="step-1">Step $(1)$</h2>
+<p>In this last case there are two main possibilities:</p>
 
-<p>Under the assumption that all agents share the same clock modulo $T = C \log n$ for a big constant $C$, the following trick shows how to obtain convergence  in $O(\log n)$ time. Each phase of length $T$ is subdivided into two subphases of length $T/2$, the <em>morning</em> and the <em>evening</em>. In the morning, non-source agents are <em>sensitive</em> to opinion $0$. This means that whenever they see another agent displaying $0$, they turn their displayed bit to $0$, but if they see $1$ they ignore it. Then, in the evening, they do the opposite, namely they switch the displayed bit to $1$ as soon as they see a $1$.</p>
+<ul>
+  <li>either the cows can communicate directly (in the robot metaphor, this a 
+wireless communication)</li>
+  <li>or they cannot: two cows can only communicate if they are at the same place (face-to-face communication).</li>
+</ul>
 
-<p>Consider the phase (i.e., morning+evening) starting after initialization.  If $b=0$ after morning is over at time $T/2$, every displayed bit is $0$ w.h.p., and remains there forever. Otherwise, if $b=1$, after the first evening, $[T/2+1, T]$, all displayed bits are set to $1$ w.h.p., and remain $1$ forever. Note that a common time notion is required to achieve correctness, and this cannot be assumed in a self-stabilizing framework as the common clock is a part of the memory which could be initially corrupted.</p>
+<p>The paper by Brandt et al. presented at the conference, and listed at the end of this post 
+is about this last case, with lower and upper bounds on the competitive ratio. 
+Another paper by Cyzyzowicz et al. was about evacuation from a disk, with 
+some faulty agents.</p>
 
-<h2 id="step-2">Step $(2)$</h2>
-<p>Step $(2)$ is based on the protocol <em>MAJORITY</em> from the paper <em><a href="http://vesta.informatik.rwth-aachen.de/opus/volltexte/2010/2429/pdf/09371.ScheidelerChristian.Paper.2429.pdf">Stabilizing consensus with the power of two choices</a></em>. To design a clock modulo $T$ each agent displays $\log T$ bits corresponding to the binary expansion of a number $&lt; T$. On each round, each agent samples the counters of $2$ other agents uniformly at random. Then <em>3-MAJORITY</em> is applied bitwise and the counters are also incremented on every round.</p>
+<h1 id="finally-lets-go-exploring">Finally, let’s go exploring!</h1>
+<p>To finish this post, I would like to mention a similar but different kind of 
+problem: graph exploration. 
+We consider agents that move in an unknown graph, the following way. An agent starts at
+a vertex, and can only see that there are some edges linking it to the rest of the graph.
+Then it chooses such an edge, reveal a new node, and a set of outgoing edges. 
+Then again it chooses an edge etc. 
+At each steps the part of the graph that has been explored increases, and the goal is to explore 
+the graph completely, as fast as possible. 
+Once again the question is: what is the good strategy for these agents? More precisely, 
+how to minimize the competitive ratio (which is defined here, as the ratio between the 
+time of exploration, and the time it would take to explore the graph if the agents had a map of the graph)?
+Again there are many variations. A paper on this topic at the conference is by Disser at al.</p>
 
-<p>At this stage, convergence of the counters may seem counter-intuitive. Each bit of each counter is affected both by the operation of incrementing and also by the majority rule. It turns out however that this solution works in $O(\log T \log n)$ rounds provided $T$ is a power of $2$. However it uses $\log T$ bits messages and later we want $T$ to be of order $\log  n » 1$.</p>
+<hr />
 
-<h2 id="step-3">Step $(3)$</h2>
+<h4 id="papers-and-notes">Papers and notes</h4>
+<ul>
+  <li>Amos Korman, Jean-Sébastien Sereni, Laurent Viennot: 
+<a href="https://arxiv.org/abs/1512.03306">Toward more localized local algorithms: removing assumptions concerning global knowledge</a>. 
+Distributed Computing 26(5-6): 289-308 (2013)</li>
+  <li>Sebastian Brandt, Klaus-Tycho Förster, Benjamin Richner, and Roger Wattenhofer: 
+<a href="https://sirocco2017.lif.univ-mrs.fr/preproceedings/Wireless%20evacuation%20on%20m%20rays%20with%20k%20searchers.pdf">Wireless Evacuation on $m$ Rays with $k$ Searchers</a> SIROCCO 2017.</li>
+  <li>Jurek Czyzowicz, Konstantinos Georgiou, Maxime Godon, Evangelos Kranakis, Danny Krizanc, Wojciech Rytter, and Michal Wlodarczyk:
+<a href="https://sirocco2017.lif.univ-mrs.fr/preproceedings/Evacuation%20from%20a%20disc%20in%20the%20presence%20of%20a%20faulty%20robot.pdf">Evacuation from a Disc in the Presence of a Faulty Robot</a> SIROCCO 2017.</li>
+  <li>Yann Disser, Frank Mousset, Andreas Noever, Nemanja Skoric, and Angelika Steger:
+<a href="https://sirocco2017.lif.univ-mrs.fr/preproceedings/A%20general%20lower%20bound%20for%20collaborative%20tree%20exploration.pdf">A General Lower Bound for Collaborative Tree Exploration</a></li>
+</ul>
 
-<p>In this part, our main lemma is the following.</p>
+<p>The weird section titles are references to <em><a href="http://www.bartleby.com/119/1.html">a poem</a></em> 
+and a <em><a href="http://www.gocomics.com/calvinandhobbes/1995/12/31/">comics</a></em></p>
 
-<p><strong>Informal lemma</strong>
-In our context, any protocol  $\Pi$ using $\ell$ bits messages can be emulated by another one using $\lceil \log \ell \rceil +1$ bits messages, at the cost of only a small overhead in the running time.</p>
+<p>Contact for comments: feuilloley at irif dot fr.</p>
 
-<p><em>Informal proof</em>
-We know from the previous step how to design a counter modulo $\ell$ using $\lceil \log \ell \rceil $ bits. This can be interpreted as an index saying which bit of the $\Pi$-message  to display. Looping over indices of $\Pi$ allows, within $\ell$ rounds to emulate \emph{one} round of $\Pi$.</p>
-
-<p>The lemma can be applied to any protocol, and in particular… to the clock synchronization protocol we saw in Step $2$. This reduces the message size from $\log T$ to $\lceil \log \log T\rceil +1$. We can keep iterating this and
-we are able to reduce the message size until reaching the fixed point of $T \mapsto \lceil \log T \rceil + 1$ which happens to be $3$.</p>
-
-<h1 id="open-questions">Open questions</h1>
-<p>Does there exist a $1$ bit efficient solution to the <em>broadcast</em> problem ? A solution that does not build a clock would be of special interest to us.</p>
+<h4 id="footnotes">Footnotes</h4>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>There is not a great difference between the continuous and the discrete setting here. The only subtlety is that in the continuous setting, there must be a guarantee that the treasure cannot be arbitrarily close to the starting point, otherwise any first move would already be arbitrarily bad.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>For an example in network distributed computing, see the paper by Korman et al., in which the unknown parameter is the size of the network.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>References for these results and the ones of the following section can be found in the paper by Brandt et al.&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>If you think this story is becoming too silly, just replace the word ‘cow’ by ‘robot’ or ‘agent’, and ‘treasure’ by ‘target’.&nbsp;<a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   </div>
   
