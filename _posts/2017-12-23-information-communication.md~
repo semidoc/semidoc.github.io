@@ -82,7 +82,7 @@ Communication for Boolean Functions](https://pdfs.semanticscholar.org/fd13/ba5bb
 Nevertheless, this approach is very powerful, and almost all the lower bounds 
 we have on 
 communication complexity can be phrased as information complexity lower bounds 
-XXXXXXXX REF XXXXXXXXXXXXXX. 
+(See [this paper](https://arxiv.org/abs/1204.1505)). 
 
 ## Multi-party communication (the more the merrier... maybe not)
 Multi-party communication is the setting in which the input is split between 

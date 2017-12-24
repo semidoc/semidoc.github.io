@@ -92,5 +92,5 @@ But this is not easy. There are different
 ways to define the information revealed during a multi-party protocol, and none of 
 ones we know gives very good bounds.  
 
-## Footnotes
+### Footnotes
 [^1]: See the classic _rectangle method_, for example in [this survey](https://pdfs.semanticscholar.org/6094/392d07d36c086a988493686b73ebca39169b.pdf).
