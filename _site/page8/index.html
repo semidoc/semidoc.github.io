@@ -86,168 +86,145 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/rotondo-fractions">
-        Combinatorics of continued fractions
+      <a href="/exploration">
+        Exploring, evacuating and finding treasures, without a map
       </a>
     </h1>
 
-    <span class="post-date">31 Aug 2017</span>
+    <span class="post-date">29 Jun 2017</span>
 
-    <p>Hello, the first post of this new academic year is by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a> 
-who gave a talk at the seminar a few months ago. As there is more to say about 
-the subject, this post will probably have a follow-up later.</p>
+    <p>Hi there! I have come back from the 
+<a href="https://sirocco2017.lif.univ-mrs.fr/">Sirocco conference</a> a few days ago, 
+and there I saw a couple of talks on fun and easy-to-explain topics, so here is a post about it.</p>
+
+<h1 id="cow-path-problem">Cow path problem</h1>
+<p>You may know the following problem, or a variant of it:</p>
+
+<p>A cow is looking for a treasure, 
+that is located at an unknown position of a path. 
+The cow cannot see very well, so it can only detect the treasure if it is just below its eyes.
+The question is: what is a good strategy to find the treasure while
+walking as little as possible? More precisely, if there are $d$ steps from the 
+starting point to the treasure (and $d$ is unknown), is it possible to find it after $O(d)$ steps?<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
+
+<p>I will explain the solution in the next paragraph, but I guess it is better to find it by 
+yourself, if you do not know it already (it is not super tricky).</p>
+
+<p>For sure, the cow cannot go straight in one direction, as 
+the treasure may be in the other direction. But when it turns back, it may be the case 
+that the direction was good, and that the treasure is just a few steps further. 
+The solution is basically to do a first step in one arbitrary direction, say the right, 
+then to go back to the starting point, to do two steps to the left, 
+to go back, do four steps to the right etc. doubling the distance every time.</p>
+
+<p>The cow will eventually find the treasure, as it goes arbitrarily far in both directions.
+As for the distance travelled, the last movement from the starting point to the treasure is 
+basically of the same order of magnitude as the whole distance walked from the very 
+start of the procedure. This kind of exponential increase is often used in 
+algorithms, see for example 
+the <a href="https://en.wikipedia.org/wiki/Exponential_search">exponential search</a>. 
+Another example is the case when one 
+has an efficient algorithm for a task, but this algorithm requires some upper 
+bound on a parameter of the input ; then one can guess 
+a small value for the parameter, and then, if the  algorithm fails with this parameter, 
+double this value, try again, etc.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
+
+<p>Note that the cow path problem is also known under the less bucolic name of 
+<a href="https://en.wikipedia.org/wiki/Linear_search_problem">linear search problem</a>.</p>
+
+<h1 id="competitive-ratio">Competitive ratio</h1>
+<p>In the algorithm above, the ratio between the time it takes to find the treasure 
+if you do not know where it is, and the time it takes to reach it if you know where it is, 
+is constant. In analogy with <a href="https://en.wikipedia.org/wiki/Online_algorithm">online algorithms</a>, 
+this ratio is called the <em>competitive ratio</em>, and it
+is the usual way to measure how efficient a search algorithm is. The first step is 
+to prove that a constant ratio strategy exists, and then to improve this constant.
+For example in the cow path problem, the strategy above leads to an optimal ratio of 9, and it 
+is possible to get a smaller constant with a randomized strategy.<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup></p>
+
+<h1 id="more-roads-diverged-in-a-yellow-wood">More roads diverged in a yellow wood…</h1>
+<p>So now what happens if the cow stands at the intersection of $m$ paths 
+(the previous case being $m=2$)? It is natural to visit every path
+one after the other, increasing the distance travelled. 
+To minimize the competitive ratio, 
+the best strategy is to fix some ordering on the path, and to visit them in the ordering
+(1, 2, …, m, 1, 2, etc.), and every time a new path is taken 
+to multiply the distance by $m/(m-1)$.</p>
+
+<h1 id="and-more-cows-were-grazing">…and more cows were grazing</h1>
+<p>Then one can again improve the story by adding more cows (usually less than the 
+number of paths, otherwise it is less funny<sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>).
+Then the finishing time can be defined in several ways:</p>
+
+<ul>
+  <li>the simplest way is to say that the game finishes when one of the cows find the treasure,</li>
+  <li>but maybe you want all the cows to be around the treasure. This case is usually called an <em>evacuation problem</em>, because it represents the situation in which the agents are looking for an exit, and every agent has to be evacuated.</li>
+</ul>
+
+<p>In this last case there are two main possibilities:</p>
+
+<ul>
+  <li>either the cows can communicate directly (in the robot metaphor, this a 
+wireless communication)</li>
+  <li>or they cannot: two cows can only communicate if they are at the same place (face-to-face communication).</li>
+</ul>
+
+<p>The paper by Brandt et al. presented at the conference, and listed at the end of this post 
+is about this last case, with lower and upper bounds on the competitive ratio. 
+Another paper by Cyzyzowicz et al. was about evacuation from a disk, with 
+some faulty agents.</p>
+
+<h1 id="finally-lets-go-exploring">Finally, let’s go exploring!</h1>
+<p>To finish this post, I would like to mention a similar but different kind of 
+problem: graph exploration. 
+We consider agents that move in an unknown graph, the following way. An agent starts at
+a vertex, and can only see that there are some edges linking it to the rest of the graph.
+Then it chooses such an edge, reveal a new node, and a set of outgoing edges. 
+Then again it chooses an edge etc. 
+At each steps the part of the graph that has been explored increases, and the goal is to explore 
+the graph completely, as fast as possible. 
+Once again the question is: what is the good strategy for these agents? More precisely, 
+how to minimize the competitive ratio (which is defined here, as the ratio between the 
+time of exploration, and the time it would take to explore the graph if the agents had a map of the graph)?
+Again there are many variations. A paper on this topic at the conference is by Disser at al.</p>
 
 <hr />
 
-<p>In this post we discuss 
-<strong><a href="https://en.wikipedia.org/wiki/Continued_fraction">continued fraction expansions</a></strong>, 
-and their statistics.</p>
-
-<h1 id="introduction">Introduction</h1>
-<p>Continued fractions are rather ubiquitous, they pop up in various contexts such as: 
-the <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean Algorithm</a>, 
-<a href="https://en.wikipedia.org/wiki/Pell%27s_equation">Pell’s equation</a> (see 
-<a href="http://www-bcf.usc.edu/~lototsky/PiMuEp/Pell-IMO.pdf">here</a> and 
-<a href="http://math.stanford.edu/~jbooher/expos/continued_fractions.pdf">here</a>) and 
-<a href="https://en.wikipedia.org/wiki/Diophantine_approximation">Diophantine approximation</a>, the approximation of reals by rationals.</p>
-
-<h3 id="relation-to-the-euclidean-algorithm-and-definitions">Relation to the Euclidean algorithm and definitions.</h3>
-
-<p>Let us briefly see their relation to the Euclidean algorithm as an introduction.</p>
-
-<p>The Euclidean algorithm allows us to calculate the greatest common divisor ($\gcd$) of 
-a pair of positive integers $(x,y)$, by performing successive divisions. Supposing
-$x\geq y$, the algorithm proceeds by applying $(x,y)\mapsto (y,x\bmod y)$ until the
-smallest entry $y$ is $0$ and the result is then $x$. Its correctness is seen from the fact
-that $x\bmod y = x - y \, \lfloor x/y\rfloor$, and therefore $\gcd(x,y)=\gcd(y,x\bmod y)$.</p>
-
-<p>Let us get to the continued fractions. Given a pair of positive integers $(x,y)$
-with $x\geq y$ we may write</p>
-
-<script type="math/tex; mode=display">\frac{y}{x} = \frac{1}{x/y} = \cfrac{1}{\lfloor x/y \rfloor + \cfrac{x\bmod y}{y} }\,,</script>
-
-<p>and then continue the procedure with $\cfrac{x\bmod y}{y}$ provided that $x\bmod y \neq 0$. This is
-exactly the Euclidean algorithm, and observe that the quotients $\lfloor x/y\rfloor$
-that we discard in the algorithm here appear as coefficients.</p>
-
-<p>Thus the Euclidean produces a continued fraction expansion</p>
-
-<script type="math/tex; mode=display">\frac{y}{x} = \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}\,,</script>
-
-<p>where the positive integers $m_1,\ldots,m_k$ are the successive quotients in the algorithm.</p>
-
-<p>More generally, we call any such expansion a continued fraction expansion and even given infinitely many coefficients $m_1,\ldots,m_k,\ldots$ we define</p>
-
-<script type="math/tex; mode=display">\cfrac{1}{m_1 + \cfrac{1}{m_2+\ddots} } = \lim_{k\to\infty}\cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}\,,</script>
-
-<p>whose convergence we do not prove here, but you can find a proof in Kinchin’s book 
-(see the reference at the end of the post).</p>
-
-<p>Rational numbers have exactly two expansions:</p>
-
-<script type="math/tex; mode=display">\frac{y}{x} = \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}= \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{(m_k-1) + \cfrac{1}{1}} }}\,,</script>
-
-<p>while irrational numbers $\alpha\in (0,1)$ have a unique (infinite) expansion, 
-which can be found applying the same Euclidean algorithm (!) to the pair $(1/\alpha,1)$.</p>
-
-<p>Some remarkable examples  (for a proof see <a href="https://arxiv.org/abs/math/0601660">this</a> 
-arXiv note or <a href="https://topologicalmusings.wordpress.com/2008/08/04/continued-fraction-for-e/">this</a>)</p>
-
-<script type="math/tex; mode=display">\frac{\sqrt{5}-1}{2} = \cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{\ddots}}}\,,</script>
-
-<script type="math/tex; mode=display">\qquad e-2 = \cfrac{1}{1+\cfrac{1}{2+\cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{4+\cfrac{1}{1+\ddots}}}}}}\,,</script>
-
-<p>the last one being made up from the concatenation of the trios $1,2n,1$ for $n=1,2,\ldots$.</p>
-
-<h3 id="notations">Notations</h3>
-<p>Given an irrational number $\alpha \in (0,1)$ with continued fraction expansion</p>
-
-<script type="math/tex; mode=display">\alpha  = \cfrac{1}{m_1 + \cfrac{1}{m_2+\ddots} }\,,</script>
-
-<p>the coefficients $m_1,m_2,\ldots \geq 1$ are called <em>partial quotients</em> or <em>digits</em>, while the partial expansions</p>
-
-<script type="math/tex; mode=display">\frac{p_k(\alpha)}{q_k(\alpha)} := \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k}}}\,,</script>
-
-<p>with 
-<script type="math/tex">\gcd(p_k(\alpha),q_k(\alpha)) = 1</script>, 
-are known as <em>convergents</em>. By convention we define $p_0=0$ and $q_0=1$ for every irrational $\alpha\in (0,1)$. The denominators $(q_k(\alpha))_{k\in \mathbb{N}}$ of the convergents are known as the <em>continuants</em> of $\alpha$.</p>
-
-<p>Of course, all of these definition can be extended to rational numbers by considering only the meaningful part ($k\leq$ length of the expansion). See <a href="http://stackoverflow.com/questions/5440688/the-guess-the-number-game-for-arbitrary-rational-numbers">here</a> for a particularly interesting application to a game of guessing a rational number!</p>
-
-<h3 id="number-of-steps-in-the-euclidean-algorithm">Number of steps in the Euclidean algorithm.</h3>
-
-<p>The depth of the continued fraction expansion of a rational number $x/y$ is exactly the number of steps $\ell:=\ell(x,y)$ performed by the Euclidean algorithm on $(x,y)$. To bound $\ell$, we remark that the denominators satisfy the following recurrence relation</p>
-
-<script type="math/tex; mode=display">q_{k+1} = m_{k+1}q_k + q_{k-1}\,,\quad q_0=1,q_{-1}=0\,.</script>
-
-<p>This is proved by induction, along with the analogous (up to the initial condition) recurrence relation for the numerators $p_k$. 
-It is evident from the recurrence relation that $q_k$ is strictly increasing, furthermore</p>
-
-<script type="math/tex; mode=display">q_{k+1} = m_{k+1}q_k + q_{k-1} \geq 2 q_{k-1}\,,</script>
-
-<p>so that $q_k \geq 2^{\frac{k-1}{2}}$.</p>
-
-<p>Picking $k=\ell(x,y)$, the previous inequality reads $y\geq 2^{\frac{\ell-1}{2}}$ so that</p>
-
-<script type="math/tex; mode=display">\ell(x,y) \leq 1 + 2 \log_2 y\,.</script>
-
-<h1 id="classical-continued-fraction-statistics">Classical Continued Fraction Statistics</h1>
-<p>We have just seen that convergents $q_k(\alpha)$ grow at least exponentially</p>
-
-<script type="math/tex; mode=display">2^{\frac{k-1}{2}} \leq q_k(\alpha)\,,</script>
-
-<p>we briefly mention that much more precise results are known when we allow $\alpha$ to be almost any irrational in $(0,1)$.</p>
-
-<p><strong>Theorem</strong> [Lévy]
-For almost every $\alpha\in (0,1)$ (w.r.t the Lebesgue -uniform- measure) we have</p>
-
-<script type="math/tex; mode=display">\lim_{k\to\infty}\frac{1}{k}\log q_k(\alpha) = \frac{\pi^2}{12 \log 2}\,.</script>
-
-<p>This result is proved by using Ergodic Theory. Continued fractions are naturally associated to the
-so called Euclidean Dynamical System arising from the Gauss map</p>
-
-<script type="math/tex; mode=display">T \colon (0,1)\to (0,1) \,,\qquad x\mapsto \left\{\tfrac{1}{x}\right\}\,,</script>
-
-<p>where ${x}:=x-\lfloor x\rfloor$ is the <em>fractional part</em> of $x$.</p>
-
-<p>Interestingly, it is also true that the frequency of $m_j=k$ tends to
-$\log_2\left(1+\frac{1}{k(k+2)}\right)$ almost surely as we take more and more quotients.
-For more on this read the notes 
-<a href="http://www.maths.manchester.ac.uk/~cwalkden/ergodic-theory/ergodic_theory.pdf">here</a> 
-or in Khinchin’s book.</p>
-
-<h1 id="best-approximations">Best approximations</h1>
-<p>Convergents are particularly important due to the fact that they provide the ``best’’ approximations to numbers in the following sense</p>
-
-<p><em>Definition</em> [Best approximations of the second kind]
-Let $\alpha \in (0,1)$ be a real number. Then the fraction $\tfrac{p}{q}$ with $q&gt;0$ is said to be a best approximation of the second kind for $\alpha$ if and only if</p>
-
-<script type="math/tex; mode=display">% <![CDATA[
-|q \alpha - p| < |q^\prime \alpha - p^\prime| %]]></script>
-
-<p>for any other fraction $\tfrac{p^\prime}{q^\prime}$ with $0&lt;
-q \prime \leq q$.</p>
-
-<p>Remark that 
-<script type="math/tex">|q \alpha - p| = \frac{| \alpha - p / q|}{1/q}</script> so that this ``objective function’’ can be thought of as the error of approximating $\alpha$ by $p/q$, relative to the size of the denominator $q$. We are ready to state the relation with continued fractions</p>
-
-<p><strong>Theorem</strong> [See Khinchin 97]
-Best approximations of the second kind are necessarily convergents, and conversely, every convergent is a best approximation of the second kind, with exception of the trivial case of</p>
-
-<script type="math/tex; mode=display">\alpha = \frac{1}{2},\qquad \frac{p_0}{q_0} = 0\,.</script>
-
-<p>Concretely, this means that if we may choose from the set of fractions whose denominators are at most $n$, the best approximation is given by $\frac{p_k(\alpha)}{q_k(\alpha)}$ with $k:= k(\alpha,n)$ is the only index $k$ for which $q_k(\alpha)\leq n &lt; q_{k+1}(\alpha)$.</p>
-
-<p>We remark that it is the continuants under the condition $q_k(\alpha)\leq n &lt; q_{k+1}(\alpha)$ and $n\to \infty$ that will eventually interest us, rather than the classical fixed depth $k\to \infty$.</p>
-
-<h1 id="references">References.</h1>
-
+<h4 id="papers-and-notes">Papers and notes</h4>
 <ul>
-  <li>Aleksandr Ya. Khinchin. Continued Fractions.  <em>New York: Dover Publications</em>, 1997.</li>
-  <li>M. Einsiedler and T. Ward. Ergodic Theory: with a view towards Number Theory. <em>Graduate Texts
-in Mathematics. Springer, 2010.</em></li>
-  <li>N. P. Fogg , V. Berthé, S. Ferenczi , C. Mauduit and Anne Siegel: Substitutions in Dynamics, Arithmetics, and Combinatorics <em>Lecture Notes in Mathematics, Vol. 1794.</em></li>
+  <li>Amos Korman, Jean-Sébastien Sereni, Laurent Viennot: 
+<a href="https://arxiv.org/abs/1512.03306">Toward more localized local algorithms: removing assumptions concerning global knowledge</a>. 
+Distributed Computing 26(5-6): 289-308 (2013)</li>
+  <li>Sebastian Brandt, Klaus-Tycho Förster, Benjamin Richner, and Roger Wattenhofer: 
+<a href="https://sirocco2017.lif.univ-mrs.fr/preproceedings/Wireless%20evacuation%20on%20m%20rays%20with%20k%20searchers.pdf">Wireless Evacuation on $m$ Rays with $k$ Searchers</a> SIROCCO 2017.</li>
+  <li>Jurek Czyzowicz, Konstantinos Georgiou, Maxime Godon, Evangelos Kranakis, Danny Krizanc, Wojciech Rytter, and Michal Wlodarczyk:
+<a href="https://sirocco2017.lif.univ-mrs.fr/preproceedings/Evacuation%20from%20a%20disc%20in%20the%20presence%20of%20a%20faulty%20robot.pdf">Evacuation from a Disc in the Presence of a Faulty Robot</a> SIROCCO 2017.</li>
+  <li>Yann Disser, Frank Mousset, Andreas Noever, Nemanja Skoric, and Angelika Steger:
+<a href="https://sirocco2017.lif.univ-mrs.fr/preproceedings/A%20general%20lower%20bound%20for%20collaborative%20tree%20exploration.pdf">A General Lower Bound for Collaborative Tree Exploration</a></li>
 </ul>
+
+<p>The weird section titles are references to <em><a href="http://www.bartleby.com/119/1.html">a poem</a></em> 
+and a <em><a href="http://www.gocomics.com/calvinandhobbes/1995/12/31/">comics</a></em></p>
+
+<p>Contact for comments: feuilloley at irif dot fr.</p>
+
+<h4 id="footnotes">Footnotes</h4>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>There is not a great difference between the continuous and the discrete setting here. The only subtlety is that in the continuous setting, there must be a guarantee that the treasure cannot be arbitrarily close to the starting point, otherwise any first move would already be arbitrarily bad.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>For an example in network distributed computing, see the paper by Korman et al., in which the unknown parameter is the size of the network.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>References for these results and the ones of the following section can be found in the paper by Brandt et al.&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:4">
+      <p>If you think this story is becoming too silly, just replace the word ‘cow’ by ‘robot’ or ‘agent’, and ‘treasure’ by ‘target’.&nbsp;<a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   </div>
   
@@ -271,7 +248,7 @@ in Mathematics. Springer, 2010.</em></li>
 
       <div class="footer">
         <p>
-          &copy; 2017. All rights reserved.
+          &copy; 2018. All rights reserved.
         </p>
       </div>
     </div>

@@ -86,144 +86,168 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/rotondo-sturmian">
-        Sturmian words
+      <a href="/rotondo-fractions">
+        Combinatorics of continued fractions
       </a>
     </h1>
 
-    <span class="post-date">07 Sep 2017</span>
+    <span class="post-date">31 Aug 2017</span>
 
-    <p>Hi, this is the second post by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a>.
-This one is about sturmian words, and sometimes refers to the first post about 
-continued fractions, that you can found <a href="https://semidoc.github.io/rotondo-fractions">here</a>.</p>
+    <p>Hello, the first post of this new academic year is by <a href="https://www.irif.fr/users/rotondo/index">Pablo Rotondo</a> 
+who gave a talk at the seminar a few months ago. As there is more to say about 
+the subject, this post will probably have a follow-up later.</p>
 
 <hr />
 
-<p>Sturmian words are infinite words ${\bf{u}}=u_0u_1\ldots\in \mathcal{A}^\infty$ 
-(sequences of symbols $u_i$ from an alphabet $\mathcal{A}$) that have numerous 
-characterizations, as the coding of digital lines, as rotation sequences, minimal 
-complexity sequences…</p>
+<p>In this post we discuss 
+<strong><a href="https://en.wikipedia.org/wiki/Continued_fraction">continued fraction expansions</a></strong>, 
+and their statistics.</p>
 
-<h3 id="a-first-definition">A first definition</h3>
-<p><em>Definition</em> [Sturmian word]
-Consider $\alpha,\beta \in [0,1)$ with $\alpha$ irrational. We define infinite words
-<script type="math/tex">\left(\underline{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
-and 
-<script type="math/tex">\left(\bar{s}_{\alpha,\beta}(n)\right)_{n\in\mathbb{N}}</script> 
-by</p>
+<h1 id="introduction">Introduction</h1>
+<p>Continued fractions are rather ubiquitous, they pop up in various contexts such as: 
+the <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean Algorithm</a>, 
+<a href="https://en.wikipedia.org/wiki/Pell%27s_equation">Pell’s equation</a> (see 
+<a href="http://www-bcf.usc.edu/~lototsky/PiMuEp/Pell-IMO.pdf">here</a> and 
+<a href="http://math.stanford.edu/~jbooher/expos/continued_fractions.pdf">here</a>) and 
+<a href="https://en.wikipedia.org/wiki/Diophantine_approximation">Diophantine approximation</a>, the approximation of reals by rationals.</p>
 
-<script type="math/tex; mode=display">\underline{s}_{\alpha,\beta}(n)= \left\lfloor (n+1)\,\alpha +\beta \right\rfloor - \left\lfloor n\,\alpha +\beta \right\rfloor\, ,</script>
+<h3 id="relation-to-the-euclidean-algorithm-and-definitions">Relation to the Euclidean algorithm and definitions.</h3>
 
-<p>and</p>
+<p>Let us briefly see their relation to the Euclidean algorithm as an introduction.</p>
 
-<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)= \left\lceil (n+1)\,\alpha +\beta \right\rceil - \left\lceil n\,\alpha +\beta \right\rceil\,,</script>
+<p>The Euclidean algorithm allows us to calculate the greatest common divisor ($\gcd$) of 
+a pair of positive integers $(x,y)$, by performing successive divisions. Supposing
+$x\geq y$, the algorithm proceeds by applying $(x,y)\mapsto (y,x\bmod y)$ until the
+smallest entry $y$ is $0$ and the result is then $x$. Its correctness is seen from the fact
+that $x\bmod y = x - y \, \lfloor x/y\rfloor$, and therefore $\gcd(x,y)=\gcd(y,x\bmod y)$.</p>
 
-<p>for each $n\in \mathbb{N}$. A binary word ${\bf{u}} \in {0,1}^\infty$ is 
-Sturmian if and only if it is of the form 
-<script type="math/tex">u_n = \underline{s}_{\alpha,\beta}(n),\,\forall n</script>,
-or 
-<script type="math/tex">u_n = \bar{s}_{\alpha,\beta}(n),\,\forall n</script> 
-for some $\alpha,\beta$ as above. The irrational number $\alpha$ is called the 
-<em>slope</em> of the word $\bf{u}$.</p>
+<p>Let us get to the continued fractions. Given a pair of positive integers $(x,y)$
+with $x\geq y$ we may write</p>
 
-<p><strong>Remark</strong> Observe that if ${\bf{u}}=\underline{s}_{\alpha,\beta}$</p>
+<script type="math/tex; mode=display">\frac{y}{x} = \frac{1}{x/y} = \cfrac{1}{\lfloor x/y \rfloor + \cfrac{x\bmod y}{y} }\,,</script>
 
-<script type="math/tex; mode=display">\lim_{n\to\infty} \frac{|u_0\ldots u_{n-1}|_1}{n} = \lim_{n\to\infty} \frac{1}{n}\,\sum_{i=0}^{n-1}u_i = \lim_{n\to\infty} \frac{\left\lfloor n\,\alpha +\beta \right\rfloor-\left\lfloor \beta \right\rfloor}{n} = \alpha\,,</script>
+<p>and then continue the procedure with $\cfrac{x\bmod y}{y}$ provided that $x\bmod y \neq 0$. This is
+exactly the Euclidean algorithm, and observe that the quotients $\lfloor x/y\rfloor$
+that we discard in the algorithm here appear as coefficients.</p>
 
-<p>where 
-<script type="math/tex">|\cdot|_1</script>
-denotes the number of ones in the word. Thus $\alpha$ represents the <em>frequency</em> 
-of ones. Clearly the same result is true when 
-<script type="math/tex">{\bf{u}}=\bar{s}_{\alpha,\beta}</script> 
-by the same argument.</p>
+<p>Thus the Euclidean produces a continued fraction expansion</p>
 
-<h3 id="sturmian-words-as-circle-rotations">Sturmian words as circle rotations</h3>
-<p>The above definition can be seen more intuitively as the binary coding of the 
-trajectory of a point on a circle of circumference $1$. This circle is realized 
-as the interval $[0,1]$ identifying $0$ and $1$, that is, taking fractional 
-parts $x\mapsto {x}$ or, equivalently, modulo one $x\mapsto x \bmod 1$.</p>
+<script type="math/tex; mode=display">\frac{y}{x} = \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}\,,</script>
 
-<p>Indeed, observe that</p>
+<p>where the positive integers $m_1,\ldots,m_k$ are the successive quotients in the algorithm.</p>
+
+<p>More generally, we call any such expansion a continued fraction expansion and even given infinitely many coefficients $m_1,\ldots,m_k,\ldots$ we define</p>
+
+<script type="math/tex; mode=display">\cfrac{1}{m_1 + \cfrac{1}{m_2+\ddots} } = \lim_{k\to\infty}\cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}\,,</script>
+
+<p>whose convergence we do not prove here, but you can find a proof in Kinchin’s book 
+(see the reference at the end of the post).</p>
+
+<p>Rational numbers have exactly two expansions:</p>
+
+<script type="math/tex; mode=display">\frac{y}{x} = \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k} }}= \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{(m_k-1) + \cfrac{1}{1}} }}\,,</script>
+
+<p>while irrational numbers $\alpha\in (0,1)$ have a unique (infinite) expansion, 
+which can be found applying the same Euclidean algorithm (!) to the pair $(1/\alpha,1)$.</p>
+
+<p>Some remarkable examples  (for a proof see <a href="https://arxiv.org/abs/math/0601660">this</a> 
+arXiv note or <a href="https://topologicalmusings.wordpress.com/2008/08/04/continued-fraction-for-e/">this</a>)</p>
+
+<script type="math/tex; mode=display">\frac{\sqrt{5}-1}{2} = \cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{\ddots}}}\,,</script>
+
+<script type="math/tex; mode=display">\qquad e-2 = \cfrac{1}{1+\cfrac{1}{2+\cfrac{1}{1+\cfrac{1}{1+\cfrac{1}{4+\cfrac{1}{1+\ddots}}}}}}\,,</script>
+
+<p>the last one being made up from the concatenation of the trios $1,2n,1$ for $n=1,2,\ldots$.</p>
+
+<h3 id="notations">Notations</h3>
+<p>Given an irrational number $\alpha \in (0,1)$ with continued fraction expansion</p>
+
+<script type="math/tex; mode=display">\alpha  = \cfrac{1}{m_1 + \cfrac{1}{m_2+\ddots} }\,,</script>
+
+<p>the coefficients $m_1,m_2,\ldots \geq 1$ are called <em>partial quotients</em> or <em>digits</em>, while the partial expansions</p>
+
+<script type="math/tex; mode=display">\frac{p_k(\alpha)}{q_k(\alpha)} := \cfrac{1}{m_1 + \cfrac{1}{\ddots + \cfrac{1}{m_k}}}\,,</script>
+
+<p>with 
+<script type="math/tex">\gcd(p_k(\alpha),q_k(\alpha)) = 1</script>, 
+are known as <em>convergents</em>. By convention we define $p_0=0$ and $q_0=1$ for every irrational $\alpha\in (0,1)$. The denominators $(q_k(\alpha))_{k\in \mathbb{N}}$ of the convergents are known as the <em>continuants</em> of $\alpha$.</p>
+
+<p>Of course, all of these definition can be extended to rational numbers by considering only the meaningful part ($k\leq$ length of the expansion). See <a href="http://stackoverflow.com/questions/5440688/the-guess-the-number-game-for-arbitrary-rational-numbers">here</a> for a particularly interesting application to a game of guessing a rational number!</p>
+
+<h3 id="number-of-steps-in-the-euclidean-algorithm">Number of steps in the Euclidean algorithm.</h3>
+
+<p>The depth of the continued fraction expansion of a rational number $x/y$ is exactly the number of steps $\ell:=\ell(x,y)$ performed by the Euclidean algorithm on $(x,y)$. To bound $\ell$, we remark that the denominators satisfy the following recurrence relation</p>
+
+<script type="math/tex; mode=display">q_{k+1} = m_{k+1}q_k + q_{k-1}\,,\quad q_0=1,q_{-1}=0\,.</script>
+
+<p>This is proved by induction, along with the analogous (up to the initial condition) recurrence relation for the numerators $p_k$. 
+It is evident from the recurrence relation that $q_k$ is strictly increasing, furthermore</p>
+
+<script type="math/tex; mode=display">q_{k+1} = m_{k+1}q_k + q_{k-1} \geq 2 q_{k-1}\,,</script>
+
+<p>so that $q_k \geq 2^{\frac{k-1}{2}}$.</p>
+
+<p>Picking $k=\ell(x,y)$, the previous inequality reads $y\geq 2^{\frac{\ell-1}{2}}$ so that</p>
+
+<script type="math/tex; mode=display">\ell(x,y) \leq 1 + 2 \log_2 y\,.</script>
+
+<h1 id="classical-continued-fraction-statistics">Classical Continued Fraction Statistics</h1>
+<p>We have just seen that convergents $q_k(\alpha)$ grow at least exponentially</p>
+
+<script type="math/tex; mode=display">2^{\frac{k-1}{2}} \leq q_k(\alpha)\,,</script>
+
+<p>we briefly mention that much more precise results are known when we allow $\alpha$ to be almost any irrational in $(0,1)$.</p>
+
+<p><strong>Theorem</strong> [Lévy]
+For almost every $\alpha\in (0,1)$ (w.r.t the Lebesgue -uniform- measure) we have</p>
+
+<script type="math/tex; mode=display">\lim_{k\to\infty}\frac{1}{k}\log q_k(\alpha) = \frac{\pi^2}{12 \log 2}\,.</script>
+
+<p>This result is proved by using Ergodic Theory. Continued fractions are naturally associated to the
+so called Euclidean Dynamical System arising from the Gauss map</p>
+
+<script type="math/tex; mode=display">T \colon (0,1)\to (0,1) \,,\qquad x\mapsto \left\{\tfrac{1}{x}\right\}\,,</script>
+
+<p>where ${x}:=x-\lfloor x\rfloor$ is the <em>fractional part</em> of $x$.</p>
+
+<p>Interestingly, it is also true that the frequency of $m_j=k$ tends to
+$\log_2\left(1+\frac{1}{k(k+2)}\right)$ almost surely as we take more and more quotients.
+For more on this read the notes 
+<a href="http://www.maths.manchester.ac.uk/~cwalkden/ergodic-theory/ergodic_theory.pdf">here</a> 
+or in Khinchin’s book.</p>
+
+<h1 id="best-approximations">Best approximations</h1>
+<p>Convergents are particularly important due to the fact that they provide the ``best’’ approximations to numbers in the following sense</p>
+
+<p><em>Definition</em> [Best approximations of the second kind]
+Let $\alpha \in (0,1)$ be a real number. Then the fraction $\tfrac{p}{q}$ with $q&gt;0$ is said to be a best approximation of the second kind for $\alpha$ if and only if</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-\bar{s}_{\alpha,\beta}(n)=   1 \Longleftrightarrow n\alpha + \beta \leq m < (n+1)\alpha + \beta %]]></script>
+|q \alpha - p| < |q^\prime \alpha - p^\prime| %]]></script>
 
-<p>for some integer $m$. By taking $\bmod 1$ it is immediately seen that this means 
-that</p>
+<p>for any other fraction $\tfrac{p^\prime}{q^\prime}$ with $0&lt;
+q \prime \leq q$.</p>
 
-<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 1 \Longleftrightarrow \{n\alpha + \beta\} \in I_1  := [1-\alpha,1)\,,</script>
+<p>Remark that 
+<script type="math/tex">|q \alpha - p| = \frac{| \alpha - p / q|}{1/q}</script> so that this ``objective function’’ can be thought of as the error of approximating $\alpha$ by $p/q$, relative to the size of the denominator $q$. We are ready to state the relation with continued fractions</p>
 
-<script type="math/tex; mode=display">\bar{s}_{\alpha,\beta}(n)  = 0 \Longleftrightarrow \{n\alpha + \beta\} \in I_0  := [0,1-\alpha)\,.</script>
+<p><strong>Theorem</strong> [See Khinchin 97]
+Best approximations of the second kind are necessarily convergents, and conversely, every convergent is a best approximation of the second kind, with exception of the trivial case of</p>
 
-<p>A similar definition can be done for 
-<script type="math/tex">\underline{s}_{\alpha,\beta}(n)</script> 
-by reversing the close-open in the border of the intervals. In terms of the 
-circle, this reads: start from a point 
-<script type="math/tex">y_0=\beta</script> 
-on the circle and rotate an arc-length of $\alpha$ on each discrete time 
-<script type="math/tex">y_{k+1} = (\alpha + y_k)\bmod 1</script>, 
-then code the resulting points by $1$ when they belong to 
-<script type="math/tex">I_1</script> 
-and 
-$0$ when they belong to 
-<script type="math/tex">I_0</script>.</p>
+<script type="math/tex; mode=display">\alpha = \frac{1}{2},\qquad \frac{p_0}{q_0} = 0\,.</script>
 
-<p><img src="assets/rotondo_plot4.png" alt="" class="center-image" height="300px" /></p>
+<p>Concretely, this means that if we may choose from the set of fractions whose denominators are at most $n$, the best approximation is given by $\frac{p_k(\alpha)}{q_k(\alpha)}$ with $k:= k(\alpha,n)$ is the only index $k$ for which $q_k(\alpha)\leq n &lt; q_{k+1}(\alpha)$.</p>
 
-<h3 id="factors-of-sturmian-words">Factors of Sturmian words.</h3>
+<p>We remark that it is the continuants under the condition $q_k(\alpha)\leq n &lt; q_{k+1}(\alpha)$ and $n\to \infty$ that will eventually interest us, rather than the classical fixed depth $k\to \infty$.</p>
 
-<p>The finite patterns appearing within our infinite words ${\bf{u}}$ are a 
-fundamental object of study in the field of Combinatorics of Words. We say that 
-$w\in {0,1}^m$ is a <em>factor</em> of ${\bf{u}}$ if, for some index $i\geq 0$, we have</p>
+<h1 id="references">References.</h1>
 
-<script type="math/tex; mode=display">w_1\ldots w_m = u_i \ldots u_{i+m-1}\,,</script>
-
-<p>and say that $m$ is its <em>length</em>.</p>
-
-<p>We have seen that digits in a Sturmian word ${\bf{u}}$ correspond to intervals 
-$I_0$ and $I_1$, this process can be iterated to explain what happens with 
-larger factors $w\in {0,1}^m$. The result being that factors are in 
-correspondance with the circle intervals delimited by</p>
-
-<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
-
-<p>modulo $1$.</p>
-
-<p><img src="assets/rotondo_plot3.png" alt="" class="center-image" height="300px" /></p>
-
-<p><strong>Remark</strong> [Complexity of a Sturmian word]
-Since $\alpha$ is irrational, the points</p>
-
-<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
-
-<p>modulo $1$ are all distinct.</p>
-
-<p>Thus the the above points delimit $m+1$ circle intervals: we have $m+1$ factors 
-$w\in {0,1}^m$ of length $m$ appearing in $\bf{u}$. This is the smallest 
-possible number of factors of length $m$ in the sense that, if we had at most 
-$m$ factors of length $m$ for some $m$, our words would be eventually periodic.</p>
-
-<p>The intervals-factor correspondence is independent from $\beta$. In particular, 
-the set of factors of length $m$ appearing within ${\bf{u}}$ depends only on the 
-choice of $\alpha$. Furthermore, the sequence ${n\alpha}$ is <em>equidistributed</em> 
-(also known as <a href="https://en.wikipedia.org/wiki/Equidistributed_sequence">uniform distribution $\bmod. 1$</a>) 
-meaning that the proportion of the time it spends on an interval $I$ tends to 
-its length 
-<script type="math/tex">\left| I \right|</script>. 
-Thus the initial point $y_0=\beta$ is not really important for our purposes.</p>
-
-<p>The smallest (least frequent) interval delimited by</p>
-
-<script type="math/tex; mode=display">0,-\alpha,-2\alpha,\ldots,-m\alpha\,,</script>
-
-<p>in fact corresponds to the one given by $0$ and 
-<script type="math/tex">\{-q_k\alpha\}</script>, 
-where 
-<script type="math/tex">% <![CDATA[
-q_k(\alpha)\leq m < q_{k+1}(\alpha) %]]></script>, 
-and has length 
-<script type="math/tex">\Gamma(\alpha,m) := |q_k \alpha - p_k|</script>, 
-by the Theorem of the <em>Best approximation</em> section in the previous post.</p>
+<ul>
+  <li>Aleksandr Ya. Khinchin. Continued Fractions.  <em>New York: Dover Publications</em>, 1997.</li>
+  <li>M. Einsiedler and T. Ward. Ergodic Theory: with a view towards Number Theory. <em>Graduate Texts
+in Mathematics. Springer, 2010.</em></li>
+  <li>N. P. Fogg , V. Berthé, S. Ferenczi , C. Mauduit and Anne Siegel: Substitutions in Dynamics, Arithmetics, and Combinatorics <em>Lecture Notes in Mathematics, Vol. 1794.</em></li>
+</ul>
 
   </div>
   
@@ -247,7 +271,7 @@ by the Theorem of the <em>Best approximation</em> section in the previous post.<
 
       <div class="footer">
         <p>
-          &copy; 2017. All rights reserved.
+          &copy; 2018. All rights reserved.
         </p>
       </div>
     </div>
