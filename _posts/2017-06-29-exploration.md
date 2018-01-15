@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Exploring, evacuating and finding treasures, without a map
+title: Exploring, evacuating, and finding treasures, without a map
 redirect_from: "/2017/06/29/exploration/"
 permalink: exploration
 ---
