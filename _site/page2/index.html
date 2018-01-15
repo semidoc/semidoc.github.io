@@ -86,105 +86,152 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/information-communication">
-        Communication complexity and information theory
+      <a href="/cubic-TSP">
+        Traveling salesman problem on cubic graphs
       </a>
     </h1>
 
-    <span class="post-date">23 Dec 2017</span>
+    <span class="post-date">08 Jan 2018</span>
 
-    <p>I attended the annual meeting of the <a href="https://www.irif.fr/~nschaban/GT-COA/">complexity and algorithms working 
-group of the CNRS</a> (GT CoA) a few weeks ago, and 
-I wanted to review some parts of it. This is the first element of a series of 
-posts. The talks at this meeting were quite 
-technical, and I cannot give a deep overview of each them. So instead 
-I will just write about some details that caught my attention, and that are easy 
-to explain, or, like today, give a very succinct	 summary of the story. 
-For most of the talks, the post will deal with basic considerations, and 
-not with the new things developed by the speakers. 
-For comments: feuilloley [at] irif [dot] fr.</p>
+    <p>This is the second post of a series that start
+<a href="https://semidoc.github.io/information-communication">here</a>, based on the talks 
+at a French meeting on algorithms and complexity 
+(<a href="https://www.irif.fr/~nschaban/GT-COA/">GT CoA</a>).</p>
+
+<p>The second talk I want to “review” is: <em>Applications and Constructions of cut-covering 
+decompositions for connectivity problems</em>, by 
+<a href="http://www.g-scop.grenoble-inp.fr/membres/newman-alantha--570520.kjsp">Alantha Newman</a> from the 
+<a href="http://www.g-scop.grenoble-inp.fr/welcome/welcome--452610.kjsp">GSOP lab</a> in 
+Grenoble. Her work is partly based on the paper
+ <em><a href="http://dare.ubvu.vu.nl/bitstream/handle/1871/34734/274155.pdf?sequence=1">TSP on Cubic and Subcubic Graphs</a></em>, 
+that I will focus on here.</p>
 
 <hr />
-<p>The first talk was actually a lecture,
-entitled <em>Information Theory and Communication Protocols</em> by Florent Urrutia 
-from <a href="https://www.irif.fr/en/index">IRIF at Paris Diderot university</a>.</p>
 
-<h2 id="communication-complexity">Communication complexity</h2>
+<p><a href="https://en.wikipedia.org/wiki/Cubic_graph">Cubic graphs</a> are graphs in which 
+every node has degree 3. These graphs have special structures that are useful 
+when designing 
+<a href="https://en.wikipedia.org/wiki/Approximation_algorithm">approximation algorithms</a>
+for the 
+<a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem">traveling salesman problem</a>
+(TSP for short), 
+and this is the topic of this post.</p>
 
-<p>In a nutshell, <a href="https://en.wikipedia.org/wiki/Communication_complexity">communication complexity</a>
-measures the number of bits that some agents must exchange to complete a task. 
-More precisely, in the basic setting, there are two players, 
-traditionally named Alice and Bob, and each of them is given 
-half of an input bit string. They both have to output the result of a boolean
-function of the (whole) input. A task is for example to output the 
-parity of the number of 1s in the input string.
-Before outputting, they can communicate, that is exchange some bits one after the other.
-Then an easy protocol is to send each other all the (half-)inputs they have, and 
-then to compute the output in parallel. The basic question is: for which tasks
-you can do better, that is sending less bits than the size of the input?</p>
+<h2 id="graph-tsp-and-graphical-tsp">Graph-TSP and graphical-TSP</h2>
+<p>First, one may be confused by the fact the TSP is usually defined on weighted
+complete graphs, and not on some class of unweighted graphs. Indeed at first it 
+does not make sense, as not all the graphs are 
+<a href="https://en.wikipedia.org/wiki/Eulerian_path">eulerian</a>, that is, for some graphs 
+there does not exist a tour (i.e. a circuit in the graph that visits every 
+node exactly once).</p>
 
-<h2 id="information-complexity">Information complexity</h2>
-<p>In another nutshell, <a href="https://en.wikipedia.org/wiki/Information_theory">information theory</a> 
-measure the amount of information contained in some message given some context. 
-This has been 
-introduced by Shannon in the forties, and is used in many 
-contexts. 
-It requires formulas, with logs, sups, infs etc. to 
-make this precise, and I do not want to dive into this. If you know about 
-<a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">Shannon entropy</a>, 
-<a href="https://en.wikipedia.org/wiki/Mutual_information">mutual information</a> etc., 
-you know what I mean. Otherwise, no problem, it is not really
-necessary for this post. Now, very roughly speaking, <em>information complexity</em> measures 
-the amount of information that one needs to reveal to solve some task under some 
-distribution, and its definition is based on the one of the entropy.</p>
+<p>We actually deal with on <em>graph-TSP</em> here, which is TSP on a subset of instances, whose 
+edge weights are very special. Graph-TSP on an unweighted graph $G$ with $n$ nodes, means that we are aiming at 
+the shortest tour in the complete graph $C$ on $n$ nodes, where 
+the weight of the edge between two arbitrary nodes $u$ and $v$ in $C$, is the shortest path 
+distance between these nodes in $G$. This is known as the metric completion of $G$, and 
+indeed one can check that these distances follow the triangle inequality.</p>
 
-<h2 id="information-as-a-lower-bound-on-communication">Information as a lower bound on communication</h2>
-<p>The focus of the course was to look at the relation between these two fields.
-The main point, that is very powerful, can be stated as a naive sentence: the 
-number of bits communicated in any protocol to solve the task 
-must be larger than the information the players have 
-to reveal, in theory, when communicating. Namely, the communication 
-complexity must be at least 
-the information complexity. As I have not properly defined the two notions, this 
-may sound quite useless, I will try to convince the reader that it is interesting. 
-What is surprizing is that these two notions are 
-quite different in the way they are defined. The first one is defined as a simple 
-worst-case measure and has a quite combinatorial flavour, it really counts bits. 
-Indeed it is possible 
-to prove lower bound on communication complexity by studying some combinatorics 
-of 0-1 matrices.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>
-The second one is defined as an infimum (over communication protocols) of a supremum 
-over distributions of inputs of an (entropy-like) function that is based on a 
-sum of logs. A pretty non-combinatorial object.</p>
+<p>Another problem is interesting to us: <em>graphical-TSP</em>. In this new problem, given 
+a graph, one has to find the shortest tour that visits all the nodes, 
+but with the relaxation that it can visit the nodes and edges more than 
+once.</p>
 
-<p>I guess this inequality mainly means that these definitions are the right ones..!</p>
+<p>“Graph-TSP” and “Graphical-TSP” are unpleasantly close names, but 
+fortunately, the problems are equivalent! Suppose you have a tour for 
+graph-TSP, then every edge $(u,v)$ has the weight of the path between $u$ and 
+$v$ in $G$: one can take this path instead of the direct edge. 
+Unfolding every edge this way, one gets a solution for graphical-TSP with
+same weight. A similar construction works for the other 
+direction.</p>
 
-<h2 id="further">Further</h2>
-<p>It is not true that communication complexity is equal to information 
-complexity, there can even be an exponential gap between those, but this happens 
-in some very special context. See the paper <em><a href="https://pdfs.semanticscholar.org/fd13/ba5bb068e7887fb450ef6c2cc2a849652db2.pdf">Exponential Separation of 
-Information and
-Communication for Boolean Functions</a></em> 
-(not for the beginners).</p>
+<p>The literature seems to focus on Graph-TSP, probably because it generalizes to 
+the classic TSP more easily. For this post, the graphical-TSP is more handy.</p>
 
-<p>Nevertheless, this approach is very powerful, and almost all the lower bounds 
-we have on 
-communication complexity can be phrased as information complexity lower bounds 
-(See <a href="https://arxiv.org/abs/1204.1505">this paper</a>).</p>
+<h2 id="simplified-christofides-algorithm">Simplified Christofides algorithm</h2>
 
-<h2 id="multi-party-communication-the-more-the-merrier-maybe-not">Multi-party communication (the more the merrier… maybe not)</h2>
-<p>Multi-party communication is the setting in which the input is split between 
-more than two players. In this new setting, lower bounds are 
-difficult to get. A natural step is to use information complexity. 
-But this is not easy. There are different 
-ways to define the information revealed during a multi-party protocol, and none of 
-ones we know gives very good bounds.</p>
+<p>Consider the following simple algorithm for graphical-TSP. Take a minimum 
+spanning tree of the graph $G$, and then consider the path taken if one does a 
+traversal of the tree. This is a tour, because every node is visited. It gives 
+a 2-approximation, because the optimal tour cannot be lighter than the minimum 
+spanning tree, and because every edge is taken exactly twice in our tour.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Christofides_algorithm">Christofides algorithm</a> 
+is a refinement of this idea, and it gives a 3/2-approximation for metric 
+instance of (the general) TSP, thus it gives 3/2 for graph-TSP. 
+The challenge is to go further than this 3/2, and this is possible for 
+cubic graphs.</p>
+
+<h2 id="a-few-graph-theoretic-definitions">A few graph theoretic definitions</h2>
+<p>Before we get to why cubic graphs are nice, we need a few definitions from graph theory.</p>
+
+<ul>
+  <li>A <em><a href="https://en.wikipedia.org/wiki/Bridge_(graph_theory)#Bridgeless_graphs">bridge</a></em> 
+in a graph, is an edge whose removal disconnects the graph.</li>
+  <li>A <em>perfect matching</em>, is a <a href="https://en.wikipedia.org/wiki/Matching_(graph_theory)">matching</a>, 
+that is a set of vertex-disjoint edges, that matches all vertices in G.</li>
+  <li>A <em><a href="https://en.wikipedia.org/wiki/Vertex_cycle_cover">(vertex disjoint) cycle cover</a></em>
+is a set of vertex-disjoint cycles that span all vertices in G.</li>
+</ul>
+
+<p>Note that the two last definitions are pretty similar, and indeed they are two 
+examples of a more general concept, called 
+<a href="https://en.wikipedia.org/wiki/Graph_factorization">k-factors</a>. But let’s go 
+back to cubic graphs.</p>
+
+<h2 id="cycle-covers-from-petersens-theorem">Cycle covers from Petersen’s theorem</h2>
+<p><a href="https://en.wikipedia.org/wiki/Petersen%27s_theorem">Petersen’s theorem</a> states 
+that every bridgeless cubic graph, has a perfect matching.</p>
+
+<p>Now, take a bridgeless cubic graph and remove a perfect matching. What is 
+left? A cycle cover of G. 
+Indeed the degree of every node has decreased from three to two, thus the 
+resulting graph must be union of cycles spanning all nodes.</p>
+
+<h2 id="all-together-now">All together now</h2>
+<p>Let’s put all the ingredient together to get an approximation algorithm for 
+graphical-TSP with a better ratio than Christofides algorithm.</p>
+
+<p>First find a cycle cover of $G$ as in the previous section. This subgraph is visiting 
+every node exactly once, but it is not a tour yet, because it is disconnected. 
+We will now 
+link these cycles together. Consider 
+the graph $G’$ made by contracting every cycle into just one node. On this graph 
+$G’$, take the tour
+induced by the spanning tree as in the simplified Chritofides algorithm. 
+This tour corresponds to a set of edges in $G$. 
+Now this set of edges plus the edges of the cycle cover form a tour, and we have 
+a solution for graphical-TSP!</p>
+
+<p>What is the weight of this tour? The cycle cover contains exactly $n$ edges. 
+Let $c$ be the number of cycles in this cover. Then there are $2c-1$ edges in 
+the tree. The tour has weight $n+2c-1$. With a bit of work<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> one can 
+get $c\leq n/6$. This yields to a tour with 
+less then $4n/3$ edges, thus a 4/3 approximation, as a tour cannot be shorter 
+than $n$. And this improves on the 3/2 ratio of Christofides.</p>
+
+<p>We discussed only cubic graphs, but the approach based on studying the cycle 
+covers is fruitful, and led to many improvements in the field.</p>
+
+<h2 id="bonus-recent-advances-on-asymmetric-tsp">Bonus: recent advances on asymmetric TSP</h2>
+
+<p>On a related topic, there has been recent advances on asymmetric TSP, that is 
+TSP where the directed edges $(u,v)$ and $(v,u)$ may not have the same weight. 
+<a href="https://arxiv.org/pdf/1708.04215">A recent paper</a> gives the  long-awaited
+first constant approximation algorithm for the problem. You will find 
+links to a summary and videos on <a href="http://jakub.tarnawski.org/">Jakub Tarnawski’s webpage</a>. 
+The paper has been covered on <a href="https://rjlipton.wordpress.com/2017/09/11/a-tsp-breakthrough/">Gödel’s lost letter</a><sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>, 
+and in <a href="https://www.quantamagazine.org/one-way-salesman-finds-fast-path-home-20171005/">Quanta magazine</a>.</p>
 
 <h3 id="footnotes">Footnotes</h3>
+
 <div class="footnotes">
   <ol>
     <li id="fn:1">
-      <p>See the classic <em>rectangle method</em>, for example in <a href="https://pdfs.semanticscholar.org/6094/392d07d36c086a988493686b73ebca39169b.pdf">this survey</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+      <p>To make this work one needs a stronger version of Petersen’s theorem, to have a better cycle cover. The details are in <a href="http://dare.ubvu.vu.nl/bitstream/handle/1871/34734/274155.pdf?sequence=1">this paper</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>A blog by Richard Lipton, that we recently mentionned in our <a href="https://semidoc.github.io/blogs">post on TCS blogs</a> (in French).&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

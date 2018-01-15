@@ -86,49 +86,91 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/reiter-dga">
-        Logic and distributed automata
+      <a href="/zijlstra-lwe">
+        Learning with Errors- based Cryptography
       </a>
     </h1>
 
-    <span class="post-date">12 May 2017</span>
+    <span class="post-date">23 Jun 2017</span>
 
-    <p>Hi everyone,</p>
+    <p>Hi! The current blog post has been written by <strong>Timo Zijlstra</strong>, who is doing an internship at the IRIF, and gave a talk at the seminar a few weeks ago.</p>
 
-<p>today I’d like to give a glimpse of the PhD seminar <a href="https://www.irif.fr/users/reiterf/index">Fabian Reiter</a> gave fairly recently. It is about the paper <em>Asynchronous Distributed Automata: A Characterization of the Modal Mu-Fragment</em> (<a href="https://arxiv.org/abs/1611.08554">arxiv version</a>). 
-Between the seminar and today, the paper has been accepted at <a href="http://icalp17.mimuw.edu.pl/">ICALP 2017</a>, so if you are at Warsaw in mid-July, you can hear about this directly from him! For any comment on this post: feuilloley [at] irif.fr.</p>
+<hr />
 
-<p>Actually I will not talk about this paper in particular, as I am far from being an expert, but I would like to give a feeling of the topic, from the point of view of an outsider.</p>
+<p>Cryptographic primitives such as encryption and signature schemes rely on computationally hard problems. A good scheme is constructed in such a way that any method that breaks the scheme automatically yields an algorithm that solves the underlying hard problem. The <a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA encryption scheme</a>, for example, relies on the fact that there is no known algorithm that <a href="https://en.wikipedia.org/wiki/Integer_factorization">efficiently factorizes large integers</a>. If someone would be able to break RSA, then this would imply a method to factorize large integers. This would be a major breakthrough in mathematics, since the factorization problem has been intensively studied. Therefore, it is safe to assume that RSA cannot be broken. Most of implemented cryptography relies on the hardness of the factorization problem (RSA) or the <a href="https://en.wikipedia.org/wiki/Discrete_logarithm">discrete logarithm problem</a> (<a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic Curve Cryptography</a>). However, <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor’s quantum algorithm</a> can be applied to both of these problems, making the cryptosystems unsafe against quantum adversaries.</p>
 
-<p>Automata and logic are usually taught in different courses, and may be thought as unrelated subjects by those who are not working in these domains. It is far from being the case, and there are strong connexions between the two topics. One area of TCS for which these connexions are essential is <a href="https://en.wikipedia.org/wiki/Model_checking">model checking</a>. In this domain, one would like to check if some structure satisfies some property, expressed as a logical formula. In this case, a common technique is to translate the formula into an automaton. Then one can, for example, compute some product of the structure with the automaton, and the checking boils down to a reachability problem.</p>
+<p>This is the reason why we need to find mathematical problems that are computationally hard even for quantum computers. The best candidates for use in post-quantum cryptography are <a href="https://en.wikipedia.org/wiki/Lattice_problem">lattice problems</a> such as the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Shortest_vector_problem_.28SVP.29">Shortest Vector Problem</a> (SVP) and the <a href="https://en.wikipedia.org/wiki/Lattice_problem#Closest_vector_problem_.28CVP.29">Closest Vector Problem</a> (CVP). There is currently no known (quantum) algorithm that solves these problems efficiently.</p>
 
-<p>To give an intuition of the logic we are talking about, let’s consider the case of words over the alphabet {$a,b$}. It is easier to consider a word as a directed path, for example the word $aabab$ is represented by the following path.</p>
+<p>One lattice problem that is particularly adaptable for cryptographic applications is the <strong>Learning With Errors</strong> (LWE) problem. It consists of solving a system of approximate linear equations over the integers modulo some prime $q$. Let 
+<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
+be a secret vector and 
+<script type="math/tex">\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}</script> 
+vectors taken from the uniformly random distribution over 
+<script type="math/tex">\mathbb{Z}_q^n</script>
+. Given the system of approximate equations:</p>
 
-<p><img src="assets/mot2.svg" alt="" class="center-image" /></p>
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{align*}
+\textbf{a}^{(1)} \cdot \textbf{s} &\approx b_1 \\
+&\vdots \\
+\textbf{a}^{(m)} \cdot \textbf{s} &\approx b_m,
+\end{align*} %]]></script>
 
-<p>A property one would like to express is, for example, ‘‘there are no two consecutive $b$’’ in the word. To do so the logic has three predicates, $\rightarrow$, $a()$ and $b()$. Given two variables $x$ and $y$ that indicate positions in the path, $x \rightarrow y$ means that $y$ is the position just after $x$ in the word. If the letter at position $x$ is $a$ (resp. $b$), then $a(x)$ (resp. $b(x)$) holds. Then the ‘‘not-2-b’’ property can be expressed as:</p>
+<p>where the approximation is ‘close’ in a sense that will be made clear later, the LWE-problem is to find 
+<script type="math/tex">\textbf{s}</script>. 
+Note that if the approximations were equalities, then it would be easy to solve the system using <a href="https://en.wikipedia.org/wiki/Gaussian_elimination">Gaussian elimination</a>. This method does not work for LWE though, because we cannot obtain a new approximation by adding an arbitrary number of multiples of approximate equations. The cumulative approximation error would grow so large that there is no information left in the ‘approximation’ obtained by summation and scalar multiplication. It is shown by Regev<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, that a (quantum) algorithm that solves LWE would imply a quantum algorithm that solves several believed to be hard lattice problems, among which SVP.</p>
 
-<script type="math/tex; mode=display">\not \exists x,y: b(x) \wedge b(y) \wedge x \rightarrow y</script>
+<p>More formally, the LWE-distribution is defined as follows.</p>
 
-<p>This a basically first-order logic, with the predicates suited to talk about words. Note that quantifiers “talk about” single nodes. If in addition we add quantification over sets of nodes, we get <a href="https://en.wikipedia.org/wiki/Monadic_second-order_logic">monadic second-order (MSO) logic</a> on words. And here comes the magic: the properties of words that are expressible with MSO are precisely the ones that corresponds to regular languages, that is languages recognized by finite automata.</p>
+<p><strong>Definition</strong>
+Let 
+<script type="math/tex">\textbf{s} \in \mathbb{Z}_q^n</script> 
+be a secret vector and 
+<script type="math/tex">\chi</script> 
+an error distribution over 
+<script type="math/tex">\mathbb{Z}</script>. 
+The LWE distribution 
+<script type="math/tex">\mathcal{A}_{s, \chi}</script> 
+is sampled by taking a vector 
+<script type="math/tex">\textbf{a} \leftarrow \mathbb{Z}_q^n</script> 
+and an integer 
+<script type="math/tex">e \leftarrow \chi</script> 
+and outputting the pair 
+<script type="math/tex">(\textbf{a}, b:= \textbf{a} \cdot \textbf{s} + e)</script>.</p>
 
-<p>This all goes back to the 60s, and then a lot of work has been done to create bridges between special kinds of logic and types of languages. An important example is the work on trees with <a href="https://en.wikipedia.org/wiki/Tree_automaton">tree automata</a>. What Fabian and a few others are interested in, is the case of graphs.</p>
+<p>This distribution is pseudorandom: given $m$ independent samples from either (1) the uniform distribution, or (2) the LWE- distribution, we cannot determine which is the case. To distinguish between the uniform and the LWE- distribution is equally hard as solving the LWE-problem, that is, finding the secret vector $\textbf{s}$. This makes the construction of LWE-based semantically secure cryptosystems possible, such as Regev’s encryption scheme:</p>
 
-<p>There are several kinds of logic that can be considered on graphs, and I will not dive into it. Instead I will focus on the other side: the automaton. It is not clear what adaptation of a finite automaton is the most relevant for graphs, and several such tool have been proposed. The approach of Fabian and others is to consider <em>distributed graph automaton</em>. The word <em>distributed</em> comes from the fact that instead of having one machine considering the parts of the graph in some order, as one would do to generalize results on words and trees, here each node of the graph is equipped with an automaton. These automata take steps, and at each step they take into account their state, and the states of their neighbours, and update their own state.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
+<ul>
+  <li>Key generation. The private key is a random vector $\textbf{s} \in \mathbb{Z}_q^n$. To create a public key, we take $m$ vectors $\textbf{a}^{(1)}, \dots, \textbf{a}^{(m)}$ independently from the uniform distribution, and $e_1, \dots, e_m$ from $\chi$. The public key is given by the $m$ LWE samples $(\textbf{a}^{(i)}, b_i)$, where $b_i = \textbf{a}^{(i)} \cdot \textbf{s} + e_i$ for $i$ from 1 to $m$. In matrix notation: $\textbf{b} = A\textbf{s} + \textbf{e}$.</li>
+  <li>Encryption. To encrypt a bit $x$, we take a random vector $v \in {0, 1}^m$ and output the pair</li>
+</ul>
 
-<p>The information available from the neighbours, the synchrony or not of the automata, the termination criterion, and the non-determinism allowed have a great influence on the corresponding logic. A previous paper of Fabian<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> described a model of synchronized distributed graph automata that corresponds to the MSO logic on graphs. The current paper considers asynchronous automata, and links it with a fragment of the <a href="https://en.wikipedia.org/wiki/Modal_%CE%BC-calculus">modal $\mu$-calculus</a>.</p>
+<script type="math/tex; mode=display">(\textbf{c}_1, c_2) = \big( A\textbf{v}, \textbf{b} \cdot \textbf{v} + x \cdot \left\lfloor \frac{q}{2} \right\rfloor \big),</script>
 
-<p>For more on the topic, I let you read Fabian’s papers!</p>
+<p>that is, we take a subset of the row vectors and encrypt the bit in the subset sum of the samples.</p>
+
+<ul>
+  <li>
+    <p>Decryption. Using the secret key $\textbf{s}$, compute:
+<script type="math/tex">% <![CDATA[
+\begin{align*}
+  c_2 - \textbf{c}_1 \cdot \textbf{s} &= \left(A\textbf{s} + \textbf{e}\right) \cdot \textbf{v} + x \left\lfloor \frac{q}{2} \right\rfloor - (A\textbf{v})\cdot \textbf{s} 
+  \\
+  &= (A\textbf{s})\cdot \textbf{v} - (A\textbf{v})\cdot \textbf{s} + \textbf{e}\cdot \textbf{v} + x \left\lfloor \frac{q}{2}\right\rfloor
+  \\
+  &\approx  x \left\lfloor \frac{q}{2}\right\rfloor, 
+  \end{align*} %]]></script></p>
+
+    <p>since both $\textbf{e}$ and $\textbf{v}$ are vectors of small norm. If this outcome is closer to zero than to $\left\lfloor \frac{q}{2}\right\rfloor$, then the decryption of $(\textbf{c}_1, c_2)$ is $0$, else it is $1$.</p>
+  </li>
+</ul>
 
 <hr />
 
 <div class="footnotes">
   <ol>
     <li id="fn:1">
-      <p>For those of you who have met the LOCAL model at some point, this must sound very familiar as it is basically the same state of mind as the locality-oriented distributed computing.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:2">
-      <p>The paper <em>Distributed Graph Automata</em> (<a href="https://arxiv.org/abs/1408.3030">arxiv version</a>). The slides are also available <a href="https://www.irif.fr/_media/users/reiterf/lics2015.pdf">here</a>.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+      <p>O. Regev. <a href="http://www.cims.nyu.edu/~regev/papers/qcrypto.pdf">On lattices, learning with errors, random linear codes, and cryptography</a>. J. ACM, 56(6):1–40, 2009. Preliminary version in STOC 2005.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>
