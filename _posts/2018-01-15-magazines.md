@@ -19,7 +19,7 @@ des blogs d'institutions.
 
 ### [Quanta magazine](https://www.quantamagazine.org/)
 Un magazine en ligne parlant de sciences en générale, mais assez souvent
-d'informatique théorique, et le plus souvent très bien[^1], malgré des titres 
+d'informatique théorique, et plutôt bien[^1], malgré des titres 
 un peu sensationnels parfois[^2]. La plupart des
 sujets sont reliés au quantique ou à l'apprentissage, mais pas tous. Le
 magazine est financé par la fondation Simons, qui est aussi à l'origine
