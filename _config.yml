@@ -35,3 +35,8 @@ pages_list:
 gems:
   - jekyll-redirect-from
   - jekyll-paginate
+
+#RSS
+name: Semidoc	
+description: Blog du séminaire des doctorants de l’IRIF à l’université Paris Diderot.
+url: https://semidoc.github.io/
