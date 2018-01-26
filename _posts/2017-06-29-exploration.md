@@ -7,7 +7,9 @@ permalink: exploration
 
 Hi there! I have come back from the 
 [Sirocco conference](https://sirocco2017.lif.univ-mrs.fr/) a few days ago, 
-and there I saw a couple of talks on fun and easy-to-explain topics, so here is a post about it. 
+and there I saw a couple of talks on fun and easy-to-explain topics, so here is 
+a post about it. (There is a review of Sirocco by Christian Konrad,
+[here](www.christiankonrad.de/publications/sirocco-review-2017.pdf)). 
 
 # Cow path problem 
 You may know the following problem, or a variant of it:
