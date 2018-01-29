@@ -63,6 +63,7 @@
 
   <!-- RSS -->
   <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+  <link href='http://semidoc.github.io/feed.xml' rel='alternate' type='application/atom+xml'>
 </head>
 
 
@@ -102,9 +103,11 @@ given at a French meeting on algorithms and complexity
 decompositions for connectivity problems</em>, by 
 <a href="http://www.g-scop.grenoble-inp.fr/membres/newman-alantha--570520.kjsp">Alantha Newman</a> from the 
 <a href="http://www.g-scop.grenoble-inp.fr/welcome/welcome--452610.kjsp">GSOP lab</a> in 
-Grenoble. Her work is partly based on an earlier paper, 
+Grenoble. Her work is partly based on an approch that began with the paper
  <em><a href="http://dare.ubvu.vu.nl/bitstream/handle/1871/34734/274155.pdf?sequence=1">TSP on Cubic and Subcubic Graphs</a></em>.
-What I describe in this post is based on this earlier paper.</p>
+What I describe in this post is based on this first paper. You can find more 
+advanced lecture notes on this topic, by Newman, 
+<a href="http://pagesperso.g-scop.grenoble-inp.fr/~newmana/Algorithms2017/ORCO-ConvexCombinationsTSP.pdf">here</a>.</p>
 
 <hr />
 
@@ -200,7 +203,7 @@ graphical-TSP with a better ratio than Christofides algorithm.</p>
 
 <p>First find a cycle cover of $G$ as in the previous section. This can be
 done in poynomial time, thanks to the
-<a href="https://en.wikipedia.org/wiki/Blossom_algorithm">Blossom algorithm</a>.
+<a href="https://en.wikipedia.org/wiki/Blossom_algorithm">blossom algorithm</a>.
 This subgraph is visiting 
 every node exactly once, but it is not a tour yet, because it is disconnected. 
 We will now 
