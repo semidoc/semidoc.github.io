@@ -59,7 +59,9 @@ nodes. What happens if we consider bounded degree graphs? Then for maximum degre
 $\Delta$, greedy achieves the approximation of ratio $\frac{\Delta+2}{3}$[^2], 
 which is not that bad. 
 A second thing one can say, is that this graph does not seem generic, for example 
-it does not look like a random graph. And greedy is quite good on random graphs 
+it does not look like a 
+[random graph](https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93R%C3%A9nyi_model). 
+And greedy is quite good on random graphs 
 actually, it achieves a ratio 2 in expectation[^3]. 
 
 Random graph are not that common in applications though, either on real-world 
@@ -68,8 +70,11 @@ Once again greedy is a good choice: it provides a 6-approximation on planar
 graphs, and is optimal for trees. 
 
 There is a general method to prove that greedy is optimal for 
-trees, and also on other graph classes, such as maximal outerplanar graphs, 
-cographs, and split graphs. First note that if there is a node $v$ in the graph 
+trees, and also on other graph classes, such as 
+[maximal outerplanar graphs](https://en.wikipedia.org/wiki/Outerplanar_graph), 
+[cographs](https://en.wikipedia.org/wiki/Cograph), and 
+[split graphs](https://en.wikipedia.org/wiki/Split_graph). 
+First note that if there is a node $v$ in the graph 
 such that its neighbours and itself form a clique, then this node belongs to one of 
 the maximum independent sets. Indeed only one node from the clique can be in the 
 set, and we can always take the node $v$, because there cannot be a conflict 
@@ -88,6 +93,6 @@ know which execution of the algorithm will give the best outcome, without
 running it ? Mathieu and his co-author's answer is basically "no".
 
 ### Footnotes ###
-[^1]: Some precisions about the non-approximability results. The precise results is that it is NP-hard to get a $n^{1-\epsilon}$ approximation of the maximum independent set. It comes from the paper [Clique is hard to approximate within $n^{1–\epsilon}$](https://pdfs.semanticscholar.org/5be6/a7e25c5e4cb0f1ece182042dc6275e438bbd.pdf) by [Johan Håstad](https://fr.wikipedia.org/wiki/Johan_H%C3%A5stad) and is proved with the [PCP machinery](https://en.wikipedia.org/wiki/PCP_theorem). Note that the title of the paper is about the maximum clique problem and not the independent set, but for general graphs this is the same problem: just take the complement of the input graph.
+[^1]: Some precisions about the non-approximability results. The precise results is that it is NP-hard to get a $n^{1-\epsilon}$ approximation of the maximum independent set. It comes from the paper [Clique is hard to approximate within $n^{1–\epsilon}$](https://pdfs.semanticscholar.org/5be6/a7e25c5e4cb0f1ece182042dc6275e438bbd.pdf) by [Johan Håstad](https://en.wikipedia.org/wiki/Johan_H%C3%A5stad) and is proved with the [PCP machinery](https://en.wikipedia.org/wiki/PCP_theorem). Note that the title of the paper is about the maximum clique problem and not the independent set, but for general graphs this is the same problem: just take the complement of the input graph.
 [^2]: See [Greed is good: Approximating independent sets in sparse and bounded-degree graphs](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.452.5619&rep=rep1&type=pdf) by Halldórsson and Radhakrishnan.
 [^3]: See [On independent sets in random graphs](https://arxiv.org/pdf/1007.1378) by Coja-Oghlan and Efthymiou.
