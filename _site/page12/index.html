@@ -86,88 +86,52 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/boczkowski-3-bits">
-        Fast self-stabilizing bit dissemination
+      <a href="/reiter-dga">
+        Logic and distributed automata
       </a>
     </h1>
 
-    <span class="post-date">09 Mar 2017</span>
+    <span class="post-date">12 May 2017</span>
 
-    <h3 id="introduction">Introduction</h3>
-<p>(The introduction is in French and English, the text itself is in English)</p>
+    <p>Hi everyone,</p>
 
-<p>fr : Bonjour, et bienvenue pour le premier vrai post de ce blog. Aujourd’hui <a href="https://www.irif.fr/~lboczko/">Lucas Boczkowski</a> résume (en anglais) l’exposé qu’il a donné au séminaire des doctorants le 22 février 2017 à propos de l’article <a href="https://arxiv.org/abs/1602.04419"><em>Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits</em></a>, présenté avec ses co-auteurs à SODA 2017. Si vous avez des commentaires n’hésitez pas à les envoyer, à Lucas ou bien à moi (respectivement lboczko et feuilloley at irif.fr).</p>
+<p>today I’d like to give a glimpse of the PhD seminar <a href="https://www.irif.fr/users/reiterf/index">Fabian Reiter</a> gave fairly recently. It is about the paper <em>Asynchronous Distributed Automata: A Characterization of the Modal Mu-Fragment</em> (<a href="https://arxiv.org/abs/1611.08554">arxiv version</a>). 
+Between the seminar and today, the paper has been accepted at <a href="http://icalp17.mimuw.edu.pl/">ICALP 2017</a>, so if you are at Warsaw in mid-July, you can hear about this directly from him! For any comment on this post: feuilloley [at] irif.fr.</p>
 
-<p>en: Hi everyone, and welcome to the first real post of this blog. The following text is a summary (in English) by <a href="https://www.irif.fr/~lboczko/">Lucas Boczkowski</a> of the talk he gave at the PhD seminar on the 22nd of February 2017. It is about the paper he and his coauthors presented at SODA this year: <a href="https://arxiv.org/abs/1602.04419"><em>Minimizing Message Size in Stochastic Communication Patterns: Fast Self-Stabilizing Protocols with 3 bits</em></a>. For any comment, send an email to Lucas or to me (respectively lboczko and feuilloley at irif.fr).</p>
+<p>Actually I will not talk about this paper in particular, as I am far from being an expert, but I would like to give a feeling of the topic, from the point of view of an outsider.</p>
 
-<h1 id="setup-and-result">Setup and result</h1>
-<p>Consider the following scenario.
-A school of $n$ fish has to decide whether to keep moving forward or change direction. We model an answer to this question by a binary bit $b \in {0,1}$.
-An informed source, perhaps a fish who saw a predator, is convinced on what the correct choice of $b$ should be and she wishes to spread  it to her peers. On each round every fish looks at $O(1)$ randomly chosen other fish.
-If they see the source or someone who knows $b$ they learn it themselves.</p>
+<p>Automata and logic are usually taught in different courses, and may be thought as unrelated subjects by those who are not working in these domains. It is far from being the case, and there are strong connexions between the two topics. One area of TCS for which these connexions are essential is <a href="https://en.wikipedia.org/wiki/Model_checking">model checking</a>. In this domain, one would like to check if some structure satisfies some property, expressed as a logical formula. In this case, a common technique is to translate the formula into an automaton. Then one can, for example, compute some product of the structure with the automaton, and the checking boils down to a reachability problem.</p>
 
-<p>We will be interested in information spreading of the kind we just described.
-Let us denote  by <em>SIMPLE</em> this simple example. It can be shown that <em>SIMPLE</em> only needs $O(\log n)$ rounds to finish with high probability (w.h.p). 
-In this work, we seek to understand what are the harshest conditions under which such efficient spreading of information can be implemented.
-Our result is a generalization to a more general context that still runs in $\tilde{O}(\log n)$ rounds.</p>
+<p>To give an intuition of the logic we are talking about, let’s consider the case of words over the alphabet {$a,b$}. It is easier to consider a word as a directed path, for example the word $aabab$ is represented by the following path.</p>
 
-<p>To begin with, it should be pointed out that <em>SIMPLE</em> already has some nice features. Agents interact <em>stochastically</em> and <em>anonymously</em>. When they interact they only need to exchange one bit which is $b$. In fact, we should be more precise and say they actually exchange two bits one saying if they are <em>knowledgeable</em> and the other possibly giving the value $b$.</p>
+<p><img src="assets/mot2.svg" alt="" class="center-image" /></p>
 
-<p>On top of this, we add a requirement known as <em>self-stabilization</em>. This means that no matter what the agents inner state is at the beginning of the protocol, they should after some (hopefully short) time get to know the source bit $b$. Even if initially most fish wanted to go forward, if the informed source saw a predator, she will manage to influence the whole school.
-The self-stabilizing requirement  can be a daunting one. Indeed, the more complex a protocol is, the more states the agents are allowed to have, the more cases a proof of self-stabilization needs to handle.
-Another view on self-stabilization is that if the source for some reason, in the middle of the execution of the protocol changes her mind from $b$ to $1-b$ then soon after that, the mechanism allows everyone to agree on $1-b$.</p>
+<p>A property one would like to express is, for example, ‘‘there are no two consecutive $b$’’ in the word. To do so the logic has three predicates, $\rightarrow$, $a()$ and $b()$. Given two variables $x$ and $y$ that indicate positions in the path, $x \rightarrow y$ means that $y$ is the position just after $x$ in the word. If the letter at position $x$ is $a$ (resp. $b$), then $a(x)$ (resp. $b(x)$) holds. Then the ‘‘not-2-b’’ property can be expressed as:</p>
 
-<p>Regarding communication, we allow the agents to have a big memory, but we ask that messages exchanged on each round by each agent are of small size. 
-In other words, 
-even if agents are able to do sophisticated computations privately, only few bits are exchanged on each interaction.</p>
+<script type="math/tex; mode=display">\not \exists x,y: b(x) \wedge b(y) \wedge x \rightarrow y</script>
 
-<p>Let us now go back to <em>SIMPLE</em> and try and understand why it does not meet our demands. 
-First we need to be slightly more precise and define what happens when two knowledgeable agents with different opinions meet. For concreteness let us say that in this case they flip opinions, except for the source of course. In the first paragraph, such a situation didn’t occur because we implicitly started from a very favourable configuration where nobody was in a ``knowledgeable state”, i.e., thought they had already seen the source.
-But in fact, if we start with everybody being knowledgeable, and being convinced of the wrong value of $b$, convergence will be very slow. Other similar simple rules share this burden of being slow, or they are demanding in terms of message size.</p>
+<p>This a basically first-order logic, with the predicates suited to talk about words. Note that quantifiers “talk about” single nodes. If in addition we add quantification over sets of nodes, we get <a href="https://en.wikipedia.org/wiki/Monadic_second-order_logic">monadic second-order (MSO) logic</a> on words. And here comes the magic: the properties of words that are expressible with MSO are precisely the ones that corresponds to regular languages, that is languages recognized by finite automata.</p>
 
-<p>Our main result is the following.</p>
+<p>This all goes back to the 60s, and then a lot of work has been done to create bridges between special kinds of logic and types of languages. An important example is the work on trees with <a href="https://en.wikipedia.org/wiki/Tree_automaton">tree automata</a>. What Fabian and a few others are interested in, is the case of graphs.</p>
 
-<p><strong>Theorem</strong>
- There exists a  protocol, which solves the <em>broadcast</em> problem in a self-stabilizing manner in $\tilde{O}(\log n)$ rounds w.h.p using $3$-bit messages.</p>
+<p>There are several kinds of logic that can be considered on graphs, and I will not dive into it. Instead I will focus on the other side: the automaton. It is not clear what adaptation of a finite automaton is the most relevant for graphs, and several such tool have been proposed. The approach of Fabian and others is to consider <em>distributed graph automaton</em>. The word <em>distributed</em> comes from the fact that instead of having one machine considering the parts of the graph in some order, as one would do to generalize results on words and trees, here each node of the graph is equipped with an automaton. These automata take steps, and at each step they take into account their state, and the states of their neighbours, and update their own state.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup></p>
 
-<p>Note these $3$ bits in principle allow to encode information such as <em>I am the source</em> but it is not enough to say <em>I saw the source $k$ rounds ago</em> for more than $\Omega(1)$ distinct values of $k$.</p>
+<p>The information available from the neighbours, the synchrony or not of the automata, the termination criterion, and the non-determinism allowed have a great influence on the corresponding logic. A previous paper of Fabian<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> described a model of synchronized distributed graph automata that corresponds to the MSO logic on graphs. The current paper considers asynchronous automata, and links it with a fragment of the <a href="https://en.wikipedia.org/wiki/Modal_%CE%BC-calculus">modal $\mu$-calculus</a>.</p>
 
-<h1 id="sketch-of-proof-of-the-theorem">Sketch of proof of the Theorem</h1>
+<p>For more on the topic, I let you read Fabian’s papers!</p>
 
-<p>The proof consists of three steps.</p>
+<hr />
 
-<ul>
-  <li>We first show that the problem can be reduced to that of agreeing on a counter modulo $O(\log n)$.</li>
-  <li>We then build such a counter  in $\tilde{O}(\log n)$ rounds using large messages.</li>
-  <li>A message reduction tool is invoked to reduce the message size down to $O(1)$, paying only a small $o(\log n)$ multiplicative overhead in the number of rounds.</li>
-</ul>
-
-<h2 id="step-1">Step $(1)$</h2>
-
-<p>Under the assumption that all agents share the same clock modulo $T = C \log n$ for a big constant $C$, the following trick shows how to obtain convergence  in $O(\log n)$ time. Each phase of length $T$ is subdivided into two subphases of length $T/2$, the <em>morning</em> and the <em>evening</em>. In the morning, non-source agents are <em>sensitive</em> to opinion $0$. This means that whenever they see another agent displaying $0$, they turn their displayed bit to $0$, but if they see $1$ they ignore it. Then, in the evening, they do the opposite, namely they switch the displayed bit to $1$ as soon as they see a $1$.</p>
-
-<p>Consider the phase (i.e., morning+evening) starting after initialization.  If $b=0$ after morning is over at time $T/2$, every displayed bit is $0$ w.h.p., and remains there forever. Otherwise, if $b=1$, after the first evening, $[T/2+1, T]$, all displayed bits are set to $1$ w.h.p., and remain $1$ forever. Note that a common time notion is required to achieve correctness, and this cannot be assumed in a self-stabilizing framework as the common clock is a part of the memory which could be initially corrupted.</p>
-
-<h2 id="step-2">Step $(2)$</h2>
-<p>Step $(2)$ is based on the protocol <em>MAJORITY</em> from the paper <em><a href="http://vesta.informatik.rwth-aachen.de/opus/volltexte/2010/2429/pdf/09371.ScheidelerChristian.Paper.2429.pdf">Stabilizing consensus with the power of two choices</a></em>. To design a clock modulo $T$ each agent displays $\log T$ bits corresponding to the binary expansion of a number $&lt; T$. On each round, each agent samples the counters of $2$ other agents uniformly at random. Then <em>3-MAJORITY</em> is applied bitwise and the counters are also incremented on every round.</p>
-
-<p>At this stage, convergence of the counters may seem counter-intuitive. Each bit of each counter is affected both by the operation of incrementing and also by the majority rule. It turns out however that this solution works in $O(\log T \log n)$ rounds provided $T$ is a power of $2$. However it uses $\log T$ bits messages and later we want $T$ to be of order $\log  n » 1$.</p>
-
-<h2 id="step-3">Step $(3)$</h2>
-
-<p>In this part, our main lemma is the following.</p>
-
-<p><strong>Informal lemma</strong>
-In our context, any protocol  $\Pi$ using $\ell$ bits messages can be emulated by another one using $\lceil \log \ell \rceil +1$ bits messages, at the cost of only a small overhead in the running time.</p>
-
-<p><em>Informal proof</em>
-We know from the previous step how to design a counter modulo $\ell$ using $\lceil \log \ell \rceil $ bits. This can be interpreted as an index saying which bit of the $\Pi$-message  to display. Looping over indices of $\Pi$ allows, within $\ell$ rounds to emulate \emph{one} round of $\Pi$.</p>
-
-<p>The lemma can be applied to any protocol, and in particular… to the clock synchronization protocol we saw in Step $2$. This reduces the message size from $\log T$ to $\lceil \log \log T\rceil +1$. We can keep iterating this and
-we are able to reduce the message size until reaching the fixed point of $T \mapsto \lceil \log T \rceil + 1$ which happens to be $3$.</p>
-
-<h1 id="open-questions">Open questions</h1>
-<p>Does there exist a $1$ bit efficient solution to the <em>broadcast</em> problem ? A solution that does not build a clock would be of special interest to us.</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>For those of you who have met the LOCAL model at some point, this must sound very familiar as it is basically the same state of mind as the locality-oriented distributed computing.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:2">
+      <p>The paper <em>Distributed Graph Automata</em> (<a href="https://arxiv.org/abs/1408.3030">arxiv version</a>). The slides are also available <a href="https://www.irif.fr/_media/users/reiterf/lics2015.pdf">here</a>.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   </div>
   
