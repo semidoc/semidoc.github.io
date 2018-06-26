@@ -13,7 +13,7 @@ The talk related to this post was given by
 about [pentagonal tilings](https://en.wikipedia.org/wiki/Pentagonal_tiling). 
 This topic has been covered in many places (see for example
 [Quanta magazine](https://www.quantamagazine.org/pentagon-tiling-proof-solves-century-old-math-problem-20170711/)[^1] 
-and this [video](https://lejournal.cnrs.fr/videos/le-theoreme-du-carreleur). 
+and this [video](https://lejournal.cnrs.fr/videos/le-theoreme-du-carreleur)). 
 This post will focus on another aspect: what about heptagonal tilings?
 More precisely, how to show that there is no tiling of the plane with a convex 
 heptagonal tile?
