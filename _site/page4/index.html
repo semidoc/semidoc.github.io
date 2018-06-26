@@ -87,166 +87,79 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/cubic-TSP">
-        Travelling salesman problem on cubic graphs
+      <a href="/mags">
+        Magazines, rubriques et cie.
       </a>
     </h1>
 
-    <span class="post-date">08 Jan 2018</span>
+    <span class="post-date">15 Jan 2018</span>
 
-    <p>This is the second post of a series that start
-<a href="https://semidoc.github.io/information-communication">here</a>, based on the talks 
-given at a French meeting on algorithms and complexity 
-(<a href="https://www.irif.fr/~nschaban/GT-COA/">GT CoA</a>).</p>
-
-<p>The second talk I want to “review” is: <em>Applications and Constructions of cut-covering 
-decompositions for connectivity problems</em>, by 
-<a href="http://www.g-scop.grenoble-inp.fr/membres/newman-alantha--570520.kjsp">Alantha Newman</a> from the 
-<a href="http://www.g-scop.grenoble-inp.fr/welcome/welcome--452610.kjsp">GSOP lab</a> in 
-Grenoble. Her work is partly based on an approch that began with the paper
- <em><a href="http://dare.ubvu.vu.nl/bitstream/handle/1871/34734/274155.pdf?sequence=1">TSP on Cubic and Subcubic Graphs</a></em>.
-What I describe in this post is based on this first paper. You can find more 
-advanced lecture notes on this topic, by Newman, 
-<a href="http://pagesperso.g-scop.grenoble-inp.fr/~newmana/Algorithms2017/ORCO-ConvexCombinationsTSP.pdf">here</a>.</p>
+    <p>Hi, this post is in French (except this paragraph, as you may
+have noticed) and is a list of magazines or websites related to TCS.
+Some of these are written in French, others in English.</p>
 
 <hr />
 
-<p><a href="https://en.wikipedia.org/wiki/Cubic_graph">Cubic graphs</a> are graphs in which 
-every node has degree 3. These graphs have special structures that are useful 
-when designing 
-<a href="https://en.wikipedia.org/wiki/Approximation_algorithm">approximation algorithms</a>
-for the 
-<a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem">travelling salesman problem</a>
-(TSP for short), 
-and this is the topic of this post.</p>
+<p>Bonjour, en complément au <a href="https://semidoc.github.io/blogs">billet sur les blogs</a> 
+publié ici il y a quelques mois,
+un billet sur des initiatives plus structurées qui traitent (entre autres) d’informatique
+théorique : des magazines, des rubriques dans des journaux, 
+des blogs d’institutions.</p>
 
-<h2 id="from-tsp-to-graph-tsp-and-then-to-graphical-tsp">From TSP to Graph-TSP, and then to graphical-TSP</h2>
-<p>First, one may be confused by the fact the TSP is usually defined on weighted
-complete graphs, and not on some class of unweighted graphs. Indeed at first it 
-does not make sense, as not all the graphs are 
-<a href="https://en.wikipedia.org/wiki/Eulerian_path">eulerian</a>, that is, for some graphs 
-there does not exist a tour (i.e. a circuit in the graph that visits every 
-node exactly once).</p>
+<h3 id="quanta-magazinehttpswwwquantamagazineorg"><a href="https://www.quantamagazine.org/">Quanta magazine</a></h3>
+<p>Un magazine en ligne parlant de sciences en générale, mais assez souvent
+d’informatique théorique, et plutôt bien<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, malgré des titres 
+un peu sensationnels parfois<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>. La plupart des
+sujets sont reliés au quantique ou à l’apprentissage, mais pas tous. Le
+magazine est financé par la fondation Simons, qui est aussi à l’origine
+du <a href="https://simons.berkeley.edu/">Simons Institute for the Theory of Computing</a>.</p>
 
-<p>We actually deal with <em>graph-TSP</em> here, which is TSP on a subset of instances, whose 
-edge weights are very special. Graph-TSP on an unweighted graph $G$ with $n$ nodes, 
-means that we are looking for 
-the shortest tour in the complete graph $C$ on $n$ nodes, where 
-the weight of the edge between two arbitrary nodes $u$ and $v$ in $C$, is the length 
-of the shortest path  between these nodes in $G$.
-This is known as the metric completion of $G$, and 
-indeed one can check that these distances follow the triangle inequality.</p>
+<h3 id="images-des-mathshttpimagesmathcnrsfrlangfr"><a href="http://images.math.cnrs.fr/?lang=fr">Images des maths</a></h3>
+<p><em>Images des maths</em> est une plate-forme de vulgarisation des mathématiques
+(au sens large) soutenue par le CNRS. Les articles sont écrits par des
+profs et chercheurs, et sont de difficulté variable (celle-ci étant annoncée par 
+un code couleur). Il y est question d’informatique théorique relativement
+souvent, et il y aussi un bonne revue de presse tous les mois.</p>
 
-<p>Another problem is interesting to us: <em>graphical-TSP</em>. In this new problem, given 
-a graph, one has to find the shortest tour that visits all the nodes, 
-but with the relaxation that it can visit the nodes and edges more than 
-once.</p>
+<h3 id="binairehttpbinairebloglemondefr"><a href="http://binaire.blog.lemonde.fr/">Binaire</a></h3>
+<p>Le blog du <em>Monde</em> sur l’informatique, soutenue par la Société
+Informatique de France. Le blog suit l’actualité de l’informatique en 
+donnant un point de vue un peu plus axé « recherche » que dans les médias et 
+blogs généralistes. Et 
+aussi : des podcasts, de l’histoire de l’informatique, des rubriques
+récurrentes
+(notamment 
+« <a href="http://binaire.blog.lemonde.fr/il-etait-une-fois-ma-these/">Il était une fois ma thèse…</a> »).</p>
 
-<p>“Graph-TSP” and “Graphical-TSP” are unpleasantly close names, but 
-fortunately, the problems are equivalent. Suppose you have a tour for 
-graph-TSP, then every edge $(u,v)$ has the weight of the path between $u$ and 
-$v$ in $G$: one can take this path instead of the direct edge. 
-Unfolding every edge this way, one gets a solution for graphical-TSP with the
-same weight. A similar construction works for the other 
-direction.</p>
+<h3 id="intersticeshttpsintersticesinfo"><a href="https://interstices.info/">Interstices</a></h3>
+<p>Magazine en ligne du numérique, soutenu par Inria. Des articles rédigés 
+par des chercheurs, là encore sur les sujets du moment, l’histoire de 
+l’informatique etc. mais aussi des billets de vulgarisation sur des 
+sujets peu plus pointus, dans la section 
+« <a href="https://interstices.info/jcms/mf_46683/approfondir">Approfondir</a> ».</p>
 
-<p>The literature seems to focus on Graph-TSP, probably because it generalizes to 
-the classic TSP more easily. For this post, the graphical-TSP is more handy, 
-so we continue wih this one.</p>
-
-<h2 id="simplified-christofides-algorithm">Simplified Christofides algorithm</h2>
-
-<p>Consider the following simple approximation algorithm for graphical-TSP. 
-Take a minimum 
-spanning tree of the graph $G$, and then consider the path taken if one does a 
-traversal of this tree. This is a tour (in the sense of graphical-TSP), 
-because every node is visited. It gives 
-a 2-approximation, because the optimal tour cannot be lighter than the minimum 
-spanning tree, and because every edge is taken exactly twice in this solution.
-Also it runs in polynomial-time, and that is what we are looking for.</p>
-
-<p><a href="https://en.wikipedia.org/wiki/Christofides_algorithm">Christofides algorithm</a> 
-is a refinement of this idea, and it gives a 3/2-approximation for metric 
-instance of (the general) TSP. In particular it gives a 3/2-approximation 
-for graphical-TSP on cubic graphs and we will show how to get better a better 
-ratio.</p>
-
-<h2 id="a-few-graph-theoretic-definitions">A few graph theoretic definitions</h2>
-<p>Before we get to why cubic graphs are nice, we need a few definitions from graph theory.</p>
+<h3 id="et-sur-papier">Et sur papier…</h3>
+<p>Plusieurs journaux scientifiques francophones ont des rubriques
+pertinentes pour ce post. Notamment :</p>
 
 <ul>
-  <li>A <em><a href="https://en.wikipedia.org/wiki/Bridge_(graph_theory)#Bridgeless_graphs">bridge</a></em> 
-in a graph, is an edge whose removal disconnects the graph.</li>
-  <li>A <em>perfect matching</em>, is a <a href="https://en.wikipedia.org/wiki/Matching_(graph_theory)">matching</a>, 
-i.e. a set of vertex-disjoint edges, that matches all vertices in G.</li>
-  <li>A <em><a href="https://en.wikipedia.org/wiki/Vertex_cycle_cover">(vertex disjoint) cycle cover</a></em>
-is a set of vertex-disjoint cycles that spans all vertices in G.</li>
+  <li><a href="http://www.pourlascience.fr/ewb_pages/l/logique_et_calcul.php">Logique et calcul</a>
+de <a href="https://fr.wikipedia.org/wiki/Jean-Paul_Delahaye">Jean-Paul Delahaye</a>
+dans <em><a href="https://fr.wikipedia.org/wiki/Pour_la_science">Pour la science</a></em>.</li>
+  <li>la chronique « Numériques »  tenues par 
+Serge Abiteboul et Gerard Berry, et la chronique « Mathématiques » de 
+Roger Mansuy, dans <em><a href="http://www.larecherche.fr/">La Recherche</a></em>.</li>
 </ul>
 
-<p>Note that the two last definitions are pretty similar, and indeed they are two 
-examples of a more general concept, called 
-<a href="https://en.wikipedia.org/wiki/Graph_factorization">$k$-factors</a>. But let’s go 
-back to cubic graphs.</p>
-
-<h2 id="cycle-covers-from-petersens-theorem">Cycle covers from Petersen’s theorem</h2>
-<p><a href="https://en.wikipedia.org/wiki/Petersen%27s_theorem">Petersen’s theorem</a> states 
-that every bridgeless cubic graph, has a perfect matching.</p>
-
-<p>Now, take a bridgeless cubic graph and remove a perfect matching. What is 
-left? A cycle cover of G. 
-Indeed the degree of every node has decreased from three to two, thus the 
-resulting graph must be union of cycles spanning all nodes.</p>
-
-<h2 id="all-together-now">All together now</h2>
-<p>Let’s put all the ingredients together to get an approximation algorithm for 
-graphical-TSP with a better ratio than Christofides algorithm.</p>
-
-<p>First find a cycle cover of $G$ as in the previous section. This can be
-done in poynomial time, thanks to the
-<a href="https://en.wikipedia.org/wiki/Blossom_algorithm">blossom algorithm</a>.
-This subgraph is visiting 
-every node exactly once, but it is not a tour yet, because it is disconnected. 
-We will now 
-link these cycles together. Consider 
-the graph $G’$ made by contracting every cycle into just one node. On this graph 
-$G’$, take the tour
-induced by the spanning tree as in the simplified Chritofides algorithm. 
-This tour corresponds to a set of edges in $G$. 
-Now this set of edges plus the edges of the cycle cover form a tour, and we have 
-a solution for graphical-TSP!</p>
-
-<p>What is the weight of this tour? The cycle cover contains exactly $n$ edges. 
-Let $c$ be the number of cycles in this cover. Then there are $2c-1$ edges in 
-the tree. It follows that the tour has weight $n+2c-1$. With a bit of work<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> one can 
-get $c\leq n/6$. This yields to a tour with 
-less then $4n/3$ edges. This is a 4/3-approximation, as a tour cannot be shorter 
-than $n$, which improves on Christofides.</p>
-
-<p>We discussed only cubic graphs and got only a small improvement here, 
-but the approach based on studying the cycle 
-covers is fruitful in other context, and led to many improvements for 
-this fundamental problem.</p>
-
-<h2 id="bonus-recent-advances-on-asymmetric-tsp">Bonus: recent advances on asymmetric TSP</h2>
-
-<p>On a related topic, there has been recent advances on asymmetric TSP, that is 
-TSP where the directed edges $(u,v)$ and $(v,u)$ do not have the same weight
-in general. 
-<a href="https://arxiv.org/pdf/1708.04215">A recent paper</a> gives the  long-awaited
-first constant-approximation algorithm for the problem. You will find 
-links to a summary and videos on <a href="http://jakub.tarnawski.org/">Jakub Tarnawski’s webpage</a>. 
-The paper has been covered on <a href="https://rjlipton.wordpress.com/2017/09/11/a-tsp-breakthrough/">Gödel’s lost letter</a><sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>, 
-and in <a href="https://www.quantamagazine.org/one-way-salesman-finds-fast-path-home-20171005/">Quanta magazine</a>.</p>
-
-<h3 id="footnotes">Footnotes</h3>
+<h4 id="notes">Notes</h4>
 
 <div class="footnotes">
   <ol>
     <li id="fn:1">
-      <p>To make this work, one needs a stronger version of Petersen’s theorem, to have a better cycle cover. The details are in <a href="http://dare.ubvu.vu.nl/bitstream/handle/1871/34734/274155.pdf?sequence=1">this paper</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+      <p>Voir par exemple <a href="https://www.quantamagazine.org/one-way-salesman-finds-fast-path-home-20171005/">l’article</a> sur les récentes avancées sur le problème du voyageur de commerce que l’on citait dans le <a href="https://semidoc.github.io/cubic-TSP">billet précédent</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:2">
-      <p>A blog by Richard Lipton, that we recently mentioned in our <a href="https://semidoc.github.io/blogs">post on TCS blogs</a> (in French).&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+      <p>Comme « <em><a href="https://www.quantamagazine.org/subhash-khot-unique-games-conjecturer-is-awarded-rolf-nevanlinna-prize-20140812/">A Grand Vision for the Impossible</a></em> » pour un article sur la <a href="https://fr.wikipedia.org/wiki/Conjecture_des_jeux_uniques">conjecture des jeux uniques</a>.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

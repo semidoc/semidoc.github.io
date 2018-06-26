@@ -87,93 +87,108 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/blogs">
-        Blogs d'informatique théorique
+      <a href="/information-communication">
+        Communication complexity and information theory
       </a>
     </h1>
 
-    <span class="post-date">09 Nov 2017</span>
+    <span class="post-date">23 Dec 2017</span>
 
-    <p>Hi everyone, the rest of this post is in French and is basically a list of TCS 
-blogs, some in French, some in English.</p>
+    <p>I attended the annual meeting of the <a href="https://www.irif.fr/~nschaban/GT-COA/">complexity and algorithms working 
+group of the CNRS</a> (GT CoA) a few weeks ago, and 
+I wanted to review some parts of it. This is the first element of a series of 
+posts. The talks at this meeting were quite 
+technical, and I cannot give a deep overview of each them. So instead 
+I will just write about some details that caught my attention, and that are easy 
+to explain, or, like today, give a very succinct	 summary of the story. 
+For most of the talks, the post will deal with basic considerations, and 
+not with the new things developed by the speakers. 
+For comments: feuilloley [at] irif [dot] fr.</p>
 
 <hr />
+<p>The first talk was actually a lecture,
+entitled <em>Information Theory and Communication Protocols</em> by Florent Urrutia 
+from <a href="https://www.irif.fr/en/index">IRIF at Paris Diderot university</a>.</p>
 
-<p>Bonjour, aujourd’hui un billet sur les blogs d’informatique théorique.  J’ai un 
-peu taté le terrain auprès des doctorants de l’<a href="https://www.irif.fr/index">IRIF</a>,
-pour savoir ce qui était lu et voilà une partie des résultats, avec de courtes 
-descriptions qui n’engagent que moi. Je vous encourage à aller voir vous-même.</p>
+<h2 id="communication-complexity">Communication complexity</h2>
 
-<p>N’hésitez pas à m’envoyer des commentaires et suggestions 
-(feuilloley ‘at’ irif ‘point’ fr).</p>
+<p>In a nutshell, <a href="https://en.wikipedia.org/wiki/Communication_complexity">communication complexity</a>
+measures the number of bits that some agents must exchange to complete a task. 
+More precisely, in the basic setting, there are two players, 
+traditionally named Alice and Bob, and each of them is given 
+half of an input bit string. They both have to output the result of a boolean
+function of the (whole) input. A task is for example to output the 
+parity of the number of 1s in the input string.
+Before outputting, they can communicate, that is exchange some bits one after the other.
+Then an easy protocol is to send each other all the (half-)inputs they have, and 
+then to compute the output in parallel. The basic question is: for which tasks
+you can do better, that is sending less bits than the size of the input?</p>
 
-<h3 id="the-n-category-cafhttpsgolemphutexaseducategory"><a href="https://golem.ph.utexas.edu/category/">The n-Category Café</a></h3>
-<p>Un blog collectif lu notamment par les catégoriciens. Une dizaines d’auteurs, dont 
-<a href="https://fr.wikipedia.org/wiki/John_Baez">John Baez</a> 
-(assez présent sur internet, notamment autour de l’open access et du rechauffement 
-climatique, et qui a son propre blog, 
-<a href="https://johncarlosbaez.wordpress.com/about/">Azimut</a> qui parle de beaucoup 
-d’autres choses). Les contenus techniques sont axés catégories, mais avec des 
-incursions dans d’autres domaines et des commentaires sur l’informatique en général.</p>
+<h2 id="information-complexity">Information complexity</h2>
+<p>In another nutshell, <a href="https://en.wikipedia.org/wiki/Information_theory">information theory</a> 
+measure the amount of information contained in some message given some context. 
+This has been 
+introduced by Shannon in the forties, and is used in many 
+contexts. 
+It requires formulas, with logs, sups, infs etc. to 
+make this precise, and I do not want to dive into this. If you know about 
+<a href="https://en.wikipedia.org/wiki/Entropy_(information_theory)">Shannon entropy</a>, 
+<a href="https://en.wikipedia.org/wiki/Mutual_information">mutual information</a> etc., 
+you know what I mean. Otherwise, no problem, it is not really
+necessary for this post. Now, very roughly speaking, <em>information complexity</em> measures 
+the amount of information that one needs to reveal to solve some task under some 
+distribution, and its definition is based on the one of the entropy.</p>
 
-<h3 id="shtetl-optimizedhttpswwwscottaaronsoncomblog"><a href="https://www.scottaaronson.com/blog/">Shtetl-Optimized</a></h3>
-<p>Un blog classique en quantique/complexité/nerdisme, par un nerd quantique 
-complexe, <a href="https://fr.wikipedia.org/wiki/Scott_Aaronson">Scott Aaronson</a>. 
-Des discussions techniques, mais 
-surtout le suivi des (non-)avancées des ordinateurs quantiques, une partie de la 
-politique américaine 
-et des avis sur les trous noirs, la calculabilité, la conscience, et les problèmes d’Uber. 
-Entre autres.</p>
+<h2 id="information-as-a-lower-bound-on-communication">Information as a lower bound on communication</h2>
+<p>The focus of the course was to look at the relation between these two fields.
+The main point, that is very powerful, can be stated as a naive sentence: the 
+number of bits communicated in any protocol to solve the task 
+must be larger than the information the players have 
+to reveal, in theory, when communicating. Namely, the communication 
+complexity must be at least 
+the information complexity. As I have not properly defined the two notions, this 
+may sound quite useless, I will try to convince the reader that it is interesting. 
+What is surprizing is that these two notions are 
+quite different in the way they are defined. The first one is defined as a simple 
+worst-case measure and has a quite combinatorial flavour, it really counts bits. 
+Indeed it is possible 
+to prove lower bound on communication complexity by studying some combinatorics 
+of 0-1 matrices.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>
+The second one is defined as an infimum (over communication protocols) of a supremum 
+over distributions of inputs of an (entropy-like) function that is based on a 
+sum of logs. A pretty non-combinatorial object.</p>
 
-<h3 id="gagaliumhttpgalliuminriafrblog"><a href="http://gallium.inria.fr/blog/">Gagalium</a></h3>
-<p>Le blog de la communauté <a href="https://fr.wikipedia.org/wiki/OCaml">Ocaml</a>, 
-avec du contenu très pointu, mais aussi des 
-histoires qui peuvent interesser un plus large public, comme 
-<em><a href="http://gallium.inria.fr/blog/intel-skylake-bug/">How I found a bug in Intel Skylake processors</a></em>.</p>
+<p>I guess this inequality mainly means that these definitions are the right ones..!</p>
 
-<h3 id="windows-on-theoryhttpswindowsontheoryorg"><a href="https://windowsontheory.org/">Windows on Theory</a></h3>
-<p>Blog à <em>n</em> mains, avec <em>n</em> grand, mais dont l’auteur principal est aujourd’hui 
-<a href="http://www.boazbarak.org/">Boak Barak</a>. Il y est question de <em>theoretical 
-computer science</em> (TCS), selon la compréhension américaine du terme : algorithmes, 
-complexité, crypto. Beaucoup de contenus semi-techniques et de discussions sur la 
-communauté, les conférences, l’enseignement, les nouveaux domaines, les postes.</p>
+<h2 id="further">Further</h2>
+<p>It is not true that communication complexity is equal to information 
+complexity, there can even be an exponential gap between those, but this happens 
+in some very special context. See the paper <em><a href="https://pdfs.semanticscholar.org/fd13/ba5bb068e7887fb450ef6c2cc2a849652db2.pdf">Exponential Separation of 
+Information and
+Communication for Boolean Functions</a></em> 
+(not for the beginners).</p>
 
-<h3 id="la-vie-est-mal-configurehttpdavidmonniauxfreefrdotclearindexphp"><a href="http://david.monniaux.free.fr/dotclear/index.php/">La vie est mal configurée</a></h3>
-<p>Le blog de <a href="http://www-verimag.imag.fr/~monniaux/">David Monniaux</a>, prof au CNRS 
-à Grenoble. Le plus souvent en français, avec un focus sur l’informatique en 
-France (son enseignement, son image dans les médias etc.), sur la recherche en 
-informatique en générale (processus de publication, vie de chercheur), et 
-parfois de la vulgarisation de contenu technique.</p>
+<p>Nevertheless, this approach is very powerful, and almost all the lower bounds 
+we have on 
+communication complexity can be phrased as information complexity lower bounds 
+(See <a href="https://arxiv.org/abs/1204.1505">this paper</a>).</p>
 
-<h3 id="gdels-lost-letter-and-pnphttpsrjliptonwordpresscom"><a href="https://rjlipton.wordpress.com/">Gödel’s lost letter and P=NP</a></h3>
-<p>Un autre blog de TCS à l’américaine, généraliste mais avec parfois des billets 
-de vulgarisation de sujets vraiment techniques, avec souvent un nouveau point de vue, 
-des questions ouvertes, des avis personels etc.. Par 
-<a href="https://fr.wikipedia.org/wiki/Richard_J._Lipton">Richard Lipton</a> et Ken Regan.</p>
+<h2 id="multi-party-communication-the-more-the-merrier-maybe-not">Multi-party communication (the more the merrier… maybe not)</h2>
+<p>Multi-party communication is the setting in which the input is split between 
+more than two players. In this new setting, lower bounds are 
+difficult to get. A natural step is to use information complexity. 
+But this is not easy. There are different 
+ways to define the information revealed during a multi-party protocol, and none of 
+ones we know gives very good bounds.</p>
 
-<h3 id="lambda-the-ultimatehttplambda-the-ultimateorg"><a href="http://lambda-the-ultimate.org/">Lambda the ultimate</a></h3>
-<p>Entre le blog et le forum. Contenus techniques sur la théorie des langages de 
-	programmation.</p>
-
-<h3 id="computational-complexityhttpblogcomputationalcomplexityorg"><a href="http://blog.computationalcomplexity.org/">Computational complexity</a></h3>
-<p>Et pour finir encore un blog dans le domaine algo/complexité, avec aussi des 
-énigmes, des annonces de postes, des avis sur les technologies en général. 
-Par <a href="https://en.wikipedia.org/wiki/Lance_Fortnow">Lance Fortnow</a> et 
-<a href="https://en.wikipedia.org/wiki/William_Gasarch">Bill Gasarch</a>. En passant les blogs de ce type sont regroupés dans le 
-<a href="http://www.feedworld.net/toc/">Theory of Computing Blog Aggregator</a>, avec les 
-sections <a href="https://fr.wikipedia.org/wiki/ArXiv">ArXiv</a> pertinentes.</p>
-
-<h3 id="et-encore-quelques-uns">Et encore quelques uns</h3>
-<p>Deux blogs de groupes de thésards basés aux États-Unis : 
-<a href="https://mittheory.wordpress.com/">Not so Great Ideas in Theoretical Computer Science</a>
-et <a href="http://learningwitherrors.org/">Learning With Errors</a>.</p>
-
-<p>On finit avec des blogs de doctorants présents ou passés de l’IRIF :
-<a href="https://drup.github.io/">Drup</a> 
-de Gabriel Radanne, <a href="https://fiv0.github.io/">FiV0</a> de Finn Völkel
-(sur lequel la structure de semidoc est basée),
-et les blogs de <a href="https://luongo.pro/">Alessandro Luongo</a>
-et de <a href="https://www.theozimmermann.net/en/blog/">Théo Zimmermann</a>.</p>
+<h3 id="footnotes">Footnotes</h3>
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>See the classic <em>rectangle method</em>, for example in <a href="https://pdfs.semanticscholar.org/6094/392d07d36c086a988493686b73ebca39169b.pdf">this survey</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
   </div>
   

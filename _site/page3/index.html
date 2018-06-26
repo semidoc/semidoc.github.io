@@ -87,79 +87,111 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/mags">
-        Magazines, rubriques et cie.
+      <a href="/greedyMIS">
+        Greedy algorithm for maximum independent set
       </a>
     </h1>
 
-    <span class="post-date">15 Jan 2018</span>
+    <span class="post-date">29 Jan 2018</span>
 
-    <p>Hi, this post is in French (except this paragraph, as you may
-have noticed) and is a list of magazines or websites related to TCS.
-Some of these are written in French, others in English.</p>
+    <p>One more post of our GT CoA series. The introductory post is 
+<a href="https://semidoc.github.io/information-communication">here</a>. 
+We skip the third talk, <em>Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</em> 
+because we have already covered this paper, see 
+<a href="https://semidoc.github.io/lagarde-catastrophe">this post</a>. The fourth talk of 
+the meeting was about greedy algorithms for maximum independent set, presented 
+by <a href="http://www.di.ens.fr/~mmari/index.html">Mathieu Mari</a>. Once again, the text 
+will not deal much with the actual  work of the speaker, but more with the 
+background of it.</p>
 
 <hr />
 
-<p>Bonjour, en complément au <a href="https://semidoc.github.io/blogs">billet sur les blogs</a> 
-publié ici il y a quelques mois,
-un billet sur des initiatives plus structurées qui traitent (entre autres) d’informatique
-théorique : des magazines, des rubriques dans des journaux, 
-des blogs d’institutions.</p>
+<h2 id="maximum-independent-sets-are-hard-to-find">Maximum independent sets are hard to find</h2>
+<p><a href="https://en.wikipedia.org/wiki/Independent_set_(graph_theory)">Maximum independent set</a> 
+is an algorithmic problem, which asks to find the maximum set of nodes of the 
+input graph such that not two nodes of the set are adjacent. As the problem is 
+<a href="https://en.wikipedia.org/wiki/NP-hardness">NP-hard</a>, one naturally look for 
+<a href="https://en.wikipedia.org/wiki/Approximation_algorithm">approximation algorithms</a>. 
+Unfortunately it is impossible to design a non-trivial polynomial-time 
+approximation algorithm, unless you know what happens<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
 
-<h3 id="quanta-magazinehttpswwwquantamagazineorg"><a href="https://www.quantamagazine.org/">Quanta magazine</a></h3>
-<p>Un magazine en ligne parlant de sciences en générale, mais assez souvent
-d’informatique théorique, et plutôt bien<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>, malgré des titres 
-un peu sensationnels parfois<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>. La plupart des
-sujets sont reliés au quantique ou à l’apprentissage, mais pas tous. Le
-magazine est financé par la fondation Simons, qui est aussi à l’origine
-du <a href="https://simons.berkeley.edu/">Simons Institute for the Theory of Computing</a>.</p>
+<p>On the other hand, these hardness results are for worst-case general graphs, and 
+it is still interesting to study the behaviour of very simple algorithms. 
+This post is about greedy algorithms.</p>
 
-<h3 id="images-des-mathshttpimagesmathcnrsfrlangfr"><a href="http://images.math.cnrs.fr/?lang=fr">Images des maths</a></h3>
-<p><em>Images des maths</em> est une plate-forme de vulgarisation des mathématiques
-(au sens large) soutenue par le CNRS. Les articles sont écrits par des
-profs et chercheurs, et sont de difficulté variable (celle-ci étant annoncée par 
-un code couleur). Il y est question d’informatique théorique relativement
-souvent, et il y aussi un bonne revue de presse tous les mois.</p>
+<h2 id="a-greedy-algorithm-and-when-it-fails">A greedy algorithm and when it fails</h2>
+<p>A greedy algorithm for maximum independent set is the following:</p>
 
-<h3 id="binairehttpbinairebloglemondefr"><a href="http://binaire.blog.lemonde.fr/">Binaire</a></h3>
-<p>Le blog du <em>Monde</em> sur l’informatique, soutenue par la Société
-Informatique de France. Le blog suit l’actualité de l’informatique en 
-donnant un point de vue un peu plus axé « recherche » que dans les médias et 
-blogs généralistes. Et 
-aussi : des podcasts, de l’histoire de l’informatique, des rubriques
-récurrentes
-(notamment 
-« <a href="http://binaire.blog.lemonde.fr/il-etait-une-fois-ma-these/">Il était une fois ma thèse…</a> »).</p>
+<p>Start with all nodes unlabelled.<br />
+Until all nodes are labelled:<br />
+    Choose an unlabelled node with the minimum of unlabelled neighbours; <br />
+    Label this node with 1, and its unlabelled neighbours with 0; <br />
+Output the set of nodes labelled with 1.</p>
 
-<h3 id="intersticeshttpsintersticesinfo"><a href="https://interstices.info/">Interstices</a></h3>
-<p>Magazine en ligne du numérique, soutenu par Inria. Des articles rédigés 
-par des chercheurs, là encore sur les sujets du moment, l’histoire de 
-l’informatique etc. mais aussi des billets de vulgarisation sur des 
-sujets peu plus pointus, dans la section 
-« <a href="https://interstices.info/jcms/mf_46683/approfondir">Approfondir</a> ».</p>
+<p>The idea of choosing a node whose degree in the remaining unlabelled part of the 
+graph comes 
+from a simple intuition: if I choose a node with high degree, I will label 
+a lot of nodes in one step, which is bad because it decreases a lot the 
+number of nodes that are candidates to be in the independent set. But because of 
+what we said before, we know that this has to fail sometimes. Here is an example. 
+There are three sets of nodes : ${x}$, ${a_1,…., a_k}$ and 
+${b_1,…,b_k}$. The vertex $x$ is linked to every $a_i$, every 
+$a_i$ is linked to every $b_j$, and the $b_j$ form a clique. On this graph, the 
+algorithm will first pick $x$, and then pick a node 
+in ${b_1,…,b_k}$, and stop. The independent set returned has size 2, but 
+${a_1,…., a_k}$ is an independent set of size $k$, therefore the approximation 
+ratio is roughly the size of the instance.</p>
 
-<h3 id="et-sur-papier">Et sur papier…</h3>
-<p>Plusieurs journaux scientifiques francophones ont des rubriques
-pertinentes pour ce post. Notamment :</p>
+<h2 id="and-when-it-succeeds">And when it succeeds</h2>
+<p>The first thing one can say about this graph, is that it uses very high degree 
+nodes. What happens if we consider bounded degree graphs? Then for maximum degree 
+$\Delta$, greedy achieves the approximation of ratio $\frac{\Delta+2}{3}$<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>, 
+which is not that bad. 
+A second thing one can say, is that this graph does not seem generic, for example 
+it does not look like a 
+<a href="https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93R%C3%A9nyi_model">random graph</a>. 
+And greedy is quite good on random graphs 
+actually, it achieves a ratio 2 in expectation<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>.</p>
 
-<ul>
-  <li><a href="http://www.pourlascience.fr/ewb_pages/l/logique_et_calcul.php">Logique et calcul</a>
-de <a href="https://fr.wikipedia.org/wiki/Jean-Paul_Delahaye">Jean-Paul Delahaye</a>
-dans <em><a href="https://fr.wikipedia.org/wiki/Pour_la_science">Pour la science</a></em>.</li>
-  <li>la chronique « Numériques »  tenues par 
-Serge Abiteboul et Gerard Berry, et la chronique « Mathématiques » de 
-Roger Mansuy, dans <em><a href="http://www.larecherche.fr/">La Recherche</a></em>.</li>
-</ul>
+<p>Random graph are not that common in applications though, either on real-world 
+graphs or on network architecture. What about trees, what about planar graphs? 
+Once again greedy is a good choice: it provides a 6-approximation on planar 
+graphs, and is optimal for trees.</p>
 
-<h4 id="notes">Notes</h4>
+<p>There is a general method to prove that greedy is optimal for 
+trees, and also on other graph classes, such as 
+<a href="https://en.wikipedia.org/wiki/Outerplanar_graph">maximal outerplanar graphs</a>, 
+<a href="https://en.wikipedia.org/wiki/Cograph">cographs</a>, and 
+<a href="https://en.wikipedia.org/wiki/Split_graph">split graphs</a>. 
+First note that if there is a node $v$ in the graph 
+such that its neighbours and itself form a clique, then this node belongs to one of 
+the maximum independent sets. Indeed only one node from the clique can be in the 
+set, and we can always take the node $v$, because there cannot be a conflict 
+with a node outside the clique. If the class of graphs at hand has the property 
+that the nodes with the lowest degree have such clique neighbourhoods, then the 
+greedy algorithm never makes a bad choice, and is optimal. In trees, the lowest 
+degree nodes are the leaves, and they have such a property, because they have 
+only one neighbour, thus the greedy algorithm is optimal.</p>
 
+<h2 id="how-good-is-greedy-on-a-particular-graph">How good is greedy on a particular graph?</h2>
+<p>Ok, so greedy can be very bad, but it can also be good. And this can depend not 
+only on the graph but also on the choices made by the algorithm : at every step 
+there can be several nodes with minimum degree, and the choice can dramatically 
+change the output. But can we predict how good or bad greedy can be? Can we 
+know which execution of the algorithm will give the best outcome, without 
+running it ? Mathieu and his co-author’s answer is basically “no”.</p>
+
+<h3 id="footnotes">Footnotes</h3>
 <div class="footnotes">
   <ol>
     <li id="fn:1">
-      <p>Voir par exemple <a href="https://www.quantamagazine.org/one-way-salesman-finds-fast-path-home-20171005/">l’article</a> sur les récentes avancées sur le problème du voyageur de commerce que l’on citait dans le <a href="https://semidoc.github.io/cubic-TSP">billet précédent</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+      <p>Some precisions about the non-approximability results. The precise results is that it is NP-hard to get a $n^{1-\epsilon}$ approximation of the maximum independent set. It comes from the paper <a href="https://pdfs.semanticscholar.org/5be6/a7e25c5e4cb0f1ece182042dc6275e438bbd.pdf">Clique is hard to approximate within $n^{1–\epsilon}$</a> by <a href="https://en.wikipedia.org/wiki/Johan_H%C3%A5stad">Johan Håstad</a> and is proved with the <a href="https://en.wikipedia.org/wiki/PCP_theorem">PCP machinery</a>. Note that the title of the paper is about the maximum clique problem and not the independent set, but for general graphs this is the same problem: just take the complement of the input graph.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:2">
-      <p>Comme « <em><a href="https://www.quantamagazine.org/subhash-khot-unique-games-conjecturer-is-awarded-rolf-nevanlinna-prize-20140812/">A Grand Vision for the Impossible</a></em> » pour un article sur la <a href="https://fr.wikipedia.org/wiki/Conjecture_des_jeux_uniques">conjecture des jeux uniques</a>.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+      <p>See <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.452.5619&amp;rep=rep1&amp;type=pdf">Greed is good: Approximating independent sets in sparse and bounded-degree graphs</a> by Halldórsson and Radhakrishnan.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:3">
+      <p>See <a href="https://arxiv.org/pdf/1007.1378">On independent sets in random graphs</a> by Coja-Oghlan and Efthymiou.&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>

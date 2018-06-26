@@ -87,111 +87,107 @@
   
   <div class="post">
     <h1 class="post-title">
-      <a href="/greedyMIS">
-        Greedy algorithm for maximum independent set
+      <a href="/heptagons">
+        No tiling by convex heptagons
       </a>
     </h1>
 
-    <span class="post-date">29 Jan 2018</span>
+    <span class="post-date">09 Mar 2018</span>
 
-    <p>One more post of our GT CoA series. The introductory post is 
-<a href="https://semidoc.github.io/information-communication">here</a>. 
-We skip the third talk, <em>Lempel-Ziv: a “one-bit catastrophe” but not a tragedy</em> 
-because we have already covered this paper, see 
-<a href="https://semidoc.github.io/lagarde-catastrophe">this post</a>. The fourth talk of 
-the meeting was about greedy algorithms for maximum independent set, presented 
-by <a href="http://www.di.ens.fr/~mmari/index.html">Mathieu Mari</a>. Once again, the text 
-will not deal much with the actual  work of the speaker, but more with the 
-background of it.</p>
+    <p>Fourth post of the GT CoA series, see 
+<a href="https://semidoc.github.io/information-communication">here</a> for the introduction.</p>
 
-<hr />
+<p>The talk related to this post was given by 
+<a href="https://perso.ens-lyon.fr/michael.rao/">Michaël Rao</a> on his recent result 
+about <a href="https://en.wikipedia.org/wiki/Pentagonal_tiling">pentagonal tilings</a>. 
+This topic has been covered in many places (see for example
+<a href="https://www.quantamagazine.org/pentagon-tiling-proof-solves-century-old-math-problem-20170711/">Quanta magazine</a><sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> 
+and this <a href="https://lejournal.cnrs.fr/videos/le-theoreme-du-carreleur">video</a>. 
+This post will focus on another aspect: what about heptagonal tilings?
+More precisely, how to show that there is no tiling of the plane with a convex 
+heptagonal tile?</p>
 
-<h2 id="maximum-independent-sets-are-hard-to-find">Maximum independent sets are hard to find</h2>
-<p><a href="https://en.wikipedia.org/wiki/Independent_set_(graph_theory)">Maximum independent set</a> 
-is an algorithmic problem, which asks to find the maximum set of nodes of the 
-input graph such that not two nodes of the set are adjacent. As the problem is 
-<a href="https://en.wikipedia.org/wiki/NP-hardness">NP-hard</a>, one naturally look for 
-<a href="https://en.wikipedia.org/wiki/Approximation_algorithm">approximation algorithms</a>. 
-Unfortunately it is impossible to design a non-trivial polynomial-time 
-approximation algorithm, unless you know what happens<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup>.</p>
+<p>We first present a simple heurisitic proof that gives the intuition about why this holds, 
+and then a more detailed proof. The first one uses simple geometry, the second is 
+graph theoretical.</p>
 
-<p>On the other hand, these hardness results are for worst-case general graphs, and 
-it is still interesting to study the behaviour of very simple algorithms. 
-This post is about greedy algorithms.</p>
+<h1 id="first-heuristic-proof-via-double-counting-of-the-angles">First (heuristic) proof via double-counting of the angles</h1>
 
-<h2 id="a-greedy-algorithm-and-when-it-fails">A greedy algorithm and when it fails</h2>
-<p>A greedy algorithm for maximum independent set is the following:</p>
+<p>Let a <em>contact point</em> be a place where three or more tiles meet. Without loss of 
+generality wa can assume that tiles only meet at vertices, that is there is no 
+contact point in the interior of an edge, it is always at an endpoint.<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup></p>
 
-<p>Start with all nodes unlabelled.<br />
-Until all nodes are labelled:<br />
-    Choose an unlabelled node with the minimum of unlabelled neighbours; <br />
-    Label this node with 1, and its unlabelled neighbours with 0; <br />
-Output the set of nodes labelled with 1.</p>
+<p>As the <a href="https://en.wikipedia.org/wiki/Polygon#Angles">sum of the interior angles of an $n$-gon</a> 
+is $(n-2)\times 180$ degrees, for an heptagon it is $5\times 180=900$ degrees. 
+The average degree is $900/7\approx 129$ degrees. Which means that at one 
+contact point there are in average $360/129\approx 2.8 $ heptagons meeting. 
+This does not make sense because at every contact point there should be at least 
+three tiles.</p>
 
-<p>The idea of choosing a node whose degree in the remaining unlabelled part of the 
-graph comes 
-from a simple intuition: if I choose a node with high degree, I will label 
-a lot of nodes in one step, which is bad because it decreases a lot the 
-number of nodes that are candidates to be in the independent set. But because of 
-what we said before, we know that this has to fail sometimes. Here is an example. 
-There are three sets of nodes : ${x}$, ${a_1,…., a_k}$ and 
-${b_1,…,b_k}$. The vertex $x$ is linked to every $a_i$, every 
-$a_i$ is linked to every $b_j$, and the $b_j$ form a clique. On this graph, the 
-algorithm will first pick $x$, and then pick a node 
-in ${b_1,…,b_k}$, and stop. The independent set returned has size 2, but 
-${a_1,…., a_k}$ is an independent set of size $k$, therefore the approximation 
-ratio is roughly the size of the instance.</p>
+<h1 id="second-proof-with-planar-graphs">Second proof with planar graphs.</h1>
 
-<h2 id="and-when-it-succeeds">And when it succeeds</h2>
-<p>The first thing one can say about this graph, is that it uses very high degree 
-nodes. What happens if we consider bounded degree graphs? Then for maximum degree 
-$\Delta$, greedy achieves the approximation of ratio $\frac{\Delta+2}{3}$<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup>, 
-which is not that bad. 
-A second thing one can say, is that this graph does not seem generic, for example 
-it does not look like a 
-<a href="https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93R%C3%A9nyi_model">random graph</a>. 
-And greedy is quite good on random graphs 
-actually, it achieves a ratio 2 in expectation<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>.</p>
+<h2 id="first-attempt-via-the-degree">First attempt via the degree</h2>
+<p>Take an infinite tiling, and draw the following graph. In the middle of each 
+tile draw a vertex, and between two vertices that represent adjacent tiles, draw 
+an edge. This graph is infinite and planar. As the tiles are convex, there are at 
+least seven different tiles adjacent to it, and then the minimum degree of a 
+vertex in the graph is seven.</p>
 
-<p>Random graph are not that common in applications though, either on real-world 
-graphs or on network architecture. What about trees, what about planar graphs? 
-Once again greedy is a good choice: it provides a 6-approximation on planar 
-graphs, and is optimal for trees.</p>
+<p>If you are used to planar graphs, you may think that this is enough to conclude. 
+Indeed, it is known that the average degree of panar graphs is strictly smaller 
+than six 
+(see for example <a href="https://en.wikipedia.org/wiki/Planar_graph#Average_degree">here</a>), 
+and the contradiction follows. Actually this is not enough because this average 
+degree upper bound holds only in finite graph. As a counter-example to this in 
+infinite graphs, consider an infinite regular tree with arbitrary large degree $d$ ; 
+it is a planar graph and it has average degree $d$.</p>
 
-<p>There is a general method to prove that greedy is optimal for 
-trees, and also on other graph classes, such as 
-<a href="https://en.wikipedia.org/wiki/Outerplanar_graph">maximal outerplanar graphs</a>, 
-<a href="https://en.wikipedia.org/wiki/Cograph">cographs</a>, and 
-<a href="https://en.wikipedia.org/wiki/Split_graph">split graphs</a>. 
-First note that if there is a node $v$ in the graph 
-such that its neighbours and itself form a clique, then this node belongs to one of 
-the maximum independent sets. Indeed only one node from the clique can be in the 
-set, and we can always take the node $v$, because there cannot be a conflict 
-with a node outside the clique. If the class of graphs at hand has the property 
-that the nodes with the lowest degree have such clique neighbourhoods, then the 
-greedy algorithm never makes a bad choice, and is optimal. In trees, the lowest 
-degree nodes are the leaves, and they have such a property, because they have 
-only one neighbour, thus the greedy algorithm is optimal.</p>
+<h2 id="euler-formula-on-the-dual">Euler formula on the dual</h2>
+<p>The degree bound comes form the classic tool for planar graphs,
+<a href="https://en.wikipedia.org/wiki/Euler_characteristic#Plane_graphs">Euler’s formula</a>. 
+It states that  $|V|-|E|+|F|=2$ for finite planar graphs, where $V$ is the set of 
+nodes, $E$ is the set of edges, and $F$ is the set of faces. The problem 
+is that it works only for finite graphs. We will consider a large enough part of 
+the infinite graph and use Euler formula to prove the result.</p>
 
-<h2 id="how-good-is-greedy-on-a-particular-graph">How good is greedy on a particular graph?</h2>
-<p>Ok, so greedy can be very bad, but it can also be good. And this can depend not 
-only on the graph but also on the choices made by the algorithm : at every step 
-there can be several nodes with minimum degree, and the choice can dramatically 
-change the output. But can we predict how good or bad greedy can be? Can we 
-know which execution of the algorithm will give the best outcome, without 
-running it ? Mathieu and his co-author’s answer is basically “no”.</p>
+<p>This can probably be achieved in the graph we have defined, but it is more 
+convenient on its dual. Given a tiling, consider every place where three 
+or more tiles meet as a vertex, and the edges of the tiles are the edges of the 
+graph. Basically drawing the tiling is drawing the graph.</p>
 
-<h3 id="footnotes">Footnotes</h3>
+<p>Now consider a ball of radius $r$ much larger than the size of the tile, and the 
+tiles that are at least partilly in this ball. There 
+is order of $r^2$ tiles strictly inside the ball and $O(r)$ tiles at the boundary.
+Note that the tiles are the faces of the planar graph (except the outer face 
+that is not a tile). A similar thing holds for 
+vertices: there are $\Theta(r)$ vertices that are at the boundary, call them 
+boundary nodes ($V_b$), and order of  $r^2$ that are strictly inside the graph, 
+called interior nodes ($V_i$).</p>
+
+<p>We double-count edges. For every edge, divide it lengthwise into two 
+half-edges. There are clearly $2|E|$ half-edges. Also every face except the 
+outerface is a tile, so contributes seven half-edges. The number of half-edges 
+of the outerface is in $O(r)$. Thus $2|E|=7|F|+O(r)$.</p>
+
+<p>We now count the corners (or interior angles) of tiles. Every tile has seven 
+corners, thus this number is exactly $7|F|$. As every interior node contributes 
+at least three corners, $7|F|\geq 3|V_i|$.</p>
+
+<p>Now using that $|V|=|V_i|+|V_b|$, then $|E|=\frac{7}{2}|F|+O(r)$ and finally 
+$|F|\geq \frac{3}{7}|V_i|$ one gets: $-\frac{15}{14}V_i+V_b-O(r)\geq 2$. This is 
+not possible because $V_i$ has a higher order of magnitude than the two other 
+terms, thus the asymptotics should go to $-\infty$.</p>
+
+<h4 id="notes-et-footnotes">Notes et footnotes</h4>
+<p>Thanks to Michaël Rao for discussions.</p>
+
 <div class="footnotes">
   <ol>
     <li id="fn:1">
-      <p>Some precisions about the non-approximability results. The precise results is that it is NP-hard to get a $n^{1-\epsilon}$ approximation of the maximum independent set. It comes from the paper <a href="https://pdfs.semanticscholar.org/5be6/a7e25c5e4cb0f1ece182042dc6275e438bbd.pdf">Clique is hard to approximate within $n^{1–\epsilon}$</a> by <a href="https://en.wikipedia.org/wiki/Johan_H%C3%A5stad">Johan Håstad</a> and is proved with the <a href="https://en.wikipedia.org/wiki/PCP_theorem">PCP machinery</a>. Note that the title of the paper is about the maximum clique problem and not the independent set, but for general graphs this is the same problem: just take the complement of the input graph.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+      <p>There exists a translation in French, in <a href="https://www.pourlascience.fr/sd/mathematiques/un-point-final-au-probleme-des-pavages-pentagonaux-du-plan-12669.php">Pour la science</a>.&nbsp;<a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
     </li>
     <li id="fn:2">
-      <p>See <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.452.5619&amp;rep=rep1&amp;type=pdf">Greed is good: Approximating independent sets in sparse and bounded-degree graphs</a> by Halldórsson and Radhakrishnan.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:3">
-      <p>See <a href="https://arxiv.org/pdf/1007.1378">On independent sets in random graphs</a> by Coja-Oghlan and Efthymiou.&nbsp;<a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
+      <p>This would need a proof, but roughly, having a contact point in the middle of an edge only make the argument stronger, as it forces the other angles to be small.&nbsp;<a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
     </li>
   </ol>
 </div>
