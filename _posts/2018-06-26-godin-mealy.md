@@ -18,6 +18,7 @@ blog. Enjoy!
 During my PhD, I have been mostly looking at drawings like this one:
 
 ![](assets/godin-mealy-1.png){: .center-image height="400px"}
+*The Grigorchuk automaton*
 
 Theses drawings are called **Mealy automata**, and in this note we will see how 
 they can be used to solve important problems arising from group theory. 
